@@ -1,7 +1,8 @@
 // Connect to DB
 const { Client } = require('pg');
-const DB_NAME = 'change-this-name'
-const DB_URL = process.env.DATABASE_URL || `postgres://${ DB_NAME }`;
+const { dbName, dbPort } = require('../config');
+
+const DB_URL = process.env.DATABASE_URL || `postgres://localhost:${dbPort}/${dbName}`;
 const client = new Client(DB_URL);
 
 // database methods
@@ -10,4 +11,4 @@ const client = new Client(DB_URL);
 module.exports = {
   client,
   // db methods
-}
+};
