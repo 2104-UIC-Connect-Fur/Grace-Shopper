@@ -1,8 +1,16 @@
 // code to build and initialize DB goes here
 const {
   client,
+  createUser,
+  createUserPayment,
+  createUserAddress,
   // other db methods
 } = require('./index');
+const {
+  users: usersToCreate,
+  userpayments: userPaymentsToCreate,
+  useraddresses: userAddressesToCreate,
+} = require('./fakeData');
 
 async function buildTables() {
   try {
@@ -18,6 +26,7 @@ async function buildTables() {
   DROP TABLE IF EXISTS reviews;
   DROP TABLE IF EXISTS orders;
   DROP TABLE IF EXISTS discounts;
+  DROP TABLE IF EXISTS itemsimages;
   DROP TABLE IF EXISTS items;
   DROP TABLE IF EXISTS users;
   `);
@@ -44,7 +53,7 @@ async function buildTables() {
       cardname VARCHAR(255) NOT NULL,
       nameoncard VARCHAR(255) NOT NULL,
       billingaddress VARCHAR(255) NOT NULL,
-      ccnumber INTEGER NOT NULL,
+      ccnumber VARCHAR(255) UNIQUE NOT NULL,
       ccsecuritycode INTEGER NOT NULL,
       ccexpiration VARCHAR(255) NOT NULL,
       zipcode VARCHAR(255) NOT NULL
@@ -54,7 +63,7 @@ async function buildTables() {
       id SERIAL PRIMARY KEY,
       "userId" INTEGER REFERENCES users(id),
       street VARCHAR(255) NOT NULL,
-      apartment VARCHAR(255) NOT NULL,
+      apartment VARCHAR(255),
       city VARCHAR(255) NOT NULL,
       state VARCHAR(255) NOT NULL,
       zipcode VARCHAR(255) NOT NULL
@@ -66,6 +75,14 @@ async function buildTables() {
       description TEXT NOT NULL,
       price INTEGER NOT NULL,
       inventoryquantity INTEGER NOT NULL
+    );
+
+    CREATE TABLE itemsimages(
+      id SERIAL PRIMARY KEY,
+      "imageId" INTEGER REFERENCES items(id),
+      url TEXT NOT NULL,
+      description TEXT NOT NULL,
+      alttext VARCHAR(255)
     );
 
     CREATE TABLE categories(
@@ -98,6 +115,12 @@ async function buildTables() {
         city VARCHAR(255) NOT NULL,
         state VARCHAR(255) NOT NULL,
         zipcode VARCHAR(255) NOT NULL,
+        nameoncard VARCHAR(255) NOT NULL,
+        billingaddress VARCHAR(255) NOT NULL,
+        ccnumber INTEGER NOT NULL,
+        ccsecuritycode INTEGER NOT NULL,
+        ccexpiration VARCHAR(255) NOT NULL,
+        cczipcode VARCHAR(255) NOT NULL,
         "discountId" INTEGER REFERENCES discounts(id)
       );
 
@@ -106,13 +129,7 @@ async function buildTables() {
         "orderId" INTEGER REFERENCES orders(id),   
         "itemId" INTEGER REFERENCES items(id),
         quantity INTEGER NOT NULL,
-        priceatpurchase INTEGER,
-        nameoncard VARCHAR(255) NOT NULL,
-        billingaddress VARCHAR(255) NOT NULL,
-        ccnumber INTEGER NOT NULL,
-        ccsecuritycode INTEGER NOT NULL,
-        ccexpiration VARCHAR(255) NOT NULL,
-        zipcode VARCHAR(255) NOT NULL
+        priceatpurchase INTEGER
       );
 
       CREATE TABLE reviews(
@@ -124,9 +141,48 @@ async function buildTables() {
       );
       `);
 
-    console.log('completed dropping tables...');
+    console.log('completed creating tables...');
     // build tables in correct order
   } catch (error) {
+    throw error;
+  }
+}
+
+async function createInitialUsers() {
+  console.log('Starting to create users...');
+  try {
+    const users = await Promise.all(usersToCreate.map(createUser));
+    console.log('Users created:');
+    console.log(users);
+    console.log('Finished creating users!');
+  } catch (error) {
+    console.error('Error creating users!');
+    throw error;
+  }
+}
+
+async function createInitialUserPayments() {
+  console.log('Starting to create user payments...');
+  try {
+    const userPayments = await Promise.all(userPaymentsToCreate.map(createUserPayment));
+    console.log('Users payments created:');
+    console.log(userPayments);
+    console.log('Finished creating user payments!');
+  } catch (error) {
+    console.error('Error creating user payments!');
+    throw error;
+  }
+}
+
+async function createInitialUserAddresses() {
+  console.log('Starting to create user addresses...');
+  try {
+    const userAddresses = await Promise.all(userAddressesToCreate.map(createUserAddress));
+    console.log('Users addresses created:');
+    console.log(userAddresses);
+    console.log('Finished creating user addresses!');
+  } catch (error) {
+    console.error('Error creating user addresses!');
     throw error;
   }
 }
@@ -135,6 +191,9 @@ async function populateInitialData() {
   try {
     // create useful starting data
     console.log('populating data...');
+    await createInitialUsers();
+    await createInitialUserPayments();
+    await createInitialUserAddresses();
   } catch (error) {
     throw error;
   }
