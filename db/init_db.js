@@ -9,6 +9,7 @@ const {
   createItems,
   createItemImages,
   createCategories,
+  createItemsCategories,
   // other db methods
 } = require('./index');
 const {
@@ -20,6 +21,7 @@ const {
   items: itemsToCreate,
   imagesOfItems: imagesToDisplay,
   categories: createdCategories,
+  itemscategories: itemcategoriesToCreate,
 } = require('./fakeData');
 
 async function buildTables() {
@@ -267,6 +269,21 @@ async function createInitialCategories() {
     throw error;
   }
 }
+
+async function createInitialItemsCategories() {
+  console.log('Starting to create user Items categories...');
+  try {
+    const categories = await Promise.all(
+      itemcategoriesToCreate.map(createItemsCategories),
+    );
+    console.log('Items categories created:');
+    console.log(categories);
+    console.log('Finished creating Items categories!');
+  } catch (error) {
+    console.error('Error creating Items categories');
+    throw error;
+  }
+}
 async function populateInitialData() {
   try {
     // create useful starting data
@@ -279,6 +296,7 @@ async function populateInitialData() {
     await createInitialOrdersItems();
     await createInitialImages();
     await createInitialCategories();
+    await createInitialItemsCategories();
   } catch (error) {
     throw error;
   }

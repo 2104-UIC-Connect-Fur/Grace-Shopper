@@ -65,6 +65,12 @@ module.exports = {
       price: 110000,
       inventoryquantity: 2,
     },
+    {
+      title: 'Air Jordan 6 Off-White',
+      description: '2021 Chicago All Star Jordan 6 Special Release !!',
+      price: 110000,
+      inventoryquantity: 2,
+    },
   ],
   imagesOfItems: [
     {
@@ -90,6 +96,20 @@ module.exports = {
       id: 1,
       name: 'Shoes',
       description: 'Exclusive Shoes',
+    },
+  ],
+  itemscategories: [
+    {
+      itemId: 1,
+      categoryId: 1,
+    },
+    {
+      itemId: 2,
+      categoryId: 2,
+    },
+    {
+      itemId: 3,
+      categoryId: 1,
     },
   ],
   orders: [
