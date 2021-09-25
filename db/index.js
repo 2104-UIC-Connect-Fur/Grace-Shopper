@@ -18,6 +18,7 @@ const {
   updateItemQuantityOnOrder,
 } = require('./ordersItems');
 
+const { createItems, createItemImages, createCategories } = require('./items');
 // CREATE NEW DATABASE METHODS HERE AND EXPORT THEM IN THE MODULE EXPORT.
 // PULL THEM INTO INIT_DB.JS TO SEED THE DB WITH FAKE DATA.
 
@@ -35,5 +36,8 @@ module.exports = {
   addItemToOrder,
   deleteItemFromOrder,
   updateItemQuantityOnOrder,
+  createItems,
+  createItemImages,
+  createCategories,
   // db methods
 };

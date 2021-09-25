@@ -50,6 +50,48 @@ module.exports = {
       zipcode: '93101',
     },
   ],
+  items: [
+    {
+      id: 1,
+      title: 'Babe Ruths Jersey',
+      description: 'Game worn jersey from 1928-1930 !!!',
+      price: 599,
+      inventoryquantity: 5,
+    },
+    {
+      id: 2,
+      title: 'Air Jordan 5 Off-White',
+      description: '2020 Chicago All Star Jordan 5 Special Release !!',
+      price: 110000,
+      inventoryquantity: 2,
+    },
+  ],
+  imagesOfItems: [
+    {
+      itemId: 1,
+      url: 'Game worn jersey from 1928-1930 !!!',
+      description: 'Babe Ruth ate so many hot dogs in this bad boy!',
+      alttext: 'Babe Ruth = Hot Dogs',
+    },
+    {
+      itemId: 2,
+      url: '2020 Chicago All Star Jordan 5 Special Release !!',
+      description: '1 of 1 ! !',
+      alttext: 'Never worn!',
+    },
+  ],
+  categories: [
+    {
+      id: 1,
+      name: 'Sports',
+      description: 'Rare sports memorabilia!',
+    },
+    {
+      id: 1,
+      name: 'Shoes',
+      description: 'Exclusive Shoes',
+    },
+  ],
   orders: [
     {
       userId: 1,
