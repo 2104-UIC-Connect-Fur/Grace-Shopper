@@ -4,12 +4,17 @@ const {
   createUser,
   createUserPayment,
   createUserAddress,
+  createOrder,
+  addItemToOrder,
   // other db methods
 } = require('./index');
 const {
   users: usersToCreate,
   userpayments: userPaymentsToCreate,
   useraddresses: userAddressesToCreate,
+  orders: ordersToCreate,
+  ordersitems: ordersItemsToCreate,
+
 } = require('./fakeData');
 
 async function buildTables() {
@@ -187,6 +192,32 @@ async function createInitialUserAddresses() {
   }
 }
 
+async function createInitialOrders() {
+  console.log('Starting to create orders...');
+  try {
+    const orders = await Promise.all(ordersToCreate.map(createOrder));
+    console.log('Orders created:');
+    console.log(orders);
+    console.log('Finished creating orders');
+  } catch (error) {
+    console.error('Error creating orders');
+    throw (error);
+  }
+}
+
+async function createInitialOrdersItems() {
+  console.log('Starting to create ordersitems...');
+  try {
+    const ordersitems = await Promise.all(ordersItemsToCreate.map(addItemToOrder));
+    console.log('Added items to orders:');
+    console.log(ordersitems);
+    console.log('Finished adding items to orders');
+  } catch (error) {
+    console.error('Error creating adding item to order');
+    throw (error);
+  }
+}
+
 async function populateInitialData() {
   try {
     // create useful starting data
@@ -194,6 +225,8 @@ async function populateInitialData() {
     await createInitialUsers();
     await createInitialUserPayments();
     await createInitialUserAddresses();
+    await createInitialOrders();
+    await createInitialOrdersItems();
   } catch (error) {
     throw error;
   }
