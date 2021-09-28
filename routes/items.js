@@ -5,7 +5,9 @@ const {
   getItemsByCategoryId,
 } = require('../db');
 
-itemsRouter.get('/', async (req, res, next) => {
+const { requireUser, requireAdmin } = require('./utils');
+
+itemsRouter.get('/', requireUser, async (req, res, next) => {
   try {
     const items = await getAllItems();
     res.send(items);
@@ -14,7 +16,7 @@ itemsRouter.get('/', async (req, res, next) => {
   }
 });
 
-itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
+itemsRouter.get('/bycategory/:categoryId', requireAdmin, async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);

@@ -4,6 +4,7 @@ const {
   createUser,
   createUserPayment,
   createUserAddress,
+  getUserById,
 } = require('./users');
 const {
   createOrder,
@@ -42,5 +43,6 @@ module.exports = {
   getAllItems,
   getItemsByCategoryId,
   createItemsCategories,
+  getUserById,
   // db methods
 };

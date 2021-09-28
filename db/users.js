@@ -11,15 +11,16 @@ async function createUser({
   email,
   phonenumber,
   zipcode,
+  isAdmin,
 }) {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const { rows: [user] } = await client.query(`
-          INSERT INTO users(username, password, firstname, lastname, email, phonenumber, zipcode) 
-          VALUES($1, $2, $3, $4, $5, $6, $7) 
+          INSERT INTO users(username, password, firstname, lastname, email, phonenumber, zipcode, isAdmin) 
+          VALUES($1, $2, $3, $4, $5, $6, $7, $8) 
           ON CONFLICT (username) DO NOTHING
           RETURNING *;
-        `, [username, hashedPassword, firstname, lastname, email, phonenumber, zipcode]);
+        `, [username, hashedPassword, firstname, lastname, email, phonenumber, zipcode, isAdmin]);
     delete user.password;
     return user;
   } catch (error) {
@@ -102,8 +103,21 @@ async function createUserAddress({
   }
 }
 
+async function getUserById(id) {
+  try {
+    const { rows: [user] } = await client.query(`
+        SELECT * FROM users
+        WHERE id=${id};
+      `);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   createUserPayment,
   createUserAddress,
+  getUserById,
 };

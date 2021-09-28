@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
+var cookieParser = require('cookie-parser');
 const { serverPort } = require('./config');
 const { client } = require('./db');
 
@@ -12,8 +13,9 @@ const PORT = process.env.PORT || serverPort;
 server.use(morgan('dev'));
 
 // handle application/json requests
+// add cookie parser
 server.use(express.json());
-
+server.use(cookieParser());
 // here's our static files
 server.use(express.static(path.join(__dirname, 'build')));
 
@@ -27,7 +29,7 @@ server.use((req, res, next) => {
 
 server.use((err, req, res, next) => {
   console.log('internal server error: ', err);
-  next();
+  res.send(err);
 });
 
 server.listen(PORT, async () => {
