@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 // This is the Web Server
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const { serverPort } = require('./config');
 const { client } = require('./db');
 
@@ -28,7 +29,8 @@ server.use((req, res, next) => {
 });
 
 server.use((err, req, res, next) => {
-  console.log('internal server error: ', err);
+  const { message } = err;
+  if (message) return res.send(message);
   res.send(err);
 });
 
@@ -39,6 +41,6 @@ server.listen(PORT, async () => {
     await client.connect();
     console.log('Database is open for business!');
   } catch (error) {
-    console.error('Database is closed for repairs!\n', error);
+    console.error('Database is closed for repairs! :(\n', error);
   }
 });

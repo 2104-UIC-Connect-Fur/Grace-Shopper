@@ -1,7 +1,9 @@
 const userRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { createUser, getUser, getUserByUsername, getUserById } = require('../db');
+const {
+  createUser, getUser, getUserByUsername, getUserById,
+} = require('../db');
 const { requireUser } = require('./utils');
 
 const { JWT_SECRET = 'default' } = process.env;
@@ -28,7 +30,6 @@ userRouter.post('/register', async (req, res, next) => {
 userRouter.post('/login', async (req, res, next) => {
   try {
     const userToLogin = req.body;
-    console.log('login request body: ', req.body);
     const { id: userId, username } = await getUser(userToLogin);
     if (userId) {
       const token = jwt.sign({ userId, username }, JWT_SECRET);
@@ -39,7 +40,18 @@ userRouter.post('/login', async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log('login error: ', error);
+    next(error);
+  }
+});
+
+userRouter.get('/logout', async (req, res, next) => {
+  try {
+    res.clearCookie('token');
+    res.send({
+      success: true,
+      message: 'Logged out.',
+    });
+  } catch (error) {
     next(error);
   }
 });
