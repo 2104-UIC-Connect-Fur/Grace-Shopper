@@ -24,12 +24,6 @@ apiRouter.use(async (req, res, next) => {
   }
 });
 
-apiRouter.get('/cookie', (req, res) => {
-  const token = jwt.sign({ userId: 1 }, JWT_SECRET);
-  res.cookie('token', token, { httpOnly: true });
-  res.json('you got cookie?');
-});
-
 apiRouter.use('/items', itemsRouter);
 apiRouter.use('/users', userRouter);
 

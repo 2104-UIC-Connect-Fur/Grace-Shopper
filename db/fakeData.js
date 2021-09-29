@@ -10,7 +10,7 @@ module.exports = {
       zipcode: '93101',
     },
     {
-      username: 'cat catsby',
+      username: 'catcatsby',
       password: 'password',
       firstname: 'sydney',
       lastname: 'kitteh',
@@ -111,6 +111,8 @@ module.exports = {
     {
       itemId: 3,
       categoryId: 1,
+    },
+  ],
   discounts: [
     {
       name: 'newuser',
