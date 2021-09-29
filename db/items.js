@@ -1,6 +1,8 @@
-const { client } = require("./client");
+const { client } = require('./client');
 
-async function createItems({ title, description, price, inventoryquantity }) {
+async function createItems({
+  title, description, price, inventoryquantity,
+}) {
   try {
     const {
       rows: [item],
@@ -10,7 +12,7 @@ async function createItems({ title, description, price, inventoryquantity }) {
             VALUES($1, $2, $3, $4) 
             RETURNING *;
           `,
-      [title, description, price, inventoryquantity]
+      [title, description, price, inventoryquantity],
     );
     return item;
   } catch (error) {
@@ -18,7 +20,9 @@ async function createItems({ title, description, price, inventoryquantity }) {
   }
 }
 
-async function createItemImages({ itemId, url, description, alttext }) {
+async function createItemImages({
+  itemId, url, description, alttext,
+}) {
   try {
     const {
       rows: [image],
@@ -28,7 +32,7 @@ async function createItemImages({ itemId, url, description, alttext }) {
               VALUES($1, $2, $3, $4) 
               RETURNING *;
             `,
-      [itemId, url, description, alttext]
+      [itemId, url, description, alttext],
     );
     return image;
   } catch (error) {
@@ -46,7 +50,7 @@ async function createCategories({ name, description }) {
                 VALUES($1, $2) 
                 RETURNING *;
               `,
-      [name, description]
+      [name, description],
     );
     return categories;
   } catch (error) {

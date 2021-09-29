@@ -102,8 +102,32 @@ async function createUserAddress({
   }
 }
 
+// What other fields should be included on the cart?
+
+async function getUserCart(userId) {
+  try {
+    const { rows: [userCart] } = await client.query(`
+      SELECT users.id AS "userId", users.username, orders.id AS "orderId", orders.total, orders.complete
+      FROM users
+      JOIN orders ON users.id = orders."userId"
+      WHERE users.id = $1 AND orders.complete = false;
+    `, [userId]);
+    const { rows: ordersitems } = await client.query(`
+      SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
+      FROM ordersitems
+      JOIN items ON ordersitems."itemId" = items.id
+      WHERE ordersitems."orderId" = ${userCart.orderId};
+    `);
+    userCart.items = ordersitems;
+    return userCart;
+  } catch (error) {
+    throw (error);
+  }
+}
+
 module.exports = {
   createUser,
   createUserPayment,
   createUserAddress,
+  getUserCart,
 };
