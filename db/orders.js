@@ -66,7 +66,7 @@ async function createOrder({
   }
 }
 
-async function getOrderById({ id }) {
+async function getOrderById(id) {
   try {
     const {
       rows: [order],
@@ -84,7 +84,7 @@ async function getOrderById({ id }) {
   }
 }
 
-async function getOrdersByUserId({ userId }) {
+async function getOrdersByUserId(userId) {
   try {
     const { rows: orders } = await client.query(
       `
@@ -113,6 +113,19 @@ async function getAllIncompleteOrders() {
   }
 }
 
+async function getIncompleteOrdersByUserId(userId) {
+  try {
+    const { rows: orders } = await client.query(`
+            SELECT *
+            FROM orders
+            WHERE "userId"=$1 AND complete=false;
+        `, [userId]);
+    return orders;
+  } catch (error) {
+    throw (error);
+  }
+}
+
 async function getAllCompleteOrders() {
   try {
     const { rows: orders } = await client.query(`
@@ -126,10 +139,52 @@ async function getAllCompleteOrders() {
   }
 }
 
+async function getCompleteOrdersByUserId(userId) {
+  try {
+    const { rows: orders } = await client.query(`
+            SELECT *
+            FROM orders
+            WHERE "userId"=$1 AND complete=true;
+        `, [userId]);
+    return orders;
+  } catch (error) {
+    throw (error);
+  }
+}
+
+/* Currently returns all fields from matching items. Complete and purchaseprice fields
+    update as they should. What other changes should happen when a customer completes
+    their order?
+*/
+async function completeOrder(orderId) {
+  try {
+    const { rows: [order] } = await client.query(`
+            UPDATE orders
+            SET complete = true
+            WHERE id = $1
+            RETURNING *;
+        `, [orderId]);
+    const { rows: ordersitems } = await client.query(`
+            UPDATE ordersitems
+            SET priceatpurchase = items.price
+            FROM items
+            WHERE "orderId" = $1 AND ordersitems."itemId" = items.id
+            RETURNING *;
+        `, [orderId]);
+    order.items = ordersitems;
+    return order;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createOrder,
   getOrderById,
   getOrdersByUserId,
   getAllIncompleteOrders,
   getAllCompleteOrders,
+  getIncompleteOrdersByUserId,
+  getCompleteOrdersByUserId,
+  completeOrder,
 };
