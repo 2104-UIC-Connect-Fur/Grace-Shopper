@@ -122,7 +122,10 @@ async function getUser({ username, password }) {
     if (passwordsMatch) {
       return fetchedUser;
     }
-    throw new Error('Username and password do not match. Try again.');
+    throw {
+      success: false,
+      message: 'Username or password does not match. Please try again.',
+    };
   } catch (error) {
     throw error;
   }

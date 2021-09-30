@@ -2,7 +2,10 @@ const userRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const {
-  createUser, getUser, getUserByUsername, getUserById,
+  createUser,
+  getUser,
+  getUserByUsername,
+  getUserCart,
 } = require('../db');
 const { requireUser } = require('./utils');
 
@@ -13,6 +16,7 @@ userRouter.post('/register', async (req, res, next) => {
     const existingUser = await getUserByUsername(req.body.username);
     if (existingUser) {
       next({
+        success: false,
         name: 'userAlreadyExistError',
         message: 'A user already exists by that name.',
       });
@@ -21,7 +25,10 @@ userRouter.post('/register', async (req, res, next) => {
     const { id, username } = await createUser(userToCreate);
     const token = jwt.sign({ userId: id, username }, JWT_SECRET);
     res.cookie('token', token, { httpOnly: true });
-    return res.send(`success! user created: ${username}`);
+    return res.send({
+      success: true,
+      message: `success! user created: ${username}`,
+    });
   } catch (error) {
     next(error);
   }
@@ -69,6 +76,23 @@ userRouter.get('/me', requireUser, async (req, res, next) => {
       successs: false,
       name: 'meLookupFail',
       message: 'user lookup failed',
+    });
+  }
+});
+
+userRouter.get('/cart', requireUser, async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const cart = await getUserCart(id);
+    res.send({
+      success: true,
+      cart,
+    });
+  } catch (error) {
+    next({
+      successs: false,
+      name: 'cartFail',
+      message: 'cart lookup failed',
     });
   }
 });

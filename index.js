@@ -29,8 +29,13 @@ server.use((req, res, next) => {
 });
 
 server.use((err, req, res, next) => {
-  const { message } = err;
-  if (message) return res.send(message);
+  const { message, success } = err;
+  if (message) {
+    return res.send({
+      success,
+      message,
+    });
+  }
   res.send(err);
 });
 
