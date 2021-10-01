@@ -1,21 +1,34 @@
-import React, { useState, useEffect } from 'react';
-
-import {
-  getSomething,
-} from '../api';
+import React, { useContext, useEffect } from 'react';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import Items from './Items';
+import { store } from './State';
+import Axios from 'axios';
 
 const App = () => {
-  const [message, setMessage] = useState('');
-
+  const { state, dispatch } = useContext(store);
+  const { isLoggedIn, username } = state;
   useEffect(() => {
-    getSomething()
-      .then((response) => {
-        setMessage(response.message);
-      })
-      .catch((error) => {
-        setMessage(error.message);
-      });
-  });
+    const checkForLogin = async () => {
+      const config = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const { data: { success, username } } = await Axios.get('/api/users/me', config);
+      if (success) {
+        dispatch({
+          type: 'updateIsLoggedIn',
+          value: true,
+        });
+        dispatch({
+          type: 'setUsername',
+          value: username,
+        });
+      }
+    };
+    checkForLogin();
+  }, []);
 
   const loginClickHandler = async () => {
     const body = {
@@ -31,8 +44,17 @@ const App = () => {
     };
 
     const fetchResult = await fetch('/api/users/login', config);
-    const json = await fetchResult.json();
-    console.log(json);
+    const { success, loggedInUser } = await fetchResult.json();
+    if (success) {
+      dispatch({
+        type: 'updateIsLoggedIn',
+        value: true,
+      });
+      dispatch({
+        type: 'setUsername',
+        value: loggedInUser,
+      });
+    }
   };
 
   const logoutClickHandler = async () => {
@@ -45,16 +67,47 @@ const App = () => {
 
     const fetchResult = await fetch('/api/users/logout', config);
     const json = await fetchResult.json();
-    console.log(json);
+    dispatch({
+      type: 'updateIsLoggedIn',
+      value: false,
+    });
+    dispatch({
+      type: 'deleteUsername',
+      value: null,
+    });
   };
 
   return (
-    <div className="App">
-      <h1>Hello, Michael!</h1>
-      <h2>{ message }</h2>
-      <button onClick={loginClickHandler} type="button">Log in catcatsby</button>
-      <button onClick={logoutClickHandler} type="button">Log out</button>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Switch>
+          <Route exact path="/items" component={Items} />
+          <Route path="/">
+            <header className="App-header">
+              <h1>RARE SHIT</h1>
+            </header>
+            <div>
+              {
+                isLoggedIn
+                && (
+                  <p>
+                    Logged in as
+                    {' '}
+                    {username}
+                  </p>
+                )
+              }
+            </div>
+            <div>
+              <button onClick={loginClickHandler} type="button">Log in catcatsby</button>
+            </div>
+            <div>
+              <button onClick={logoutClickHandler} type="button">Log out</button>
+            </div>
+          </Route>
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 };
 
