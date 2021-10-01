@@ -43,7 +43,7 @@ userRouter.post('/login', async (req, res, next) => {
       res.cookie('token', token, { httpOnly: true });
       return res.send({
         success: true,
-        message: 'Login successful!',
+        loggedInUser: username,
       });
     }
   } catch (error) {
@@ -67,13 +67,13 @@ userRouter.get('/me', requireUser, async (req, res, next) => {
   try {
     const { id, username } = req.user;
     res.send({
-      successs: true,
+      success: true,
       id,
       username,
     });
   } catch (error) {
     next({
-      successs: false,
+      success: false,
       name: 'meLookupFail',
       message: 'user lookup failed',
     });
@@ -90,7 +90,7 @@ userRouter.get('/cart', requireUser, async (req, res, next) => {
     });
   } catch (error) {
     next({
-      successs: false,
+      success: false,
       name: 'cartFail',
       message: 'cart lookup failed',
     });
