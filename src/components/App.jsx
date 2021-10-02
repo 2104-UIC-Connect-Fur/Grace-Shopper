@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
-import Items from './Items';
-import { store } from './State';
 import Axios from 'axios';
+import Items from './Items';
+import Login from './Login';
+import { store } from './State';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
@@ -82,6 +83,7 @@ const App = () => {
       <div className="App">
         <Switch>
           <Route exact path="/items" component={Items} />
+          <Route exact path="/login" component={Login} />
           <Route path="/">
             <header className="App-header">
               <h1>RARE SHIT</h1>
