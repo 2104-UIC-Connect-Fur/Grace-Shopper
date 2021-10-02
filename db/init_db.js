@@ -15,17 +15,22 @@ const {
   getAllImages,
   updateItem,
   getItemsByCategoryName,
+  getUserCart,
+  createReview,
+  createDiscount,
   // other db methods
 } = require("./index");
 const {
   users: usersToCreate,
   userpayments: userPaymentsToCreate,
   useraddresses: userAddressesToCreate,
+  discounts: discountsToCreate,
   orders: ordersToCreate,
   ordersitems: ordersItemsToCreate,
   items: itemsToCreate,
   imagesOfItems: imagesToDisplay,
   categories: createdCategories,
+  reviews: reviewsToCreate,
 } = require("./fakeData");
 
 async function buildTables() {
@@ -344,7 +349,31 @@ async function updateTheItem() {
     return updatedItems;
   } catch (error) {
     console.log("Error updating item!");
+    throw error;
+  }
+}
+async function createInitialReviews() {
+  console.log("Starting to create reviews...");
+  try {
+    const reviews = await Promise.all(reviewsToCreate.map(createReview));
+    console.log("Reviews created:");
+    console.log(reviews);
+    console.log("Finished creating reviews!");
+  } catch (error) {
+    console.error("Error creating reviews");
+    throw error;
+  }
+}
 
+async function createInitialDiscounts() {
+  console.log("Starting to create discounts...");
+  try {
+    const discounts = await Promise.all(discountsToCreate.map(createDiscount));
+    console.log("Discounts created:");
+    console.log(discounts);
+    console.log("Finished creating discounts!");
+  } catch (error) {
+    console.error("Error creating discounts");
     throw error;
   }
 }
@@ -362,6 +391,19 @@ async function getItemsByCategories() {
   }
 }
 
+async function fetchTestCart() {
+  console.log("Starting to fetch cart...");
+  try {
+    const cart = await getUserCart(1);
+    console.log("Cart fetched:");
+    console.log(cart);
+    console.log("Finished fetching test cart!");
+  } catch (error) {
+    console.error("Error fetching test cart");
+    throw error;
+  }
+}
+
 async function populateInitialData() {
   try {
     // create useful starting data
@@ -370,6 +412,7 @@ async function populateInitialData() {
     await createInitialUserPayments();
     await createInitialUserAddresses();
     await createInitialItems();
+    await createInitialDiscounts();
     await createInitialOrders();
     await createInitialOrdersItems();
     await createInitialImages();
@@ -380,6 +423,8 @@ async function populateInitialData() {
     await getAllAvailableImages();
     await updateTheItem();
     await getItemsByCategories();
+    await createInitialReviews();
+    await fetchTestCart();
   } catch (error) {
     throw error;
   }

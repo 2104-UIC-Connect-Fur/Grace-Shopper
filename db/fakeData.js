@@ -105,6 +105,20 @@ module.exports = {
       description: "Exclusive Shoes",
     },
   ],
+  discounts: [
+    {
+      name: 'newuser',
+      type: 'fixed',
+      description: 'Introductory offer to new users',
+      amount: 1000,
+    },
+    {
+      name: 'tistheseason',
+      type: 'fixed',
+      description: 'seasonal discount',
+      amount: 2000,
+    },
+  ],
   orders: [
     {
       userId: 1,
@@ -137,6 +151,22 @@ module.exports = {
       ccexpiration: "1/24",
       cczipcode: "54965",
     },
+    {
+      userId: 1,
+      total: 1233,
+      complete: false,
+      street: '777 Jackpot Avenue',
+      apartment: '11',
+      city: 'Atlantic City',
+      state: 'New Jersey',
+      zipcode: '08201',
+      nameoncard: 'Berry Johnson',
+      billingaddress: '777 Jackpot Avenue, 11, Atlantic City, NJ 08201',
+      ccnumber: 123456789,
+      ccsecuritycode: 555,
+      ccexpiration: '10/25',
+      cczipcode: '08201',
+    },
   ],
   ordersitems: [
     {
@@ -156,6 +186,32 @@ module.exports = {
       itemId: 2,
       quantity: 15,
       priceatpurchase: 542,
+    },
+    {
+      orderId: 3,
+      itemId: 2,
+      quantity: 2,
+      priceatpurchase: 600,
+    },
+    {
+      orderId: 3,
+      itemId: 1,
+      quantity: 4,
+      priceatpurchase: 340,
+    },
+  ],
+  reviews: [
+    {
+      itemId: 1,
+      userId: 1,
+      title: 'What a jersey!',
+      bodytext: 'You can still see all the mustard stains!',
+    },
+    {
+      itemId: 2,
+      userId: 2,
+      title: 'Gorgeous shoes',
+      bodytext: 'I still cant hit a jumper, but at least I look good.',
     },
   ],
 };

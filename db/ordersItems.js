@@ -41,8 +41,22 @@ async function updateItemQuantityOnOrder({ orderId, itemId, quantity }) {
   }
 }
 
+async function updatePriceAtPurchase({ orderId, itemId, priceatpurchase }) {
+  try {
+    const { rows: [item] } = await client.query(`
+            UPDATE ordersitems
+            SET priceatpurchase=$3
+            WHERE "orderId"=$1 AND "itemId"=$2;
+        `, [orderId, itemId, priceatpurchase]);
+    return item;
+  } catch (error) {
+    throw (error);
+  }
+}
+
 module.exports = {
   addItemToOrder,
   deleteItemFromOrder,
   updateItemQuantityOnOrder,
+  updatePriceAtPurchase,
 };
