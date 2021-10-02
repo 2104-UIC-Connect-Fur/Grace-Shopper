@@ -61,9 +61,28 @@ async function updateItem({ id, price, inventoryquantity }) {
   }
 }
 
+async function createItemsCategories({ itemId, categoryId }) {
+  try {
+    const {
+      rows: [itemcategory],
+    } = await client.query(
+      `
+                INSERT INTO itemscategories("itemId", "categoryId") 
+                VALUES($1, $2) 
+                RETURNING *;
+              `,
+      [itemId, categoryId]
+    );
+    return itemcategory;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createItems,
   getItemsById,
   getAllItems,
   updateItem,
+  createItemsCategories,
 };

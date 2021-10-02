@@ -15,6 +15,7 @@ const {
   getAllImages,
   updateItem,
   getItemsByCategoryName,
+  createItemsCategories,
   getUserCart,
   createReview,
   createDiscount,
@@ -30,6 +31,7 @@ const {
   items: itemsToCreate,
   imagesOfItems: imagesToDisplay,
   categories: createdCategories,
+  itemscategories: itemcategoriesToCreate,
   reviews: reviewsToCreate,
 } = require("./fakeData");
 
@@ -296,6 +298,21 @@ async function getItems() {
   }
 }
 
+async function createInitialItemsCategories() {
+  console.log("Starting to create user Items categories...");
+  try {
+    const categories = await Promise.all(
+      itemcategoriesToCreate.map(createItemsCategories)
+    );
+    console.log("Items categories created:");
+    console.log(categories);
+    console.log("Finished creating Items categories!");
+  } catch (error) {
+    console.error("Error creating Items categories");
+    throw error;
+  }
+}
+
 async function itemsWithNoImages() {
   console.log("Starting to get all Items with NO images ...");
   try {
@@ -423,6 +440,7 @@ async function populateInitialData() {
     await getAllAvailableImages();
     await updateTheItem();
     await getItemsByCategories();
+    await createInitialItemsCategories();
     await createInitialReviews();
     await fetchTestCart();
   } catch (error) {

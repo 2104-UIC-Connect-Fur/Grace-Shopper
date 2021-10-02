@@ -1,5 +1,5 @@
 module.exports = {
-  port: 3000,
+  serverPort: 8080,
   dbName: "rareshit",
   dbPort: 5432,
 };

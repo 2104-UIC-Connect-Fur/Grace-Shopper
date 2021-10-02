@@ -36,7 +36,24 @@ async function getItemsByCategoryName({ name }) {
   }
 }
 
+async function getItemsByCategoryId(categoryId) {
+  try {
+    const { rows: items } = await client.query(
+      `
+            SELECT items.title, items.description, items.price
+            FROM itemscategories
+            JOIN items ON itemscategories."itemId"=items.id
+            WHERE "categoryId"=${categoryId};
+          `
+    );
+    return items;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createCategories,
   getItemsByCategoryName,
+  getItemsByCategoryId,
 };

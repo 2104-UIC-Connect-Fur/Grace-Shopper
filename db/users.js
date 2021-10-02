@@ -11,6 +11,7 @@ async function createUser({
   email,
   phonenumber,
   zipcode,
+  isAdmin,
 }) {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -18,8 +19,8 @@ async function createUser({
       rows: [user],
     } = await client.query(
       `
-          INSERT INTO users(username, password, firstname, lastname, email, phonenumber, zipcode) 
-          VALUES($1, $2, $3, $4, $5, $6, $7) 
+          INSERT INTO users(username, password, firstname, lastname, email, phonenumber, zipcode, isAdmin) 
+          VALUES($1, $2, $3, $4, $5, $6, $7, $8) 
           ON CONFLICT (username) DO NOTHING
           RETURNING *;
         `,
@@ -31,6 +32,7 @@ async function createUser({
         email,
         phonenumber,
         zipcode,
+        isAdmin,
       ]
     );
     delete user.password;
@@ -118,16 +120,67 @@ async function createUserAddress({
   }
 }
 
+async function getUserByUsername(username) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT * FROM users
+        WHERE username = $1;
+      `,
+      [username]
+    );
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUser({ username, password }) {
+  try {
+    const fetchedUser = await getUserByUsername(username);
+    const passwordsMatch = await bcrypt.compare(password, fetchedUser.password);
+    if (passwordsMatch) {
+      return fetchedUser;
+    }
+    throw {
+      success: false,
+      message: "Username or password does not match. Please try again.",
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserById(id) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+        SELECT * FROM users
+        WHERE id=${id};
+      `);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
 // What other fields should be included on the cart?
 
 async function getUserCart(userId) {
   try {
-    const { rows: [userCart] } = await client.query(`
+    const {
+      rows: [userCart],
+    } = await client.query(
+      `
       SELECT users.id AS "userId", users.username, orders.id AS "orderId", orders.total, orders.complete
       FROM users
       JOIN orders ON users.id = orders."userId"
       WHERE users.id = $1 AND orders.complete = false;
-    `, [userId]);
+    `,
+      [userId]
+    );
     const { rows: ordersitems } = await client.query(`
       SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
       FROM ordersitems
@@ -137,7 +190,7 @@ async function getUserCart(userId) {
     userCart.items = ordersitems;
     return userCart;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
@@ -145,5 +198,8 @@ module.exports = {
   createUser,
   createUserPayment,
   createUserAddress,
+  getUserById,
   getUserCart,
+  getUser,
+  getUserByUsername,
 };
