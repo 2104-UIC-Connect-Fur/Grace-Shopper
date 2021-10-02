@@ -38,17 +38,10 @@ userRouter.post('/login', async (req, res, next) => {
   try {
     const userToLogin = req.body;
     const { id: userId, username } = await getUser(userToLogin);
-    if (userId && userToLogin.rememberMe) {
-      const token = jwt.sign({ userId, username }, JWT_SECRET);
-      res.cookie('token', token, { expire: new Date() + 60480000 }, { httpOnly: true });
-      return res.send({
-        success: true,
-        loggedInUser: username,
-      });
-    }
+    const expiration = userToLogin.rememberMe ? 60480000 : 'Session';
     if (userId) {
       const token = jwt.sign({ userId, username }, JWT_SECRET);
-      res.cookie('token', token, { httpOnly: true });
+      res.cookie('token', token, { maxAge: expiration }, { httpOnly: true });
       return res.send({
         success: true,
         loggedInUser: username,
