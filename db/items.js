@@ -18,37 +18,44 @@ async function createItems({ title, description, price, inventoryquantity }) {
   }
 }
 
-async function createItemImages({ itemId, url, description, alttext }) {
+async function getItemsById({ id }) {
   try {
-    const {
-      rows: [image],
-    } = await client.query(
+    const { item } = await client.query(
       `
-              INSERT INTO itemsimages("itemId", url, description,alttext) 
-              VALUES($1, $2, $3, $4) 
-              RETURNING *;
-            `,
-      [itemId, url, description, alttext]
+        Select * from items
+        WHERE id=$1; 
+        `,
+      [id]
     );
-    return image;
+    return item;
   } catch (error) {
     throw error;
   }
 }
 
-async function createCategories({ name, description }) {
+async function getAllItems() {
+  try {
+    const { rows: items } = await client.query("SELECT * FROM ITEMS;");
+    return items;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateItem({ id, price, inventoryquantity }) {
   try {
     const {
-      rows: [categories],
+      rows: [item],
     } = await client.query(
       `
-                INSERT INTO categories(name, description) 
-                VALUES($1, $2) 
-                RETURNING *;
-              `,
-      [name, description]
+            UPDATE items
+            SET price=$2, inventoryquantity=$3
+            WHERE id=$1
+            Returning *;
+        `,
+      [id, price, inventoryquantity]
     );
-    return categories;
+    return item;
   } catch (error) {
     throw error;
   }
@@ -56,6 +63,7 @@ async function createCategories({ name, description }) {
 
 module.exports = {
   createItems,
-  createItemImages,
-  createCategories,
+  getItemsById,
+  getAllItems,
+  updateItem,
 };

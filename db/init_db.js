@@ -9,8 +9,14 @@ const {
   createItems,
   createItemImages,
   createCategories,
+  getAllItems,
+  itemsMissingImages,
+  getImagesByItemId,
+  getAllImages,
+  updateItem,
+  getItemsByCategoryName,
   // other db methods
-} = require('./index');
+} = require("./index");
 const {
   users: usersToCreate,
   userpayments: userPaymentsToCreate,
@@ -20,12 +26,12 @@ const {
   items: itemsToCreate,
   imagesOfItems: imagesToDisplay,
   categories: createdCategories,
-} = require('./fakeData');
+} = require("./fakeData");
 
 async function buildTables() {
   try {
     client.connect();
-    console.log('dropping tables...');
+    console.log("dropping tables...");
     // drop tables in correct order
     await client.query(`
   DROP TABLE IF EXISTS itemscategories;
@@ -41,9 +47,9 @@ async function buildTables() {
   DROP TABLE IF EXISTS users;
   `);
 
-    console.log('completed dropping tables...');
+    console.log("completed dropping tables...");
 
-    console.log('building tables...');
+    console.log("building tables...");
     await client.query(`
     CREATE TABLE users(
       id SERIAL PRIMARY KEY,
@@ -88,7 +94,7 @@ async function buildTables() {
     );
 
     CREATE TABLE itemsimages(
-      id SERIAL PRIMARY KEY,
+      id SERIAL PRIMARY KEY,  
       "itemId" INTEGER REFERENCES items(id),
       url TEXT NOT NULL,
       description TEXT NOT NULL,
@@ -151,7 +157,7 @@ async function buildTables() {
       );
       `);
 
-    console.log('completed creating tables...');
+    console.log("completed creating tables...");
     // build tables in correct order
   } catch (error) {
     throw error;
@@ -159,118 +165,207 @@ async function buildTables() {
 }
 
 async function createInitialUsers() {
-  console.log('Starting to create users...');
+  console.log("Starting to create users...");
   try {
     const users = await Promise.all(usersToCreate.map(createUser));
-    console.log('Users created:');
+    console.log("Users created:");
     console.log(users);
-    console.log('Finished creating users!');
+    console.log("Finished creating users!");
   } catch (error) {
-    console.error('Error creating users!');
+    console.error("Error creating users!");
     throw error;
   }
 }
 
 async function createInitialUserPayments() {
-  console.log('Starting to create user payments...');
+  console.log("Starting to create user payments...");
   try {
     const userPayments = await Promise.all(
-      userPaymentsToCreate.map(createUserPayment),
+      userPaymentsToCreate.map(createUserPayment)
     );
-    console.log('Users payments created:');
+    console.log("Users payments created:");
     console.log(userPayments);
-    console.log('Finished creating user payments!');
+    console.log("Finished creating user payments!");
   } catch (error) {
-    console.error('Error creating user payments!');
+    console.error("Error creating user payments!");
     throw error;
   }
 }
 
 async function createInitialUserAddresses() {
-  console.log('Starting to create user addresses...');
+  console.log("Starting to create user addresses...");
   try {
     const userAddresses = await Promise.all(
-      userAddressesToCreate.map(createUserAddress),
+      userAddressesToCreate.map(createUserAddress)
     );
-    console.log('Users addresses created:');
+    console.log("Users addresses created:");
     console.log(userAddresses);
-    console.log('Finished creating user addresses!');
+    console.log("Finished creating user addresses!");
   } catch (error) {
-    console.error('Error creating user addresses!');
+    console.error("Error creating user addresses!");
     throw error;
   }
 }
 
 async function createInitialOrders() {
-  console.log('Starting to create orders...');
+  console.log("Starting to create orders...");
   try {
     const orders = await Promise.all(ordersToCreate.map(createOrder));
-    console.log('Orders created:');
+    console.log("Orders created:");
     console.log(orders);
-    console.log('Finished creating orders');
+    console.log("Finished creating orders");
   } catch (error) {
-    console.error('Error creating orders');
-    throw (error);
+    console.error("Error creating orders");
+    throw error;
   }
 }
 
 async function createInitialOrdersItems() {
-  console.log('Starting to create ordersitems...');
+  console.log("Starting to create ordersitems...");
   try {
-    const ordersitems = await Promise.all(ordersItemsToCreate.map(addItemToOrder));
-    console.log('Added items to orders:');
+    const ordersitems = await Promise.all(
+      ordersItemsToCreate.map(addItemToOrder)
+    );
+    console.log("Added items to orders:");
     console.log(ordersitems);
-    console.log('Finished adding items to orders');
+    console.log("Finished adding items to orders");
   } catch (error) {
-    console.error('Error creating adding item to order');
-    throw (error);
+    console.error("Error creating adding item to order");
+    throw error;
   }
 }
 
 async function createInitialItems() {
-  console.log('Starting to create user items...');
+  console.log("Starting to create user items...");
   try {
     const items = await Promise.all(itemsToCreate.map(createItems));
-    console.log('Items created:');
+    console.log("Items created:");
     console.log(items);
-    console.log('Finished creating items!');
+    console.log("Finished creating items!");
   } catch (error) {
-    console.error('Error creating items');
+    console.error("Error creating items");
     throw error;
   }
 }
 
 async function createInitialImages() {
-  console.log('Starting to create images...');
+  console.log("Starting to create images...");
   try {
-    const items = await Promise.all(imagesToDisplay.map(createItemImages));
-    console.log('Images created:');
-    console.log(items);
-    console.log('Finished creating Images!');
+    const imagesOfItems = await Promise.all(
+      imagesToDisplay.map(createItemImages)
+    );
+    console.log("Images created:");
+    console.log(imagesOfItems);
+    console.log("Finished creating Images!");
   } catch (error) {
-    console.error('Error creating Images');
+    console.error("Error creating Images");
     throw error;
   }
 }
 
 async function createInitialCategories() {
-  console.log('Starting to create user Categories...');
+  console.log("Starting to create user Categories...");
   try {
     const categories = await Promise.all(
-      createdCategories.map(createCategories),
+      createdCategories.map(createCategories)
     );
-    console.log('Categories created:');
+    console.log("Categories created:");
     console.log(categories);
-    console.log('Finished creating categories!');
+    console.log("Finished creating categories!");
   } catch (error) {
-    console.error('Error creating categories');
+    console.error("Error creating categories");
     throw error;
   }
 }
+
+async function getItems() {
+  console.log("Starting to get ALL Items ...");
+  try {
+    const items = await getAllItems();
+    console.log("All Items Selected:");
+    console.log(items);
+    console.log("Finished Selecting All items!");
+  } catch (error) {
+    console.error("Error selecting ALL items");
+    throw error;
+  }
+}
+
+async function itemsWithNoImages() {
+  console.log("Starting to get all Items with NO images ...");
+  try {
+    const imagesOfItems = await itemsMissingImages();
+    console.log("All Items Missing Images:");
+    console.log(imagesOfItems);
+    console.log("Finished Selecting all items missing Images!");
+  } catch (error) {
+    console.error("Error selecting items missing Images");
+    throw error;
+  }
+}
+
+async function getItemsImagesById() {
+  console.log("Starting to get images by itemId...");
+  try {
+    const imagesOfItems = await Promise.all(
+      imagesToDisplay.map(getImagesByItemId)
+    );
+    console.log("Image retrieved by itemId", imagesOfItems[1]);
+    console.log("Finished getting images by itemId!");
+  } catch (error) {
+    console.error("Error creating images by itemId!");
+    throw error;
+  }
+}
+
+async function getAllAvailableImages() {
+  console.log("Starting to get All items with Images...");
+  try {
+    const imagesOfAllItems = await getAllImages();
+    console.log("Displaying all items with an image URL");
+    console.log(imagesOfAllItems);
+    console.log("Finished getting All images");
+  } catch (error) {
+    console.error("Error displaying All images!");
+    throw error;
+  }
+}
+
+async function updateTheItem() {
+  console.log("Calling updateItem on item");
+  try {
+    const updatedItems = await updateItem({
+      id: 1,
+      price: 1234,
+      inventoryquantity: 7,
+    });
+    console.log("Item is being updated");
+    console.log("Updates:", updatedItems);
+    return updatedItems;
+  } catch (error) {
+    console.log("Error updating item!");
+
+    throw error;
+  }
+}
+
+async function getItemsByCategories() {
+  console.log("Starting to get Categories by name...");
+  try {
+    const itemsBycategories = await getItemsByCategoryName({ name: "Sports" });
+    console.log("Starting to get Categories by name");
+    console.log(itemsBycategories);
+    console.log("Finished getting items by Categories!");
+  } catch (error) {
+    console.error("Error getting items categories");
+    throw error;
+  }
+}
+
 async function populateInitialData() {
   try {
     // create useful starting data
-    console.log('populating data...');
+    console.log("populating data...");
     await createInitialUsers();
     await createInitialUserPayments();
     await createInitialUserAddresses();
@@ -279,6 +374,12 @@ async function populateInitialData() {
     await createInitialOrdersItems();
     await createInitialImages();
     await createInitialCategories();
+    await getItems();
+    await itemsWithNoImages();
+    await getItemsImagesById();
+    await getAllAvailableImages();
+    await updateTheItem();
+    await getItemsByCategories();
   } catch (error) {
     throw error;
   }
