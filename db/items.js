@@ -1,6 +1,9 @@
-const { client } = require("./client");
+/* eslint-disable no-useless-catch */
+const { client } = require('./client');
 
-async function createItems({ title, description, price, inventoryquantity }) {
+async function createItems({
+  title, description, price, inventoryquantity,
+}) {
   try {
     const {
       rows: [item],
@@ -10,7 +13,7 @@ async function createItems({ title, description, price, inventoryquantity }) {
             VALUES($1, $2, $3, $4) 
             RETURNING *;
           `,
-      [title, description, price, inventoryquantity]
+      [title, description, price, inventoryquantity],
     );
     return item;
   } catch (error) {
@@ -25,7 +28,7 @@ async function getItemsById({ id }) {
         Select * from items
         WHERE id=$1; 
         `,
-      [id]
+      [id],
     );
     return item;
   } catch (error) {
@@ -35,7 +38,49 @@ async function getItemsById({ id }) {
 
 async function getAllItems() {
   try {
-    const { rows: items } = await client.query("SELECT * FROM ITEMS;");
+    const { rows: items } = await client.query('SELECT * FROM ITEMS;');
+    return items;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getItemsFromQuery(queryObject) {
+  try {
+    const {
+      priceLow,
+      priceHigh,
+      searchString,
+      categoryIds = [],
+      page = 1,
+      count = 25,
+    } = queryObject;
+    const whereConditions = priceLow || priceHigh || searchString;
+    const joinedCategories = categoryIds.join(',');
+    const categoryString = `JOIN itemscategories ON itemscategories."categoryId" IN (${joinedCategories})
+    AND itemscategories."itemId"=items.id
+    `;
+    const searchStringforQuery = `
+      (title iLIKE '%${searchString}%' OR
+      description iLIKE '%${searchString}%')
+    `;
+    const rowsToSkip = (page - 1) * count;
+    const queryString = `
+    SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id
+    FROM ITEMS
+    ${categoryIds.length ? categoryString : ''}
+    ${whereConditions ? 'WHERE' : ''}
+    ${priceLow ? `price >= ${priceLow}` : ''}
+    ${(priceLow && priceHigh) ? 'AND' : ''}
+    ${priceHigh ? `price <= ${priceHigh}` : ''}
+    ${(priceLow || priceHigh) && searchString ? 'AND' : ''}
+    ${searchString ? `${searchStringforQuery}` : ''}
+    OFFSET ${rowsToSkip} ROWS
+    FETCH NEXT ${count} ROWS ONLY;
+    ;
+    `;
+    console.log('query: ', queryObject, 'query string: ', queryString);
+    const { rows: items } = await client.query(queryString);
     return items;
   } catch (error) {
     throw error;
@@ -53,7 +98,7 @@ async function updateItem({ id, price, inventoryquantity }) {
             WHERE id=$1
             Returning *;
         `,
-      [id, price, inventoryquantity]
+      [id, price, inventoryquantity],
     );
     return item;
   } catch (error) {
@@ -71,7 +116,7 @@ async function createItemsCategories({ itemId, categoryId }) {
                 VALUES($1, $2) 
                 RETURNING *;
               `,
-      [itemId, categoryId]
+      [itemId, categoryId],
     );
     return itemcategory;
   } catch (error) {
@@ -85,4 +130,5 @@ module.exports = {
   getAllItems,
   updateItem,
   createItemsCategories,
+  getItemsFromQuery,
 };

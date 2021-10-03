@@ -10,3 +10,13 @@ export async function getMe() {
     throw error;
   }
 }
+
+export async function getAllItems() {
+  try {
+    const { data } = await axios.get('/api/items');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

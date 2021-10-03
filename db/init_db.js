@@ -19,6 +19,7 @@ const {
   getUserCart,
   createReview,
   createDiscount,
+  getItemsFromQuery,
   // other db methods
 } = require("./index");
 const {
@@ -33,6 +34,7 @@ const {
   categories: createdCategories,
   itemscategories: itemcategoriesToCreate,
   reviews: reviewsToCreate,
+  queries: queriesToMake,
 } = require("./fakeData");
 
 async function buildTables() {
@@ -421,6 +423,19 @@ async function fetchTestCart() {
   }
 }
 
+async function runTestQueries() {
+  console.log("Starting test queries...");
+  try {
+    const queriedResults = await Promise.all(queriesToMake.map(getItemsFromQuery));
+    console.log("Queries results:");
+    console.log(queriedResults);
+    console.log("Finished running test queries");
+  } catch (error) {
+    console.error("Error running test queries");
+    throw error;
+  }
+}
+
 async function populateInitialData() {
   try {
     // create useful starting data
@@ -443,6 +458,7 @@ async function populateInitialData() {
     await createInitialItemsCategories();
     await createInitialReviews();
     await fetchTestCart();
+    await runTestQueries();
   } catch (error) {
     throw error;
   }

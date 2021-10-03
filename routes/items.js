@@ -16,7 +16,7 @@ itemsRouter.get('/', requireUser, async (req, res, next) => {
   }
 });
 
-itemsRouter.get('/bycategory/:categoryId', requireAdmin, async (req, res, next) => {
+itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
