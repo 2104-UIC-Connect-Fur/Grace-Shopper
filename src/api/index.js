@@ -30,3 +30,47 @@ export const loginUser = async (username, password, rememberMe) => {
   const json = await fetchResult.json();
   return json;
 };
+
+export const registerUser = async (username,
+  password,
+  firstname,
+  lastname,
+  email,
+  phonenumber,
+  zipcode,
+  isAdmin) => {
+  const body = {
+    username,
+    password,
+    firstname,
+    lastname,
+    email,
+    phonenumber,
+    zipcode,
+    isAdmin,
+  };
+
+  const config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const fetchResult = await fetch('/api/users/register', config);
+  const json = await fetchResult.json();
+  return json;
+};
+
+export const logoutUser = async () => {
+  const config = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const fetchResult = await fetch('/api/users/logout', config);
+  const json = await fetchResult.json();
+  return json;
+};

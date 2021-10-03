@@ -1,9 +1,16 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import {
+  Modal, Button, Form, Container, Nav,
+} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { store } from './State';
 import { loginUser } from '../api';
+import Register from './Register';
 
-const LoginModal = ({ show, onHide }) => {
+const Login = ({
+  loginModalShow, setLoginModalShow, regModalShow, setRegModalShow,
+}) => {
   const { dispatch } = useContext(store);
 
   const [password, setPassword] = useState();
@@ -31,32 +38,27 @@ const LoginModal = ({ show, onHide }) => {
         type: 'setUsername',
         value: loggedInUser,
       });
-      onHide();
+      setLoginModalShow(false);
     }
   };
 
   return (
     <Modal
       id="loginModal"
-      show={show}
-      onHide={onHide}
+      show={loginModalShow}
+      onHide={() => setLoginModalShow(false)}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton>
-        {/* <Modal.Title id="contained-modal-title-vcenter">
-          Welcome back!
-        </Modal.Title> */}
-      </Modal.Header>
+      <Modal.Header closeButton onClick={(e) => e.stopPropagation()} />
       <Modal.Body>
         <h4>Welcome back!</h4>
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="formBasicUsername">
-            <Form.Label>Username</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter Username"
+              placeholder="Username"
               onChange={(e) => {
                 e.preventDefault();
                 setCurrUsername(e.target.value);
@@ -64,7 +66,6 @@ const LoginModal = ({ show, onHide }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
@@ -77,35 +78,42 @@ const LoginModal = ({ show, onHide }) => {
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Remember me" onChange={checkHandler} />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button className="mb-3" variant="primary" type="submit">
             Submit
           </Button>
         </Form>
+        <p>New to Rare Shit?</p>
+        <Container onClick={() => {
+          setLoginModalShow(false);
+          setRegModalShow(true);
+        }}
+        >
+          <Nav.Link>Join us!</Nav.Link>
+        </Container>
+        <Register
+          setLoginModalShow={setLoginModalShow}
+          regModalShow={regModalShow}
+          setRegModalShow={setRegModalShow}
+        />
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={onHide}>Close</Button>
+        <Button onClick={(e) => {
+          e.stopPropagation();
+          setLoginModalShow(false);
+        }}
+        >
+          Close
+        </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-const Login = () => {
-  const { state } = useContext(store);
-  const { isLoggedIn, username } = state;
-  const [modalShow, setModalShow] = useState(false);
-
-  return (
-    <>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
-        Login
-      </Button>
-      <h2>{isLoggedIn && `Salutations, ${username}`}</h2>
-      <LoginModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
-    </>
-  );
+Login.propTypes = {
+  loginModalShow: PropTypes.bool.isRequired,
+  setLoginModalShow: PropTypes.func.isRequired,
+  regModalShow: PropTypes.bool.isRequired,
+  setRegModalShow: PropTypes.func.isRequired,
 };
 
 export default Login;

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 // code to build and initialize DB goes here
 const {
   client,
