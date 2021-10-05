@@ -6,10 +6,12 @@ import { useLocation, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import Container from 'react-bootstrap/Container';
 import ListItem from './ListItem';
+import ItemSearch from './ItemSearch';
 import { getItemsFromQuery } from '../api/index';
 
 const Items = () => {
   const [displayItems, updateDisplayItems] = useState([]);
+  const [userSearchString, updateUserSearchString] = useState('');
   const { search } = useLocation();
   const [query, setQuery] = useState(search);
   const history = useHistory();
@@ -21,25 +23,31 @@ const Items = () => {
   console.log('queryObject: ', queryObject);
   useEffect(() => {
     const getItems = async () => {
-      const allItems = await getItemsFromQuery(queryObject);
-      updateDisplayItems(allItems);
+      const { items, success, totalResults } = await getItemsFromQuery(queryObject);
+      if (success && totalResults > 0) {
+        updateDisplayItems(items);
+      }
     };
     getItems();
   }, [query]);
   const clickHandler = async (e) => {
     e.preventDefault();
+    const URISearchString = encodeURI(userSearchString);
+    setQuery(`?searchString=${URISearchString}`);
     history.push({
       pathname: '/items',
-      search: '?searchString=one%20eyed%20cat',
+      search: `?searchString=${URISearchString}`,
     });
-    setQuery('?searchString=one%20eyed%20cat');
   };
   if (!displayItems.length) return (<h1>Loading...</h1>);
 
   return (
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
-      <button type="button" onClick={clickHandler}>Change search string</button>
-      {
+      <ItemSearch />
+      <>
+        <input type="text" value={userSearchString} onChange={(e) => { updateUserSearchString(e.target.value); }} />
+        <button type="button" onClick={clickHandler}>Change search string</button>
+        {
         displayItems.map((item) => (
           <ListItem
             item={item}
@@ -47,6 +55,7 @@ const Items = () => {
           />
         ))
       }
+      </>
     </Container>
   );
 };

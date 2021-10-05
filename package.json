@@ -27,6 +27,7 @@
     "query-string": "^7.0.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.6.4",
+    "react-bootstrap-range-slider": "^3.0.2",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1"

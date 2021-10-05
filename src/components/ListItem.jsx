@@ -3,11 +3,12 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import { string, shape } from 'prop-types';
+import { formatAsCurrency } from '../utils';
 
 const ListItem = ({
   item,
 }) => {
-  const { title, description } = item;
+  const { title, description, price } = item;
   return (
     <Col className="col-lg-3 col-md-4 col-sm-12">
       <Card className="border">
@@ -16,6 +17,9 @@ const ListItem = ({
           <Card.Title>{title}</Card.Title>
           <Card.Text>
             {description}
+          </Card.Text>
+          <Card.Text>
+            {formatAsCurrency(price)}
           </Card.Text>
           <Button variant="primary">Add to Cart</Button>
         </Card.Body>

@@ -123,6 +123,22 @@ async function createItemsCategories({ itemId, categoryId }) {
   }
 }
 
+async function getAllCategories() {
+  try {
+    const {
+      rows: [categories],
+    } = await client.query(
+      `
+      SELECT categories.name, categories.id
+      FROM categories;
+      `,
+    );
+    return categories;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createItems,
   getItemsById,
@@ -130,4 +146,5 @@ module.exports = {
   updateItem,
   createItemsCategories,
   getItemsFromQuery,
+  getAllCategories,
 };

@@ -21,6 +21,16 @@ export async function getAllItems() {
   }
 }
 
+export async function getAllCategories() {
+  try {
+    const { data } = await axios.get('/api/items/categories');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function getItemsFromQuery(queryObject) {
   try {
     const config = {
