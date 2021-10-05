@@ -3,9 +3,10 @@ const {
   getAllItems,
   createItems,
   getItemsByCategoryId,
+  getItemsFromQuery,
 } = require('../db');
 
-const { requireUser, requireAdmin } = require('./utils');
+const { requireUser } = require('./utils');
 
 itemsRouter.get('/', requireUser, async (req, res, next) => {
   try {
@@ -21,6 +22,18 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
     console.log(`items for category id ${categoryId}:`, items);
+    res.send(items);
+  } catch (error) {
+    next(error);
+  }
+});
+
+itemsRouter.post('/search', async (req, res, next) => {
+  try {
+    const { body: queryObject } = req.body;
+    console.log('search query: ', queryObject);
+    const items = await getItemsFromQuery(queryObject);
+    console.log(`items from search ${queryObject}:`, items);
     res.send(items);
   } catch (error) {
     next(error);

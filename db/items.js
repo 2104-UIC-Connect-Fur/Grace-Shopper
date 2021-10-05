@@ -53,7 +53,7 @@ async function getItemsFromQuery(queryObject) {
       searchString,
       categoryIds = [],
       page = 1,
-      count = 25,
+      resultsPerPage = 25,
     } = queryObject;
     const whereConditions = priceLow || priceHigh || searchString;
     const joinedCategories = categoryIds.join(',');
@@ -61,12 +61,12 @@ async function getItemsFromQuery(queryObject) {
     AND itemscategories."itemId"=items.id
     `;
     const searchStringforQuery = `
-      (title iLIKE '%${searchString}%' OR
-      description iLIKE '%${searchString}%')
+      (items.title iLIKE '%${searchString}%' OR
+      items.description iLIKE '%${searchString}%')
     `;
-    const rowsToSkip = (page - 1) * count;
+    const rowsToSkip = (page - 1) * resultsPerPage;
     const queryString = `
-    SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id
+    SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id, COUNT(items.id) OVER() as totalresults
     FROM ITEMS
     ${categoryIds.length ? categoryString : ''}
     ${whereConditions ? 'WHERE' : ''}
@@ -76,10 +76,9 @@ async function getItemsFromQuery(queryObject) {
     ${(priceLow || priceHigh) && searchString ? 'AND' : ''}
     ${searchString ? `${searchStringforQuery}` : ''}
     OFFSET ${rowsToSkip} ROWS
-    FETCH NEXT ${count} ROWS ONLY;
+    FETCH NEXT ${resultsPerPage} ROWS ONLY;
     ;
     `;
-    console.log('query: ', queryObject, 'query string: ', queryString);
     const { rows: items } = await client.query(queryString);
     return items;
   } catch (error) {

@@ -20,3 +20,20 @@ export async function getAllItems() {
     throw error;
   }
 }
+
+export async function getItemsFromQuery(queryObject) {
+  try {
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: queryObject,
+    };
+    const { data } = await axios.post('/api/items/search', config);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
