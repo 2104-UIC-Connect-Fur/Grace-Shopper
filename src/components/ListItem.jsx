@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import { string, shape } from 'prop-types';
-import { formatAsCurrency } from './utils';
+import { formatAsCurrency } from '../utils';
 
 const ListItem = ({
   item,
