@@ -74,3 +74,39 @@ export const logoutUser = async () => {
   const json = await fetchResult.json();
   return json;
 };
+export async function getAllItems() {
+  try {
+    const { data } = await axios.get('/api/items');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllCategories() {
+  try {
+    const { data } = await axios.get('/api/items/categories');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getItemsFromQuery(queryObject) {
+  try {
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: queryObject,
+    };
+    const { data } = await axios.post('/api/items/search', config);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

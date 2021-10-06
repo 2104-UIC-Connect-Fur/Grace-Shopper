@@ -21,72 +21,85 @@ async function createItems({
   }
 }
 
+async function getItemsById({ id }) {
+  try {
+    const { item } = await client.query(
+      `
+        Select * from items
+        WHERE id=$1; 
+        `,
+      [id],
+    );
+    return item;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getAllItems() {
   try {
-    const {
-      rows: items,
-    } = await client.query(
-      `
-            SELECT * from items;
-          `,
-    );
+    const { rows: items } = await client.query('SELECT * FROM ITEMS;');
     return items;
   } catch (error) {
     throw error;
   }
 }
 
-async function getItemsByCategoryId(categoryId) {
+async function getItemsFromQuery(queryObject) {
   try {
     const {
-      rows: items,
-    } = await client.query(
-      `
-            SELECT items.title, items.description, items.price
-            FROM itemscategories
-            JOIN items ON itemscategories."itemId"=items.id
-            WHERE "categoryId"=${categoryId};
-          `,
-    );
+      priceLow,
+      priceHigh,
+      searchString,
+      categoryIds = [],
+      page = 1,
+      resultsPerPage = 25,
+    } = queryObject;
+    const whereConditions = priceLow || priceHigh || searchString;
+    const joinedCategories = categoryIds.join(',');
+    const categoryString = `JOIN itemscategories ON itemscategories."categoryId" IN (${joinedCategories})
+    AND itemscategories."itemId"=items.id
+    `;
+    const searchStringforQuery = `
+      (items.title iLIKE '%${searchString}%' OR
+      items.description iLIKE '%${searchString}%')
+    `;
+    const rowsToSkip = (page - 1) * resultsPerPage;
+    const queryString = `
+    SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id, COUNT(items.id) OVER() as totalresults
+    FROM ITEMS
+    ${categoryIds.length ? categoryString : ''}
+    ${whereConditions ? 'WHERE' : ''}
+    ${priceLow ? `price >= ${priceLow}` : ''}
+    ${(priceLow && priceHigh) ? 'AND' : ''}
+    ${priceHigh ? `price <= ${priceHigh}` : ''}
+    ${(priceLow || priceHigh) && searchString ? 'AND' : ''}
+    ${searchString ? `${searchStringforQuery}` : ''}
+    OFFSET ${rowsToSkip} ROWS
+    FETCH NEXT ${resultsPerPage} ROWS ONLY;
+    ;
+    `;
+    const { rows: items } = await client.query(queryString);
     return items;
   } catch (error) {
     throw error;
   }
 }
 
-async function createItemImages({
-  itemId, url, description, alttext,
-}) {
+async function updateItem({ id, price, inventoryquantity }) {
   try {
     const {
-      rows: [image],
+      rows: [item],
     } = await client.query(
       `
-              INSERT INTO itemsimages("itemId", url, description,alttext) 
-              VALUES($1, $2, $3, $4) 
-              RETURNING *;
-            `,
-      [itemId, url, description, alttext],
+            UPDATE items
+            SET price=$2, inventoryquantity=$3
+            WHERE id=$1
+            Returning *;
+        `,
+      [id, price, inventoryquantity],
     );
-    return image;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function createCategories({ name, description }) {
-  try {
-    const {
-      rows: [categories],
-    } = await client.query(
-      `
-                INSERT INTO categories(name, description) 
-                VALUES($1, $2) 
-                RETURNING *;
-              `,
-      [name, description],
-    );
-    return categories;
+    return item;
   } catch (error) {
     throw error;
   }
@@ -110,11 +123,28 @@ async function createItemsCategories({ itemId, categoryId }) {
   }
 }
 
+async function getAllCategories() {
+  try {
+    const {
+      rows: [categories],
+    } = await client.query(
+      `
+      SELECT categories.name, categories.id
+      FROM categories;
+      `,
+    );
+    return categories;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createItems,
-  createItemImages,
-  createCategories,
+  getItemsById,
   getAllItems,
-  getItemsByCategoryId,
+  updateItem,
   createItemsCategories,
+  getItemsFromQuery,
+  getAllCategories,
 };

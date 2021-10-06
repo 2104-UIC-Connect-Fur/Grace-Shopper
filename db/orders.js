@@ -59,7 +59,7 @@ async function createOrder({
         ccexpiration,
         cczipcode,
         discountId,
-      ],
+      ]
     );
     return order;
   } catch (error) {
@@ -77,7 +77,7 @@ async function getOrderById(id) {
             FROM orders
             WHERE id=$1;
         `,
-      [id],
+      [id]
     );
     return order;
   } catch (error) {
@@ -93,7 +93,7 @@ async function getOrdersByUserId(userId) {
         FROM orders
         WHERE "userId"=$1;
     `,
-      [userId],
+      [userId]
     );
     return orders;
   } catch (error) {
@@ -110,20 +110,23 @@ async function getAllIncompleteOrders() {
         `);
     return orders;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
 async function getIncompleteOrdersByUserId(userId) {
   try {
-    const { rows: orders } = await client.query(`
+    const { rows: orders } = await client.query(
+      `
             SELECT *
             FROM orders
             WHERE "userId"=$1 AND complete=false;
-        `, [userId]);
+        `,
+      [userId]
+    );
     return orders;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
@@ -136,20 +139,23 @@ async function getAllCompleteOrders() {
           `);
     return orders;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
 async function getCompleteOrdersByUserId(userId) {
   try {
-    const { rows: orders } = await client.query(`
+    const { rows: orders } = await client.query(
+      `
             SELECT *
             FROM orders
             WHERE "userId"=$1 AND complete=true;
-        `, [userId]);
+        `,
+      [userId]
+    );
     return orders;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
@@ -159,19 +165,27 @@ async function getCompleteOrdersByUserId(userId) {
 */
 async function completeOrder(orderId) {
   try {
-    const { rows: [order] } = await client.query(`
+    const {
+      rows: [order],
+    } = await client.query(
+      `
             UPDATE orders
             SET complete = true
             WHERE id = $1
             RETURNING *;
-        `, [orderId]);
-    const { rows: ordersitems } = await client.query(`
+        `,
+      [orderId]
+    );
+    const { rows: ordersitems } = await client.query(
+      `
             UPDATE ordersitems
             SET priceatpurchase = items.price
             FROM items
             WHERE "orderId" = $1 AND ordersitems."itemId" = items.id
             RETURNING *;
-        `, [orderId]);
+        `,
+      [orderId]
+    );
     order.items = ordersitems;
     return order;
   } catch (error) {

@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const { client } = require('./client');
+const { client } = require("./client");
 
 async function createUser({
   username,
@@ -16,12 +16,26 @@ async function createUser({
 }) {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
           INSERT INTO users(username, password, firstname, lastname, email, phonenumber, zipcode, isAdmin) 
           VALUES($1, $2, $3, $4, $5, $6, $7, $8) 
           ON CONFLICT (username) DO NOTHING
           RETURNING *;
-        `, [username, hashedPassword, firstname, lastname, email, phonenumber, zipcode, isAdmin]);
+        `,
+      [
+        username,
+        hashedPassword,
+        firstname,
+        lastname,
+        email,
+        phonenumber,
+        zipcode,
+        isAdmin,
+      ]
+    );
     delete user.password;
     return user;
   } catch (error) {
@@ -40,7 +54,10 @@ async function createUserPayment({
   zipcode,
 }) {
   try {
-    const { rows: [userpayment] } = await client.query(`
+    const {
+      rows: [userpayment],
+    } = await client.query(
+      `
           INSERT INTO userspayments(
             "userId",
             cardname,
@@ -54,16 +71,18 @@ async function createUserPayment({
           VALUES($1, $2, $3, $4, $5, $6, $7, $8) 
           ON CONFLICT (ccnumber) DO NOTHING
           RETURNING *;
-        `, [
-      userId,
-      cardname,
-      nameoncard,
-      billingaddress,
-      ccnumber,
-      ccsecuritycode,
-      ccexpiration,
-      zipcode,
-    ]);
+        `,
+      [
+        userId,
+        cardname,
+        nameoncard,
+        billingaddress,
+        ccnumber,
+        ccsecuritycode,
+        ccexpiration,
+        zipcode,
+      ]
+    );
     return userpayment;
   } catch (error) {
     throw error;
@@ -79,7 +98,10 @@ async function createUserAddress({
   zipcode,
 }) {
   try {
-    const { rows: [userAddress] } = await client.query(`
+    const {
+      rows: [userAddress],
+    } = await client.query(
+      `
           INSERT INTO usersaddresses(
             "userId",
             street,
@@ -90,14 +112,9 @@ async function createUserAddress({
             ) 
           VALUES($1, $2, $3, $4, $5, $6) 
           RETURNING *;
-        `, [
-      userId,
-      street,
-      apartment,
-      city,
-      state,
-      zipcode,
-    ]);
+        `,
+      [userId, street, apartment, city, state, zipcode]
+    );
     return userAddress;
   } catch (error) {
     throw error;
@@ -106,10 +123,15 @@ async function createUserAddress({
 
 async function getUserByUsername(username) {
   try {
-    const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
         SELECT * FROM users
         WHERE username = $1;
-      `, [username]);
+      `,
+      [username]
+    );
     return user;
   } catch (error) {
     throw error;
@@ -125,7 +147,7 @@ async function getUser({ username, password }) {
     }
     throw {
       success: false,
-      message: 'Username or password does not match. Please try again.',
+      message: "Username or password does not match. Please try again.",
     };
   } catch (error) {
     throw error;
@@ -134,7 +156,9 @@ async function getUser({ username, password }) {
 
 async function getUserById(id) {
   try {
-    const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(`
         SELECT * FROM users
         WHERE id=${id};
       `);
@@ -147,12 +171,17 @@ async function getUserById(id) {
 
 async function getUserCart(userId) {
   try {
-    const { rows: [userCart] } = await client.query(`
+    const {
+      rows: [userCart],
+    } = await client.query(
+      `
       SELECT users.id AS "userId", users.username, orders.id AS "orderId", orders.total, orders.complete
       FROM users
       JOIN orders ON users.id = orders."userId"
       WHERE users.id = $1 AND orders.complete = false;
-    `, [userId]);
+    `,
+      [userId]
+    );
     const { rows: ordersitems } = await client.query(`
       SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
       FROM ordersitems
@@ -162,7 +191,7 @@ async function getUserCart(userId) {
     userCart.items = ordersitems;
     return userCart;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
