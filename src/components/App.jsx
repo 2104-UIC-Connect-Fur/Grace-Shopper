@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import Axios from 'axios';
 import Items from './Items';
 import { store } from './State';
-import Axios from 'axios';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
