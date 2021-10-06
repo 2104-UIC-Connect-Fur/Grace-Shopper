@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { formatAsCurrency } from '../utils';
-import { getAllCategories } from '../../db/items';
+import { getAllCategories } from '../api';
 
 const ItemSearch = () => {
   const [show, setShow] = useState(false);
@@ -23,7 +23,7 @@ const ItemSearch = () => {
       setCategories(fetchedCategories);
     };
     getCategories();
-  });
+  }, []);
 
   return (
     <>
