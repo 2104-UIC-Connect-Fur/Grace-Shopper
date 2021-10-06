@@ -37,7 +37,7 @@ itemsRouter.post('/search', async (req, res, next) => {
     const items = await getItemsFromQuery(queryObject);
     console.log(`items from search ${queryObject}:`, items);
     if (items.length > 0) {
-      const totalResults = items[0].totalresults;
+      const totalResults = Number(items[0].totalresults);
       const pages = Math.ceil(totalResults / queryObject.resultsPerPage);
       return res.send({
         success: true,

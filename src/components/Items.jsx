@@ -13,10 +13,10 @@ const Items = () => {
   const [displayItems, updateDisplayItems] = useState([]);
   const { search } = useLocation();
   const [query, setQuery] = useState(search);
-  const queryObject = queryString.parse(query, {
+  const [queryObject, setQueryObject] = useState(queryString.parse(query, {
     parseBooleans: true,
     parseNumbers: true,
-  });
+  }));
   if (typeof queryObject.categoryIds === 'number') {
     const categoryIdAsArray = [queryObject.categoryIds];
     queryObject.categoryIds = categoryIdAsArray;
@@ -30,13 +30,14 @@ const Items = () => {
       }
     };
     getItems();
-  }, [query]);
+  }, [queryObject]);
   if (!displayItems.length) return (<h1>Loading...</h1>);
 
   return (
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
       <ItemSearch
         setQuery={setQuery}
+        setQueryObject={setQueryObject}
       />
       <>
         {

@@ -11,7 +11,7 @@ import { formatAsCurrency } from '../utils';
 import { getAllCategories } from '../api';
 import queryString from 'query-string';
 
-const ItemSearch = ({ setQuery }) => {
+const ItemSearch = ({ setQuery, setQueryObject }) => {
   const history = useHistory();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -45,6 +45,7 @@ const ItemSearch = ({ setQuery }) => {
     };
     const query = queryString.stringify(queryObject);
     setQuery(query);
+    setQueryObject(queryObject);
     history.push({
       pathname: '/items/',
       search: `${query}`,
@@ -164,6 +165,7 @@ const ItemSearch = ({ setQuery }) => {
 
 ItemSearch.propTypes = {
   setQuery: func.isRequired,
+  setQueryObject: func.isRequired,
 };
 
 export default ItemSearch;
