@@ -53,38 +53,84 @@ module.exports = {
   ],
   items: [
     {
-      id: 1,
       title: 'Babe Ruths Jersey',
       description: 'Game worn jersey from 1928-1930 !!!',
       price: 599,
       inventoryquantity: 5,
     },
     {
-      id: 2,
       title: 'Air Jordan 5 Off-White',
       description: '2020 Chicago All Star Jordan 5 Special Release !!',
       price: 110000,
       inventoryquantity: 2,
     },
     {
-      title: 'Air Jordan 6 Off-White',
-      description: '2021 Chicago All Star Jordan 6 Special Release !!',
+      title: 'AMD Ryzen 5950X',
+      description: 'AMD CPU. Brand New!! Never seen and never used!',
+      price: 899,
+      inventoryquantity: 1,
+    },
+    {
+      title: "Michael Meidenbauer's Jersey",
+      description: 'Worn in high school. Smells pretty bad tbh.',
+      price: 100,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'More rare stuff',
+      description: 'I mean, just wow',
       price: 110000,
       inventoryquantity: 2,
+    },
+    {
+      title: "Kuzco's Poison",
+      description: 'The poison chosen specifically to kill Kuzco.',
+      price: 99999999,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'One eyed cat',
+      description: 'Pretty nice!',
+      price: 500000,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'Two eyed cat',
+      description: 'Plotting your demise at this very moment.',
+      price: 99999999,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'Broken headphones',
+      description: "Don't judge a book by it's cover.",
+      price: 899,
+      inventoryquantity: 1,
     },
   ],
   imagesOfItems: [
     {
       itemId: 1,
-      url: 'Game worn jersey from 1928-1930 !!!',
+      url: '/images/BabeRuthJersey.png',
+      description: 'Babe Ruth ate so many hot dogs in this bad boy!',
+      alttext: 'Babe Ruth = Hot Dogs',
+    },
+    {
+      itemId: 1,
+      url: '/images/BabeRuthJersey2.png',
       description: 'Babe Ruth ate so many hot dogs in this bad boy!',
       alttext: 'Babe Ruth = Hot Dogs',
     },
     {
       itemId: 2,
-      url: '2020 Chicago All Star Jordan 5 Special Release !!',
+      url: '/images/Jordan5OffWhite.png',
       description: '1 of 1 ! !',
       alttext: 'Never worn!',
+    },
+    {
+      itemId: 3,
+      url: '',
+      description: 'AMD Ryzen 5950X',
+      alttext: 'In Transit',
     },
   ],
   categories: [
@@ -94,7 +140,7 @@ module.exports = {
       description: 'Rare sports memorabilia!',
     },
     {
-      id: 1,
+      id: 2,
       name: 'Shoes',
       description: 'Exclusive Shoes',
     },
@@ -220,6 +266,40 @@ module.exports = {
       userId: 2,
       title: 'Gorgeous shoes',
       bodytext: 'I still cant hit a jumper, but at least I look good.',
+    },
+  ],
+  queries: [
+    {
+      priceLow: 100,
+      priceHigh: 50000,
+      categoryIds: [
+        1,
+      ],
+    },
+    {
+      priceLow: 100,
+      priceHigh: 100000000,
+      categoryIds: [
+        2,
+      ],
+    },
+    {
+      priceLow: 100,
+      priceHigh: 50000,
+      categoryIds: [
+        1,
+        2,
+      ],
+    },
+    {
+      categoryIds: [
+        2,
+      ],
+    },
+    {
+      searchString: 'jersey',
+    },
+    {
     },
   ],
 };

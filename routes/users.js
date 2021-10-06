@@ -28,6 +28,7 @@ userRouter.post('/register', async (req, res, next) => {
     return res.send({
       success: true,
       message: `success! user created: ${username}`,
+      loggedInUser: username,
     });
   } catch (error) {
     next(error);
@@ -38,9 +39,10 @@ userRouter.post('/login', async (req, res, next) => {
   try {
     const userToLogin = req.body;
     const { id: userId, username } = await getUser(userToLogin);
+    const expiration = userToLogin.rememberMe && { maxAge: 604800000 };
     if (userId) {
       const token = jwt.sign({ userId, username }, JWT_SECRET);
-      res.cookie('token', token, { httpOnly: true });
+      res.cookie('token', token, expiration, { httpOnly: true });
       return res.send({
         success: true,
         loggedInUser: username,

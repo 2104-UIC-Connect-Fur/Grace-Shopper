@@ -8,4 +8,6 @@ module.exports = {
   ...require('./items'),
   ...require('./reviews'),
   ...require('./discounts'),
+  ...require('./categories'),
+  ...require('./images'),
 };

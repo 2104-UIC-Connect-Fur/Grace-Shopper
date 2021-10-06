@@ -10,3 +10,103 @@ export async function getMe() {
     throw error;
   }
 }
+
+export const loginUser = async (username, password, rememberMe) => {
+  const body = {
+    username,
+    password,
+    rememberMe,
+  };
+
+  const config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+
+  const fetchResult = await fetch('/api/users/login', config);
+  const json = await fetchResult.json();
+  return json;
+};
+
+export const registerUser = async (username,
+  password,
+  firstname,
+  lastname,
+  email,
+  phonenumber,
+  zipcode,
+  isAdmin) => {
+  const body = {
+    username,
+    password,
+    firstname,
+    lastname,
+    email,
+    phonenumber,
+    zipcode,
+    isAdmin,
+  };
+
+  const config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const fetchResult = await fetch('/api/users/register', config);
+  const json = await fetchResult.json();
+  return json;
+};
+
+export const logoutUser = async () => {
+  const config = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const fetchResult = await fetch('/api/users/logout', config);
+  const json = await fetchResult.json();
+  return json;
+};
+export async function getAllItems() {
+  try {
+    const { data } = await axios.get('/api/items');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllCategories() {
+  try {
+    const { data } = await axios.get('/api/items/categories');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getItemsFromQuery(queryObject) {
+  try {
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: queryObject,
+    };
+    const { data } = await axios.post('/api/items/search', config);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
