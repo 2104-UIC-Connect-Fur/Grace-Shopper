@@ -32,13 +32,13 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
 itemsRouter.post('/search', async (req, res, next) => {
   try {
     const { body: queryObject } = req.body;
-    const resultsPerPage = queryObject.resultsPerPage ?? 25;
+    if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 25;
     console.log('search query: ', queryObject);
     const items = await getItemsFromQuery(queryObject);
     console.log(`items from search ${queryObject}:`, items);
     if (items.length > 0) {
       const totalResults = items[0].totalresults;
-      const pages = Math.ceil(totalResults / resultsPerPage);
+      const pages = Math.ceil(totalResults / queryObject.resultsPerPage);
       return res.send({
         success: true,
         totalResults,

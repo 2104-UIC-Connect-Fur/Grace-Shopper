@@ -21,7 +21,7 @@ const Items = () => {
     const categoryIdAsArray = [queryObject.categoryIds];
     queryObject.categoryIds = categoryIdAsArray;
   }
-  console.log('queryObject: ', queryObject);
+  // console.log('queryObject: ', queryObject);
   useEffect(() => {
     const getItems = async () => {
       const { items, success, totalResults } = await getItemsFromQuery(queryObject);

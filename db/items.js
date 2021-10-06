@@ -53,7 +53,7 @@ async function getItemsFromQuery(queryObject) {
       searchString,
       categoryIds = [],
       page = 1,
-      resultsPerPage = 25,
+      resultsPerPage,
     } = queryObject;
     const whereConditions = priceLow || priceHigh || searchString;
     const joinedCategories = categoryIds.join(',');

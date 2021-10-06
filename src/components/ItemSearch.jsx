@@ -44,7 +44,6 @@ const ItemSearch = ({ setQuery }) => {
       searchString: userSearchTerm,
     };
     const query = queryString.stringify(queryObject);
-    console.log('query: ', query);
     setQuery(query);
     history.push({
       pathname: '/items/',
