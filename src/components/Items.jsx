@@ -11,15 +11,16 @@ import { getItemsFromQuery } from '../api/index';
 
 const Items = () => {
   const [displayItems, updateDisplayItems] = useState([]);
-  const [userSearchString, updateUserSearchString] = useState('');
   const { search } = useLocation();
   const [query, setQuery] = useState(search);
-  const history = useHistory();
   const queryObject = queryString.parse(query, {
     parseBooleans: true,
     parseNumbers: true,
-    arrayFormat: 'comma',
   });
+  if (typeof queryObject.categoryIds === 'number') {
+    const categoryIdAsArray = [queryObject.categoryIds];
+    queryObject.categoryIds = categoryIdAsArray;
+  }
   console.log('queryObject: ', queryObject);
   useEffect(() => {
     const getItems = async () => {
@@ -30,23 +31,14 @@ const Items = () => {
     };
     getItems();
   }, [query]);
-  const clickHandler = async (e) => {
-    e.preventDefault();
-    const URISearchString = encodeURI(userSearchString);
-    setQuery(`?searchString=${URISearchString}`);
-    history.push({
-      pathname: '/items',
-      search: `?searchString=${URISearchString}`,
-    });
-  };
   if (!displayItems.length) return (<h1>Loading...</h1>);
 
   return (
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
-      <ItemSearch />
+      <ItemSearch
+        setQuery={setQuery}
+      />
       <>
-        <input type="text" value={userSearchString} onChange={(e) => { updateUserSearchString(e.target.value); }} />
-        <button type="button" onClick={clickHandler}>Change search string</button>
         {
         displayItems.map((item) => (
           <ListItem

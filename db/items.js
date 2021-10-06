@@ -126,14 +126,14 @@ async function createItemsCategories({ itemId, categoryId }) {
 async function getAllCategories() {
   try {
     const {
-      rows: [categories],
+      rows,
     } = await client.query(
       `
       SELECT categories.name, categories.id
       FROM categories;
       `,
     );
-    return categories;
+    return rows;
   } catch (error) {
     throw error;
   }

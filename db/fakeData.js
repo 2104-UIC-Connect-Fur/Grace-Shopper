@@ -55,7 +55,7 @@ module.exports = {
     {
       title: 'Babe Ruths Jersey',
       description: 'Game worn jersey from 1928-1930 !!!',
-      price: 599,
+      price: 59999,
       inventoryquantity: 5,
     },
     {
@@ -67,13 +67,13 @@ module.exports = {
     {
       title: 'AMD Ryzen 5950X',
       description: 'AMD CPU. Brand New!! Never seen and never used!',
-      price: 899,
+      price: 89999,
       inventoryquantity: 1,
     },
     {
       title: "Michael Meidenbauer's Jersey",
       description: 'Worn in high school. Smells pretty bad tbh.',
-      price: 100,
+      price: 10000,
       inventoryquantity: 1,
     },
     {
@@ -85,25 +85,25 @@ module.exports = {
     {
       title: "Kuzco's Poison",
       description: 'The poison chosen specifically to kill Kuzco.',
-      price: 99999999,
+      price: 99999,
       inventoryquantity: 1,
     },
     {
       title: 'One eyed cat',
       description: 'Pretty nice!',
-      price: 500000,
+      price: 25000,
       inventoryquantity: 1,
     },
     {
       title: 'Two eyed cat',
       description: 'Plotting your demise at this very moment.',
-      price: 99999999,
+      price: 25000,
       inventoryquantity: 1,
     },
     {
       title: 'Broken headphones',
       description: "Don't judge a book by it's cover.",
-      price: 899,
+      price: 20000,
       inventoryquantity: 1,
     },
   ],
@@ -135,14 +135,36 @@ module.exports = {
   ],
   categories: [
     {
-      id: 1,
       name: 'Sports',
       description: 'Rare sports memorabilia!',
     },
     {
-      id: 2,
       name: 'Shoes',
       description: 'Exclusive Shoes',
+    },
+    {
+      name: 'Cats',
+      description: 'Lil fuzzers.',
+    },
+    {
+      name: 'Antiques',
+      description: 'You mean junk?',
+    },
+    {
+      name: 'Hats',
+      description: 'For your noggin.',
+    },
+    {
+      name: 'Random shit',
+      description: 'Would you look at that',
+    },
+    {
+      name: 'Cars',
+      description: 'Vroom.',
+    },
+    {
+      name: 'Bikes',
+      description: 'Half as many wheels, twice as much fun.',
     },
   ],
   itemscategories: [
