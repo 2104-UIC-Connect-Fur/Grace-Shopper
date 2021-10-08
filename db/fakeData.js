@@ -55,7 +55,7 @@ module.exports = {
     {
       title: 'Babe Ruths Jersey',
       description: 'Game worn jersey from 1928-1930 !!!',
-      price: 59999,
+      price: 599999,
       inventoryquantity: 5,
     },
     {
@@ -67,7 +67,7 @@ module.exports = {
     {
       title: 'AMD Ryzen 5950X',
       description: 'AMD CPU. Brand New!! Never seen and never used!',
-      price: 89999,
+      price: 899999,
       inventoryquantity: 1,
     },
     {
@@ -79,25 +79,25 @@ module.exports = {
     {
       title: 'More rare stuff',
       description: 'I mean, just wow',
-      price: 110000,
+      price: 500000,
       inventoryquantity: 2,
     },
     {
       title: "Kuzco's Poison",
       description: 'The poison chosen specifically to kill Kuzco.',
-      price: 99999,
+      price: 999999,
       inventoryquantity: 1,
     },
     {
       title: 'One eyed cat',
       description: 'Pretty nice!',
-      price: 25000,
+      price: 250000,
       inventoryquantity: 1,
     },
     {
       title: 'Two eyed cat',
       description: 'Plotting your demise at this very moment.',
-      price: 25000,
+      price: 250000,
       inventoryquantity: 1,
     },
     {

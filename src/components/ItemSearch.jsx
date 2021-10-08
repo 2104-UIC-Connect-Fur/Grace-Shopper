@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import OffCanvas from 'react-bootstrap/OffCanvas';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import { func } from 'prop-types';
+import queryString from 'query-string';
 import { formatAsCurrency } from '../utils';
 import { getAllCategories } from '../api';
-import queryString from 'query-string';
 
 const ItemSearch = ({ setQuery, setQueryObject }) => {
   const history = useHistory();
@@ -53,17 +53,30 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
     setShow(false);
   };
 
+  const clearSearch = () => {
+    setCategoryIds([]);
+    setPriceLow(0);
+    setPriceHigh(1000000);
+    setUserSearchTerm('');
+    setQuery('');
+    setQueryObject({});
+    history.push({
+      pathname: '/items/',
+      search: '',
+    });
+  };
+
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
         Search items
       </Button>
 
-      <Modal show={show} onHide={handleClose} className="content-align-center">
-        <Modal.Header closeButton>
-          <Modal.Title>Refine Items</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <OffCanvas show={show} onHide={handleClose} className="content-align-center">
+        <OffCanvas.Header closeButton>
+          <OffCanvas.Title>Refine Items</OffCanvas.Title>
+        </OffCanvas.Header>
+        <OffCanvas.Body>
           <Form onSubmit={searchHandler}>
             <Form.Group as={Row} className="mb-3" controlId="Title">
               <Form.Label as={Row}>
@@ -149,16 +162,16 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
               }
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={searchHandler}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Row className="mt-2">
+            <Button variant="secondary" onClick={clearSearch} className="w-50">
+              Clear Search
+            </Button>
+            <Button variant="primary" onClick={searchHandler} className="w-50">
+              Search
+            </Button>
+          </Row>
+        </OffCanvas.Body>
+      </OffCanvas>
     </>
   );
 };
