@@ -116,7 +116,7 @@ module.exports = {
     },
     {
       itemId: 1,
-      url: '/images/BabeRuthJersey2.png',
+      url: '/images/babe_ruth_jersey_2.jpeg',
       description: 'Babe Ruth ate so many hot dogs in this bad boy!',
       alttext: 'Babe Ruth = Hot Dogs',
     },

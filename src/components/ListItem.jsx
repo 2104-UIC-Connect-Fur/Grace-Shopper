@@ -1,18 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import { string, shape } from 'prop-types';
+import {
+  string, shape, arrayOf, number,
+} from 'prop-types';
 import { formatAsCurrency } from '../utils';
 
 const ListItem = ({
   item,
 }) => {
-  const { title, description, price } = item;
+  const {
+    title, description, price, images, id,
+  } = item;
+  const mainImage = images[0].url;
   return (
     <Col className="col-lg-3 col-md-4 col-sm-12">
       <Card className="border">
-        <Card.Img variant="top" src="https://placedog.net/500/500" />
+        <Link
+          to={`/items/${id}`}
+        >
+          <Card.Img variant="top" src={mainImage} />
+        </Link>
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>
@@ -30,8 +40,14 @@ const ListItem = ({
 
 ListItem.propTypes = {
   item: shape({
+    id: number.isRequired,
     title: string.isRequired,
     description: string.isRequired,
+    images: arrayOf(shape({
+      url: string.isRequired,
+      description: string.isRequired,
+      alttext: string.isRequired,
+    })),
   }).isRequired,
 };
 

@@ -69,7 +69,7 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Search items
+        🔎
       </Button>
 
       <OffCanvas show={show} onHide={handleClose} className="content-align-center">

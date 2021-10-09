@@ -1,3 +1,6 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-useless-catch */
 const { client } = require('./client');
 
@@ -21,15 +24,39 @@ async function createItems({
   }
 }
 
-async function getItemsById({ id }) {
+async function getItemImages(id) {
   try {
-    const { item } = await client.query(
+    const placeHolderImage = {
+      url: 'https://placedog.net/500/500',
+      description: 'This item is so rare and exclusive that we cannot even photograph it. Please accept this doggo pic instead.',
+      alttext: 'woof',
+    };
+    const { rows: images } = await client.query(
+      `
+      SELECT url, description, alttext
+      FROM itemsimages
+      WHERE "itemId"=$1;
+      `, [id],
+    );
+    if (!images.length) {
+      images.push(placeHolderImage);
+    }
+    return images;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getItemsById(id) {
+  try {
+    const { rows: [item] } = await client.query(
       `
         Select * from items
         WHERE id=$1; 
         `,
       [id],
     );
+    item.images = await getItemImages(id);
     return item;
   } catch (error) {
     throw error;
@@ -80,6 +107,10 @@ async function getItemsFromQuery(queryObject) {
     ;
     `;
     const { rows: items } = await client.query(queryString);
+    for (const item of items) {
+      const images = await getItemImages(item.id);
+      item.images = images;
+    }
     return items;
   } catch (error) {
     throw error;

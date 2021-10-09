@@ -38,7 +38,7 @@ const Navigation = () => {
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/">
+            <LinkContainer to="/items">
               <Nav.Link>Items</Nav.Link>
             </LinkContainer>
 

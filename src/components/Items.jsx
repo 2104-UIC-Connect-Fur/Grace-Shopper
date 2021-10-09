@@ -58,6 +58,7 @@ const Items = () => {
         items, success, totalResults, pages: apiPages,
       } = await getItemsFromQuery(queryObject);
       if (success && totalResults > 0) {
+        console.log('fetched items: ', items);
         updateDisplayItems(items);
         setPages(apiPages);
         setNoResults(false);
