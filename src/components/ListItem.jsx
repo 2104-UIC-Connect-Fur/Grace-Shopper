@@ -16,13 +16,14 @@ const ListItem = ({
   } = item;
   const mainImage = images[0].url;
   return (
-    <Col className="col-lg-3 col-md-4 col-sm-12">
-      <Card className="border">
+    <Col className="col-lg-3 col-md-4 col-sm-12 mb-2">
+      <Card className="h-100">
         <Link
           to={`/items/${id}`}
         >
           <Card.Img variant="top" src={mainImage} />
         </Link>
+        <Button variant="primary">Add to Cart</Button>
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>
@@ -31,7 +32,6 @@ const ListItem = ({
           <Card.Text>
             {formatAsCurrency(price)}
           </Card.Text>
-          <Button variant="primary">Add to Cart</Button>
         </Card.Body>
       </Card>
     </Col>

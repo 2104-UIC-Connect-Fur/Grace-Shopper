@@ -27,7 +27,7 @@ async function createItems({
 async function getItemImages(id) {
   try {
     const placeHolderImage = {
-      url: 'https://placedog.net/500/500',
+      url: '/images/rareshit.png',
       description: 'This item is so rare and exclusive that we cannot even photograph it. Please accept this doggo pic instead.',
       alttext: 'woof',
     };

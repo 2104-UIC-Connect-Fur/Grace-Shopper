@@ -68,7 +68,14 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button
+        variant="primary"
+        onClick={handleShow}
+        style={{
+          width: '10%',
+          margin: 'auto',
+        }}
+      >
         🔎
       </Button>
 
