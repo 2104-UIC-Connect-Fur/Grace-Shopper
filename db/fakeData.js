@@ -53,7 +53,7 @@ module.exports = {
   ],
   items: [
     {
-      title: 'Babe Ruths Jersey',
+      title: "Babe Ruth's Jersey",
       description: 'Game worn jersey from 1928-1930 !!!',
       price: 599999,
       inventoryquantity: 5,
@@ -84,26 +84,26 @@ module.exports = {
     },
     {
       title: "Kuzco's Poison",
-      description: 'The poison chosen specifically to kill Kuzco.',
+      description: 'That poison?',
       price: 999999,
       inventoryquantity: 1,
     },
     {
       title: 'One eyed cat',
-      description: 'Pretty nice!',
+      description: 'What this cat lacks in eyes she makes up for in sheer adorability and gooberousness. This cat will melt your heart and eat your headphone cables.',
       price: 250000,
       inventoryquantity: 1,
     },
     {
       title: 'Two eyed cat',
-      description: 'Plotting your demise at this very moment.',
+      description: 'In the darkness lies, coiled, the grumpiest cat in existence. She rises to greet you, shouting like her grumpiest self yet quickly becoming her cuddliest self.',
       price: 250000,
       inventoryquantity: 1,
     },
     {
-      title: 'Broken headphones',
-      description: "Don't judge a book by it's cover.",
-      price: 20000,
+      title: 'HIFIMAN Ananda',
+      description: "These things will turn you into a headphone snob. But you won't care.",
+      price: 200000,
       inventoryquantity: 1,
     },
   ],
@@ -117,7 +117,7 @@ module.exports = {
     {
       itemId: 1,
       url: '/images/babe_ruth_jersey_2.jpeg',
-      description: 'Babe Ruth ate so many hot dogs in this bad boy!',
+      description: "When The Babe wasn't smashing dingers he was smashing dogs. Hot dogs, that is.",
       alttext: 'Babe Ruth = Hot Dogs',
     },
     {
@@ -127,10 +127,28 @@ module.exports = {
       alttext: 'Never worn!',
     },
     {
-      itemId: 3,
-      url: '',
-      description: 'AMD Ryzen 5950X',
-      alttext: 'In Transit',
+      itemId: 7,
+      url: '/images/uno.png',
+      description: 'Pretty nice!',
+      alttext: 'Big fan of treats.',
+    },
+    {
+      itemId: 8,
+      url: '/images/sydney-face.png',
+      description: 'Plotting your demise at this very moment.',
+      alttext: '"Everyone sucks but not kitteh. -Sydney"',
+    },
+    {
+      itemId: 9,
+      url: '/images/ananda.png',
+      description: 'These are some big-ass headphones.',
+      alttext: 'Worth.',
+    },
+    {
+      itemId: 6,
+      url: '/images/cronk.png',
+      description: "Oh, right. The poison. The poison for Kuzco. The poison chosen especially to kill Kuzco. Kusco's poison.",
+      alttext: 'Pull the lever, Cronk.',
     },
   ],
   categories: [

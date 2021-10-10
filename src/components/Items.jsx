@@ -70,14 +70,17 @@ const Items = () => {
   }, [queryObject, activePage]);
 
   return (
-    <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
-      <Row>
-        <ItemSearch
-          setQuery={setQuery}
-          setQueryObject={setQueryObject}
-        />
-      </Row>
-      {
+    <>
+      <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
+        <Row>
+          <ItemSearch
+            setQuery={setQuery}
+            setQueryObject={setQueryObject}
+          />
+        </Row>
+      </Container>
+      <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
+        {
         noResults ? (
           <Row>
             <h1>No matching results for that search.</h1>
@@ -96,7 +99,7 @@ const Items = () => {
             </Row>
           )
         }
-      {
+        {
         (pages > 1)
         && (
           <Row>
@@ -106,7 +109,8 @@ const Items = () => {
           </Row>
         )
       }
-    </Container>
+      </Container>
+    </>
   );
 };
 

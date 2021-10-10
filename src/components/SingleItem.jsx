@@ -11,7 +11,7 @@ const SingleItem = () => {
   const { itemId } = useParams();
   const [errorState, setErrorState] = useState(false);
   const [itemToDisplay, setItemToDisplay] = useState(null);
-  const showGallery = itemToDisplay && itemToDisplay.images.length > 1;
+  const showGalleryControls = itemToDisplay && itemToDisplay.images.length > 1;
   useEffect(() => {
     const getItem = async (id) => {
       const { item, success } = await getItemById(id);
@@ -26,20 +26,73 @@ const SingleItem = () => {
   if (errorState) return (<h1>Problem loading item. Please try again!</h1>);
   if (!itemToDisplay) return (<h1>Loading...</h1>);
 
-  if (showGallery) {
-    return (
-      <Container>
-        <Row>
-          <h1>{itemToDisplay.title}</h1>
-        </Row>
-        <Row>
-          <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
-        </Row>
-        <Row className="justify-content-center">
-          <Carousel
-            className="d-block w-75"
-          >
-            {
+  // return (
+  //   <Container>
+  //     <Row>
+  //       <h1>{itemToDisplay.title}</h1>
+  //     </Row>
+  //     <Row>
+  //       <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
+  //     </Row>
+  //     <Row className="justify-content-center">
+  //       {
+  //         showGalleryControls
+  //           ? (
+  //             <Carousel
+  //               className="d-block w-75"
+  //             >
+  //               {
+  //           itemToDisplay.images.map((image) => (
+  //             <Carousel.Item
+  //               key={image.id}
+  //             >
+  //               <img
+  //                 className="d-block w-100"
+  //                 src={image.url}
+  //                 alt={image.alttext}
+  //               />
+  //               <Carousel.Caption style={{
+  //                 backgroundColor: 'rgba(188,193,191,0.5)',
+  //                 color: 'black',
+  //                 padding: '.5vw',
+  //                 fontSize: '1.5vw',
+  //                 fontWeight: 'bold',
+  //               }}
+  //               >
+  //                 <p>{image.description}</p>
+  //               </Carousel.Caption>
+  //             </Carousel.Item>
+  //           ))
+  //         }
+  //             </Carousel>
+  //           )
+  //           : (
+  //             <Image src={itemToDisplay.images[0].url} className="d-block w-75" />
+  //           )
+  //       }
+  //     </Row>
+  //     <Row className="mt-2">
+  //       <h4>{itemToDisplay.description}</h4>
+  //     </Row>
+  //   </Container>
+  // );
+
+  return (
+    <Container>
+      <Row>
+        <h1>
+          {itemToDisplay.title}
+        </h1>
+      </Row>
+      <Row>
+        <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
+      </Row>
+      <Row className="justify-content-center">
+        <Carousel
+          className="d-block w-75"
+          controls={showGalleryControls}
+        >
+          {
             itemToDisplay.images.map((image) => (
               <Carousel.Item
                 key={image.id}
@@ -49,29 +102,23 @@ const SingleItem = () => {
                   src={image.url}
                   alt={image.alttext}
                 />
+                <Carousel.Caption
+                  style={{
+                    backgroundColor: 'rgba(188,193,191,0.65)',
+                    color: 'white',
+                    fontSize: '1.5vw',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <p>{image.description}</p>
+                </Carousel.Caption>
               </Carousel.Item>
             ))
           }
-          </Carousel>
-        </Row>
-        <Row>
-          <h3>{itemToDisplay.description}</h3>
-        </Row>
-      </Container>
-    );
-  }
-
-  return (
-    <Container>
-      <Row>
-        <h1>Not the carousel</h1>
-        <h1>{itemToDisplay.title}</h1>
+        </Carousel>
       </Row>
-      <Row>
-        <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
-      </Row>
-      <Row className="justify-content-center">
-        <Image src={itemToDisplay.images[0].url} className="d-block w-75" />
+      <Row className="mt-2">
+        <h4>{itemToDisplay.description}</h4>
       </Row>
     </Container>
   );
