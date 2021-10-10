@@ -5,6 +5,7 @@ import React, { createContext, useReducer } from 'react';
 const initialState = {
   isLoggedIn: false,
   username: null,
+  userCart: null,
   // Add new data to state here
 };
 
@@ -49,6 +50,13 @@ const StateProvider = ({ children }) => {
         return newState;
       }
       // Add new state-changing methods here
+      case 'updateCart': {
+        const newState = {
+          ...oldData,
+          userCart: action.value,
+        };
+        return newState;
+      }
 
       default:
         throw new Error('No state action provided!');

@@ -1,14 +1,19 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import Axios from 'axios';
 import Items from './Items';
+import Cart from './Cart';
 import { store } from './State';
 import './App.css';
 import Navigation from './Navigation';
+import { getCart } from '../api';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
-  const { isLoggedIn, username } = state;
+  const { isLoggedIn, username, userCart } = state;
+  const [badgeNumber, setBadgeNumber] = useState(null);
+  const [cartShow, setCartShow] = useState(false);
+
   useEffect(() => {
     const checkForLogin = async () => {
       const config = {
@@ -27,86 +32,59 @@ const App = () => {
           type: 'setUsername',
           value: username,
         });
+        const { success: cartSuccess, cart } = await getCart();
+        if (cartSuccess) {
+          dispatch({
+            type: 'updateCart',
+            value: cart,
+          });
+          let total = 0;
+          cart.items.forEach((item) => {
+            total += item.quantity;
+          });
+          setBadgeNumber(total);
+        }
       }
     };
     checkForLogin();
   }, []);
 
-  // const loginClickHandler = async () => {
-  //   const body = {
-  //     username: 'catcatsby',
-  //     password: 'password',
-  //   };
-  //   const config = {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(body),
-  //   };
-
-  //   const fetchResult = await fetch('/api/users/login', config);
-  //   const { success, loggedInUser } = await fetchResult.json();
-  //   if (success) {
-  //     dispatch({
-  //       type: 'updateIsLoggedIn',
-  //       value: true,
-  //     });
-  //     dispatch({
-  //       type: 'setUsername',
-  //       value: loggedInUser,
-  //     });
-  //   }
-  // };
-
-  // const logoutClickHandler = async () => {
-  //   const config = {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   };
-
-  //   const fetchResult = await fetch('/api/users/logout', config);
-  //   const json = await fetchResult.json();
-  //   dispatch({
-  //     type: 'updateIsLoggedIn',
-  //     value: false,
-  //   });
-  //   dispatch({
-  //     type: 'deleteUsername',
-  //     value: null,
-  //   });
-  // };
+  useEffect(() => {
+    const checkForCartChanges = async () => {
+      const { success: cartSuccess, cart } = await getCart();
+      if (cartSuccess) {
+        dispatch({
+          type: 'updateCart',
+          value: cart,
+        });
+        let total = 0;
+        cart.items.forEach((item) => {
+          total += item.quantity;
+        });
+        setBadgeNumber(total);
+      } else {
+        dispatch({
+          type: 'updateCart',
+          value: null,
+        });
+        setBadgeNumber(null);
+      }
+    };
+    checkForCartChanges();
+  }, [username]);
 
   return (
     <BrowserRouter>
       <div className="App">
-        <Navigation />
+        <Navigation itemCount={badgeNumber} cartShow={cartShow} setCartShow={setCartShow} />
+        <Cart cartShow={cartShow} setCartShow={setCartShow} />
         <Switch>
           <Route exact path="/items" component={Items} />
+          <Route exact path="/cart" component={Cart} />
           <Route path="/">
             <header className="App-header">
               <h1>RARE SHIT</h1>
             </header>
-            {/* <div>
-              {
-                isLoggedIn
-                && (
-                  <p>
-                    Logged in as
-                    {' '}
-                    {username}
-                  </p>
-                )
-              }
-            </div> */}
-            {/* <div>
-              <button onClick={loginClickHandler} type="button">Log in catcatsby</button>
-            </div>
-            <div>
-              <button onClick={logoutClickHandler} type="button">Log out</button>
-            </div> */}
           </Route>
         </Switch>
       </div>

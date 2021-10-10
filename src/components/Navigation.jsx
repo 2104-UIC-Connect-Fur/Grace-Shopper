@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
 import {
-  Navbar, Container, Nav, NavDropdown,
+  Navbar, Container, Nav, NavDropdown, Badge,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { store } from './State';
 import Login from './Login';
-import Cart from '../images/Cart.png';
+import CartPic from '../images/CartPic.png';
 import { logoutUser } from '../api';
 
-const Navigation = () => {
+const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
-  const { isLoggedIn, username } = state;
+  const { isLoggedIn, username, userCart } = state;
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
 
@@ -28,6 +28,14 @@ const Navigation = () => {
     }
   };
 
+  const cartClickHandler = () => {
+    if (!cartShow) {
+      setCartShow(true);
+    } else {
+      setCartShow(false);
+    }
+  };
+
   return (
     <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
       <Container>
@@ -38,7 +46,7 @@ const Navigation = () => {
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/">
+            <LinkContainer to="/items">
               <Nav.Link>Items</Nav.Link>
             </LinkContainer>
 
@@ -47,8 +55,10 @@ const Navigation = () => {
             </LinkContainer>
             {isLoggedIn ? (
               <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
+                <NavDropdown.Item href="/">Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/">My Orders</NavDropdown.Item>
+                <NavDropdown.Divider />
                 <NavDropdown.Item onClick={signOutClickHandler}>Sign Out</NavDropdown.Item>
-                <NavDropdown.Item href="/">Another action</NavDropdown.Item>
               </NavDropdown>
             ) : (
               <Container onClick={() => setLoginModalShow(true)}>
@@ -67,14 +77,15 @@ const Navigation = () => {
         </Navbar.Collapse>
       </Container>
       <Container className="justify-content-end">
-        <Navbar.Brand href="/">
+        <Navbar.Brand onClick={cartClickHandler} style={{ cursor: 'pointer' }}>
           <img
-            src={Cart}
+            src={CartPic}
             width="30"
             height="auto"
             className="d-inline-block align-top"
             alt="shopping cart"
           />
+          {itemCount && <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>{ itemCount }</Badge>}
         </Navbar.Brand>
       </Container>
     </Navbar>
