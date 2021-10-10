@@ -16,6 +16,7 @@ const Login = ({
   const [password, setPassword] = useState();
   const [currUsername, setCurrUsername] = useState();
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const checkHandler = () => {
     if (rememberMe) {
@@ -27,18 +28,21 @@ const Login = ({
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const { success, loggedInUser } = await loginUser(currUsername, password, rememberMe);
+    // const { success, loggedInUser } = await loginUser(currUsername, password, rememberMe);
+    const loginResult = await loginUser(currUsername, password, rememberMe);
 
-    if (success) {
+    if (loginResult.success) {
       dispatch({
         type: 'updateIsLoggedIn',
         value: true,
       });
       dispatch({
         type: 'setUsername',
-        value: loggedInUser,
+        value: loginResult.loggedInUser,
       });
       setLoginModalShow(false);
+    } else {
+      setErrorMessage(loginResult.message);
     }
   };
 
@@ -74,6 +78,7 @@ const Login = ({
                 setPassword(e.target.value);
               }}
             />
+            {errorMessage && <p className="mt-3" style={{ color: 'red' }}>{errorMessage}</p>}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Remember me" onChange={checkHandler} />

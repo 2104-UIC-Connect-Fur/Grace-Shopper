@@ -4,6 +4,7 @@ const itemsRouter = require('./items');
 const userRouter = require('./users');
 require('dotenv').config();
 const { getUserById } = require('../db');
+const ordersRouter = require('./orders');
 
 const { JWT_SECRET = 'default' } = process.env;
 apiRouter.use(async (req, res, next) => {
@@ -26,5 +27,6 @@ apiRouter.use(async (req, res, next) => {
 
 apiRouter.use('/items', itemsRouter);
 apiRouter.use('/users', userRouter);
+apiRouter.use('/orders', ordersRouter);
 
 module.exports = apiRouter;

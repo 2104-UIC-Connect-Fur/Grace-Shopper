@@ -122,3 +122,32 @@ export async function getItemById(id) {
     throw error;
   }
 }
+
+export async function getCart() {
+  try {
+    const { data } = await axios.get('/api/users/cart');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export const addOrSubtractItem = async (orderId, itemId, quantity) => {
+  const body = {
+    orderId,
+    itemId,
+    quantity,
+  };
+  const config = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const fetchResult = await fetch('/api/orders/items', config);
+  const json = await fetchResult.json();
+  console.log(json);
+  return json;
+};

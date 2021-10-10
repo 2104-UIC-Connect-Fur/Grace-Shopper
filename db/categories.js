@@ -1,4 +1,4 @@
-const { client } = require("./client");
+const { client } = require('./client');
 
 async function createCategories({ name, description }) {
   try {
@@ -10,7 +10,7 @@ async function createCategories({ name, description }) {
                   VALUES($1, $2) 
                   RETURNING *;
                 `,
-      [name, description]
+      [name, description],
     );
     return categories;
   } catch (error) {
@@ -27,7 +27,7 @@ async function getItemsByCategoryName({ name }) {
           SELECT * FROM categories
           WHERE "name" = $1;
           `,
-      [name]
+      [name],
     );
 
     return item;
@@ -43,8 +43,9 @@ async function getItemsByCategoryId(categoryId) {
             SELECT items.title, items.description, items.price
             FROM itemscategories
             JOIN items ON itemscategories."itemId"=items.id
-            WHERE "categoryId"=${categoryId};
-          `
+            WHERE "categoryId"=$1;
+          `,
+      [categoryId],
     );
     return items;
   } catch (error) {
