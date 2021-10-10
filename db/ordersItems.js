@@ -34,7 +34,8 @@ async function updateItemQuantityOnOrder({ orderId, itemId, quantity }) {
     const { rows: [item] } = await client.query(`
             UPDATE ordersitems
             SET quantity=$3
-            WHERE "orderId"=$1 AND "itemId"=$2;
+            WHERE "orderId"=$1 AND "itemId"=$2
+            RETURNING *;
         `, [orderId, itemId, quantity]);
     return item;
   } catch (error) {

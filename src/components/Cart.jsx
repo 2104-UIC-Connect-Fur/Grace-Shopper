@@ -35,6 +35,13 @@ const Cart = ({ cartShow, setCartShow }) => {
     }
   };
 
+  const updateCart = (cartObject) => {
+    dispatch({
+      action: 'updateCart',
+      value: cartObject,
+    });
+  };
+
   return (
     <Offcanvas show={cartShow} onHide={() => setCartShow(false)} placement="end">
       <Offcanvas.Header closeButton>
