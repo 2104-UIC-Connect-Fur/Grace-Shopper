@@ -21,25 +21,32 @@ const Cart = ({ cartShow, setCartShow }) => {
   const subtotal = subtotalArr.reduce((a, b) => a + b, 0);
   //   console.log(subtotal);
 
+  const updateCart = (cartObject) => {
+    dispatch({
+      type: 'updateCart',
+      value: cartObject,
+    });
+  };
+
   const addHandler = async (currItem) => {
     // eslint-disable-next-line max-len
-    const result = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
-    console.log(result);
+    const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
+    console.log(quantity);
+    const tempCart = { ...userCart };
+    const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+    tempCart.items[itemIndex].quantity = quantity;
+    updateCart(tempCart);
   };
 
   const subtractHandler = async (currItem) => {
     if (currItem.quantity > 0) {
-      // eslint-disable-next-line max-len
-      const result = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
-      console.log(result);
+      const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
+      console.log(quantity);
+      const tempCart = { ...userCart };
+      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+      tempCart.items[itemIndex].quantity = quantity;
+      updateCart(tempCart);
     }
-  };
-
-  const updateCart = (cartObject) => {
-    dispatch({
-      action: 'updateCart',
-      value: cartObject,
-    });
   };
 
   return (

@@ -73,6 +73,16 @@ const App = () => {
     checkForCartChanges();
   }, [username]);
 
+  useEffect(() => {
+    if (userCart && userCart.items.length) {
+      let total = 0;
+      userCart.items.forEach((item) => {
+        total += item.quantity;
+      });
+      setBadgeNumber(total);
+    }
+  }, [userCart]);
+
   return (
     <BrowserRouter>
       <div className="App">
