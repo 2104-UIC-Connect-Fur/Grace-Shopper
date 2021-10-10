@@ -87,9 +87,11 @@ const SingleItem = () => {
       <Row>
         <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
       </Row>
-      <Row className="justify-content-center">
+      <Row
+        className="justify-content-center"
+      >
         <Carousel
-          className="d-block w-75"
+          className="d-block col-sm-4 col-md-6 col-lg-8"
           controls={showGalleryControls}
         >
           {

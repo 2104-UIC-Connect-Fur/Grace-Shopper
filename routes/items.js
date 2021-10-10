@@ -48,7 +48,7 @@ itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
 itemsRouter.post('/search', async (req, res, next) => {
   try {
     const queryObject = req.body;
-    if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 25;
+    if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 12;
     // console.log('search query: ', queryObject);
     const items = await getItemsFromQuery(queryObject);
     // console.log(`items from search ${queryObject}:`, items);

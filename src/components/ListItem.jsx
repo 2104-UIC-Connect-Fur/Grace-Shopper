@@ -16,7 +16,11 @@ const ListItem = ({
   } = item;
   const mainImage = images[0].url;
   return (
-    <Col className="col-lg-3 col-md-4 col-sm-12 mb-2">
+    <Col
+      className="col-lg-3 col-md-4 col-sm-12 mb-2"
+      sm={12}
+      md={4}
+    >
       <Card className="h-100">
         <Link
           to={`/items/${id}`}
