@@ -1,53 +1,98 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/no-this-in-sfc */
-/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import Container from 'react-bootstrap/Container';
+import Pagination from 'react-bootstrap/Pagination';
+import Row from 'react-bootstrap/Row';
 import ListItem from './ListItem';
 import ItemSearch from './ItemSearch';
 import { getItemsFromQuery } from '../api/index';
 
 const Items = () => {
+  const [pages, setPages] = useState(1);
+  const [activePage, setActivePage] = useState(1);
+  const [noResults, setNoResults] = useState(false);
   const [displayItems, updateDisplayItems] = useState([]);
-  const [userSearchString, updateUserSearchString] = useState('');
   const { search } = useLocation();
-  const [query, setQuery] = useState(search);
   const history = useHistory();
-  const queryObject = queryString.parse(query, {
+  const [query, setQuery] = useState(search);
+  const [queryObject, setQueryObject] = useState(queryString.parse(query, {
     parseBooleans: true,
     parseNumbers: true,
-    arrayFormat: 'comma',
-  });
-  console.log('queryObject: ', queryObject);
+  }));
+  queryObject.page = activePage;
+  if (typeof queryObject.categoryIds === 'number') {
+    const categoryIdAsArray = [queryObject.categoryIds];
+    queryObject.categoryIds = categoryIdAsArray;
+  }
+
+  const changePage = (currentPage) => {
+    const tempQueryObject = { ...queryObject };
+    tempQueryObject.page = currentPage;
+    const tempQuery = queryString.stringify(tempQueryObject);
+    setQueryObject(tempQueryObject);
+    setQuery(tempQuery);
+    setActivePage(currentPage);
+    history.push({
+      pathname: '/items/',
+      search: `${tempQuery}`,
+    });
+  };
+
+  const paginationPages = [];
+  for (let currentPage = 1; currentPage <= pages; currentPage += 1) {
+    paginationPages.push(
+      <Pagination.Item
+        key={currentPage}
+        active={currentPage === activePage}
+        onClick={() => { changePage(currentPage); }}
+      >
+        {currentPage}
+      </Pagination.Item>,
+    );
+  }
+  // console.log('queryObject: ', queryObject);
   useEffect(() => {
     const getItems = async () => {
-      const { items, success, totalResults } = await getItemsFromQuery(queryObject);
+      const {
+        items, success, totalResults, pages: apiPages,
+      } = await getItemsFromQuery(queryObject);
       if (success && totalResults > 0) {
+        console.log('fetched items: ', items);
         updateDisplayItems(items);
+        setPages(apiPages);
+        setNoResults(false);
+      } else if (success && totalResults === 0) {
+        setNoResults(true);
       }
     };
     getItems();
-  }, [query]);
-  const clickHandler = async (e) => {
-    e.preventDefault();
-    const URISearchString = encodeURI(userSearchString);
-    setQuery(`?searchString=${URISearchString}`);
-    history.push({
-      pathname: '/items',
-      search: `?searchString=${URISearchString}`,
-    });
-  };
-  if (!displayItems.length) return (<h1>Loading...</h1>);
+  }, [queryObject, activePage]);
 
   return (
-    <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
-      <ItemSearch />
-      <>
-        <input type="text" value={userSearchString} onChange={(e) => { updateUserSearchString(e.target.value); }} />
-        <button type="button" onClick={clickHandler}>Change search string</button>
+    <Container
+      className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3"
+    >
+      <Container
+        className="mb-2"
+      >
+        <Row>
+          <ItemSearch
+            setQuery={setQuery}
+            setQueryObject={setQueryObject}
+          />
+        </Row>
+      </Container>
+      <Container>
         {
+        noResults ? (
+          <Row>
+            <h1>No matching results for that search.</h1>
+          </Row>
+        )
+          : (
+            <Row>
+              {
         displayItems.map((item) => (
           <ListItem
             item={item}
@@ -55,7 +100,20 @@ const Items = () => {
           />
         ))
       }
-      </>
+            </Row>
+          )
+        }
+        {
+        (pages > 1)
+        && (
+          <Row>
+            <Pagination size="lg">
+              {paginationPages}
+            </Pagination>
+          </Row>
+        )
+      }
+      </Container>
     </Container>
   );
 };

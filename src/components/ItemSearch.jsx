@@ -1,59 +1,106 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import OffCanvas from 'react-bootstrap/OffCanvas';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import { func } from 'prop-types';
+import queryString from 'query-string';
 import { formatAsCurrency } from '../utils';
 import { getAllCategories } from '../api';
 
-const ItemSearch = () => {
+const ItemSearch = ({ setQuery, setQueryObject }) => {
+  const history = useHistory();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [categoryIds, setCategoryIds] = useState([]);
   const [priceLow, setPriceLow] = useState(0);
   const [priceHigh, setPriceHigh] = useState(1000000);
-  const [userSearchTerm, setUserSearchTerm] = useState(null);
-  const [categoryIds, setCategoryIds] = useState([]);
+  const [userSearchTerm, setUserSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
-
+  // console.log('state: ', {
+  //   categoryIds,
+  //   priceLow,
+  //   priceHigh,
+  //   userSearchTerm,
+  // });
   useEffect(() => {
     const getCategories = async () => {
-      const fetchedCategories = await getAllCategories();
-      setCategories(fetchedCategories);
+      const { success, categories: fetchedCategories } = await getAllCategories();
+      if (success) setCategories(fetchedCategories);
     };
     getCategories();
   }, []);
+  const handleChange = (val) => setCategoryIds(val);
+
+  const searchHandler = async () => {
+    const queryObject = {
+      categoryIds,
+      priceLow,
+      priceHigh,
+      searchString: userSearchTerm,
+    };
+    const query = queryString.stringify(queryObject);
+    setQuery(query);
+    setQueryObject(queryObject);
+    history.push({
+      pathname: '/items/',
+      search: `${query}`,
+    });
+    setShow(false);
+  };
+
+  const clearSearch = () => {
+    setCategoryIds([]);
+    setPriceLow(0);
+    setPriceHigh(1000000);
+    setUserSearchTerm('');
+    setQuery('');
+    setQueryObject({});
+    history.push({
+      pathname: '/items/',
+      search: '',
+    });
+  };
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
+      <Button
+        variant="primary"
+        onClick={handleShow}
+        style={{
+          width: '10%',
+          margin: 'auto',
+        }}
+      >
+        🔎
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Refine Items</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <OffCanvas show={show} onHide={handleClose} className="content-align-center">
+        <OffCanvas.Header closeButton>
+          <OffCanvas.Title>Refine Items</OffCanvas.Title>
+        </OffCanvas.Header>
+        <OffCanvas.Body>
+          <Form onSubmit={searchHandler}>
             <Form.Group as={Row} className="mb-3" controlId="Title">
-              <Form.Label column sm={2}>
+              <Form.Label as={Row}>
                 Search title or description
               </Form.Label>
-              <Col sm={10}>
-                <Form.Control
-                  size="lg"
-                  type="text"
-                  placeholder="type your search here"
-                  onChange={(event) => {
-                    event.preventDefault();
-                  }}
-                />
-              </Col>
+              <Form.Control
+                size="lg"
+                type="text"
+                placeholder="type your search here"
+                value={userSearchTerm}
+                onChange={(event) => {
+                  setUserSearchTerm(event.target.value);
+                }}
+              />
             </Form.Group>
             <Form.Group as={Row} className="sm-12 lg-12" controlId="priceLow">
-              <Form.Label column sm={12} lg={12}>
+              <Form.Label as={Row}>
                 Low price threshold (
                 {formatAsCurrency(priceLow)}
                 )
@@ -73,7 +120,7 @@ const ItemSearch = () => {
               />
             </Form.Group>
             <Form.Group as={Row} className="sm-12 lg-12" controlId="priceHigh">
-              <Form.Label column sm={12} lg={12}>
+              <Form.Label as={Row}>
                 High price threshold (
                 {formatAsCurrency(priceHigh)}
                 )
@@ -92,19 +139,53 @@ const ItemSearch = () => {
                 }}
               />
             </Form.Group>
+            <Form.Group as={Row} className="sm-12 lg-12" controlId="categories">
+              <Form.Label as={Row}>
+                Categories
+              </Form.Label>
+              {
+                (categories.length > 0) && (
+                  <ToggleButtonGroup
+                    as={Row}
+                    className="sm-12 lg-12 flex-wrap justify-content-between"
+                    type="checkbox"
+                    value={categoryIds}
+                    onChange={handleChange}
+                  >
+                    {
+                      categories.map((category) => (
+                        <ToggleButton
+                          key={category.id}
+                          id={`tbg-btn-${category.id}`}
+                          value={category.id}
+                          variant="outline-primary"
+                        >
+                          {category.name}
+                        </ToggleButton>
+                      ))
+                    }
+                  </ToggleButtonGroup>
+                )
+              }
+            </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Row className="mt-2">
+            <Button variant="secondary" onClick={clearSearch} className="w-50">
+              Clear Search
+            </Button>
+            <Button variant="primary" onClick={searchHandler} className="w-50">
+              Search
+            </Button>
+          </Row>
+        </OffCanvas.Body>
+      </OffCanvas>
     </>
   );
+};
+
+ItemSearch.propTypes = {
+  setQuery: func.isRequired,
+  setQueryObject: func.isRequired,
 };
 
 export default ItemSearch;

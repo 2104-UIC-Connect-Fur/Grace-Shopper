@@ -96,14 +96,26 @@ export async function getAllCategories() {
 
 export async function getItemsFromQuery(queryObject) {
   try {
+    const { data } = await axios.post('/api/items/search', queryObject);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getItemById(id) {
+  try {
     const config = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: queryObject,
+      body: {
+        itemId: id,
+      },
     };
-    const { data } = await axios.post('/api/items/search', config);
+    const { data } = await axios.get(`/api/items/byItemId/${id}`, config);
     return data;
   } catch (error) {
     console.log(error);

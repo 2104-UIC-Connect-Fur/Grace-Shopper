@@ -5,6 +5,7 @@ const {
   getItemsByCategoryId,
   getItemsFromQuery,
   getAllCategories,
+  getItemsById,
 } = require('../db');
 
 const { requireUser } = require('./utils');
@@ -29,16 +30,31 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
   }
 });
 
+itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
+  try {
+    console.log('in item id route');
+    const { itemId } = req.params;
+    const item = await getItemsById(itemId);
+    res.send({
+      success: true,
+      item,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 itemsRouter.post('/search', async (req, res, next) => {
   try {
-    const { body: queryObject } = req.body;
-    const resultsPerPage = queryObject.resultsPerPage ?? 25;
-    console.log('search query: ', queryObject);
+    const queryObject = req.body;
+    if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 25;
+    // console.log('search query: ', queryObject);
     const items = await getItemsFromQuery(queryObject);
-    console.log(`items from search ${queryObject}:`, items);
+    // console.log(`items from search ${queryObject}:`, items);
     if (items.length > 0) {
-      const totalResults = items[0].totalresults;
-      const pages = Math.ceil(totalResults / resultsPerPage);
+      const totalResults = Number(items[0].totalresults);
+      const pages = Math.ceil(totalResults / queryObject.resultsPerPage);
       return res.send({
         success: true,
         totalResults,

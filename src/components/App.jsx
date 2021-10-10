@@ -5,6 +5,7 @@ import Items from './Items';
 import { store } from './State';
 import './App.css';
 import Navigation from './Navigation';
+import SingleItem from './SingleItem';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
@@ -85,6 +86,7 @@ const App = () => {
         <Navigation />
         <Switch>
           <Route exact path="/items" component={Items} />
+          <Route exact path="/items/:itemId" component={SingleItem} />
           <Route path="/">
             <header className="App-header">
               <h1>RARE SHIT</h1>
