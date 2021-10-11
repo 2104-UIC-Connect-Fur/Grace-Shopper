@@ -178,4 +178,5 @@ module.exports = {
   createItemsCategories,
   getItemsFromQuery,
   getAllCategories,
+  getItemImages,
 };

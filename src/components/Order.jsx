@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Offcanvas from 'react-bootstrap';
 import OrderItem from './OrderItem';
 import { store } from './State';
 import { getCart } from '../api';
@@ -27,6 +28,7 @@ const Order = () => {
     <Container>
       <h1
         style={{
+        //   boxShadow: '0px 5px 10px lightgrey',
           fontSize: '7vw',
         }}
       >
@@ -41,11 +43,11 @@ const Order = () => {
             />
           ))
         }
-      <h4>
+      <h3 className="font-weight-bold">
         Subtotal:
         {' '}
         {formatAsCurrency(subTotal)}
-      </h4>
+      </h3>
     </Container>
   );
 };
