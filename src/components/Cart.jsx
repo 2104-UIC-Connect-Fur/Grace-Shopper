@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import {
   Offcanvas, ListGroup, Button, Row, Col,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { store } from './State';
 import { formatAsCurrency } from '../utils';
 import deleteIcon from '../images/deleteIcon.svg';
@@ -110,6 +111,21 @@ const Cart = ({ cartShow, setCartShow }) => {
           </Row>
         </ListGroup.Item>
       </ListGroup>
+      <Row
+        className="justify-content-end"
+      >
+        <Link
+          to="/order"
+        >
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => setCartShow(false)}
+          >
+            Checkout
+          </Button>
+        </Link>
+      </Row>
     </Offcanvas>
   );
 };
