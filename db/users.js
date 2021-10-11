@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const { client } = require("./client");
+const { client } = require('./client');
 
 async function createUser({
   username,
@@ -34,7 +34,7 @@ async function createUser({
         phonenumber,
         zipcode,
         isAdmin,
-      ]
+      ],
     );
     delete user.password;
     return user;
@@ -81,7 +81,7 @@ async function createUserPayment({
         ccsecuritycode,
         ccexpiration,
         zipcode,
-      ]
+      ],
     );
     return userpayment;
   } catch (error) {
@@ -113,7 +113,7 @@ async function createUserAddress({
           VALUES($1, $2, $3, $4, $5, $6) 
           RETURNING *;
         `,
-      [userId, street, apartment, city, state, zipcode]
+      [userId, street, apartment, city, state, zipcode],
     );
     return userAddress;
   } catch (error) {
@@ -130,8 +130,15 @@ async function getUserByUsername(username) {
         SELECT * FROM users
         WHERE username = $1;
       `,
-      [username]
+      [username],
     );
+    if (!user) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        success: false,
+        message: 'This user does not exist.',
+      };
+    }
     return user;
   } catch (error) {
     throw error;
@@ -145,9 +152,10 @@ async function getUser({ username, password }) {
     if (passwordsMatch) {
       return fetchedUser;
     }
+    // eslint-disable-next-line no-throw-literal
     throw {
       success: false,
-      message: "Username or password does not match. Please try again.",
+      message: 'Username or password does not match. Please try again.',
     };
   } catch (error) {
     throw error;
@@ -160,8 +168,8 @@ async function getUserById(id) {
       rows: [user],
     } = await client.query(`
         SELECT * FROM users
-        WHERE id=${id};
-      `);
+        WHERE id=$1;
+      `, [id]);
     return user;
   } catch (error) {
     throw error;
@@ -180,7 +188,7 @@ async function getUserCart(userId) {
       JOIN orders ON users.id = orders."userId"
       WHERE users.id = $1 AND orders.complete = false;
     `,
-      [userId]
+      [userId],
     );
     const { rows: ordersitems } = await client.query(`
       SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
