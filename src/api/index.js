@@ -106,16 +106,7 @@ export async function getItemsFromQuery(queryObject) {
 
 export async function getItemById(id) {
   try {
-    const config = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: {
-        itemId: id,
-      },
-    };
-    const { data } = await axios.get(`/api/items/byItemId/${id}`, config);
+    const { data } = await axios.get(`/api/items/byItemId/${id}`);
     return data;
   } catch (error) {
     console.log(error);

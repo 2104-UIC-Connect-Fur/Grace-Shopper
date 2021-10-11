@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap/Image';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
 import { getItemById } from '../api';
@@ -25,57 +24,6 @@ const SingleItem = () => {
   }, []);
   if (errorState) return (<h1>Problem loading item. Please try again!</h1>);
   if (!itemToDisplay) return (<h1>Loading...</h1>);
-
-  // return (
-  //   <Container>
-  //     <Row>
-  //       <h1>{itemToDisplay.title}</h1>
-  //     </Row>
-  //     <Row>
-  //       <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
-  //     </Row>
-  //     <Row className="justify-content-center">
-  //       {
-  //         showGalleryControls
-  //           ? (
-  //             <Carousel
-  //               className="d-block w-75"
-  //             >
-  //               {
-  //           itemToDisplay.images.map((image) => (
-  //             <Carousel.Item
-  //               key={image.id}
-  //             >
-  //               <img
-  //                 className="d-block w-100"
-  //                 src={image.url}
-  //                 alt={image.alttext}
-  //               />
-  //               <Carousel.Caption style={{
-  //                 backgroundColor: 'rgba(188,193,191,0.5)',
-  //                 color: 'black',
-  //                 padding: '.5vw',
-  //                 fontSize: '1.5vw',
-  //                 fontWeight: 'bold',
-  //               }}
-  //               >
-  //                 <p>{image.description}</p>
-  //               </Carousel.Caption>
-  //             </Carousel.Item>
-  //           ))
-  //         }
-  //             </Carousel>
-  //           )
-  //           : (
-  //             <Image src={itemToDisplay.images[0].url} className="d-block w-75" />
-  //           )
-  //       }
-  //     </Row>
-  //     <Row className="mt-2">
-  //       <h4>{itemToDisplay.description}</h4>
-  //     </Row>
-  //   </Container>
-  // );
 
   return (
     <Container>

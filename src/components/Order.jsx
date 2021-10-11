@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Offcanvas from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
 import OrderItem from './OrderItem';
 import { store } from './State';
 import { getCart } from '../api';
@@ -26,16 +26,20 @@ const Order = () => {
   if (!userCart) return (<h1>Loading...</h1>);
   return (
     <Container>
-      <h1
-        style={{
-        //   boxShadow: '0px 5px 10px lightgrey',
-          fontSize: '7vw',
-        }}
+      <Col
+        sm={12}
+        md={6}
       >
-        YOUR ORDER
-      </h1>
-      <h5>Wow. Look at all this rare shit.</h5>
-      {
+        <h1
+          style={{
+            //   boxShadow: '0px 5px 10px lightgrey',
+            fontSize: '7vw',
+          }}
+        >
+          YOUR ORDER
+        </h1>
+        <h5>Wow. Look at all this rare shit.</h5>
+        {
           userCart.items.map((item) => (
             <OrderItem
               key={item.itemId}
@@ -43,11 +47,12 @@ const Order = () => {
             />
           ))
         }
-      <h3 className="font-weight-bold">
-        Subtotal:
-        {' '}
-        {formatAsCurrency(subTotal)}
-      </h3>
+        <h3 className="font-weight-bold">
+          Subtotal:
+          {' '}
+          {formatAsCurrency(subTotal)}
+        </h3>
+      </Col>
     </Container>
   );
 };

@@ -32,7 +32,6 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
 
 itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
   try {
-    console.log('in item id route');
     const { itemId } = req.params;
     const item = await getItemsById(itemId);
     res.send({
