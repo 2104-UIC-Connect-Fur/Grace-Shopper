@@ -3,6 +3,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import Axios from 'axios';
 import Items from './Items';
 import Cart from './Cart';
+import AdminPanel from './AdminPanel';
 import { store } from './State';
 import './App.css';
 import Navigation from './Navigation';
@@ -93,6 +94,7 @@ const App = () => {
           <Route exact path="/items" component={Items} />
           <Route exact path="/items/:itemId" component={SingleItem} />
           <Route exact path="/cart" component={Cart} />
+          <Route exact path="/admin" component={AdminPanel} />
           <Route path="/">
             <header className="App-header">
               <h1>RARE SHIT</h1>
