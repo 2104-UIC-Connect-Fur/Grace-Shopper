@@ -1,13 +1,17 @@
-const adminRouter = require('express').Router();
-const { requireAdmin } = require('./utils');
+const adminRouter = require("express").Router();
+const { requireAdmin } = require("./utils");
 
-adminRouter.use('*', requireAdmin);
+adminRouter.use("*", requireAdmin);
 
-adminRouter.get('/isAdmin', (req, res, next) => {
-  res.send({
-    success: true,
-    isAdmin: true,
-  });
+adminRouter.get("/isAdmin", async (req, res, next) => {
+  try {
+    res.send({
+      success: true,
+      message: "Welcome!!",
+      isAdmin: true,
+    });
+  } catch (error) {
+    throw error;
+  }
 });
-
 module.exports = adminRouter;
