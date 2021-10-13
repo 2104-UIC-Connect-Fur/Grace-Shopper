@@ -38,7 +38,16 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   const subtractHandler = async (currItem) => {
-    if (currItem.quantity > 0) {
+    if (currItem.quantity === 1) {
+      const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      const tempCart = { ...userCart };
+      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+      // delete tempCart.items[itemIndex];
+      tempCart.items.splice(itemIndex, 1);
+      updateCart(tempCart);
+    }
+
+    if (currItem.quantity > 1) {
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
       const tempCart = { ...userCart };
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
@@ -49,7 +58,6 @@ const Cart = ({ cartShow, setCartShow }) => {
 
   const deleteHandler = async (currItem) => {
     const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
-    console.log(deletedItem);
     const tempCart = { ...userCart };
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
     // delete tempCart.items[itemIndex];
