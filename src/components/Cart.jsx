@@ -31,7 +31,6 @@ const Cart = ({ cartShow, setCartShow }) => {
     // eslint-disable-next-line max-len
     const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
     const tempCart = { ...userCart };
-    console.log(tempCart);
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
     tempCart.items[itemIndex].quantity = quantity;
     updateCart(tempCart);
@@ -42,12 +41,12 @@ const Cart = ({ cartShow, setCartShow }) => {
       const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
       const tempCart = { ...userCart };
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-      // delete tempCart.items[itemIndex];
       tempCart.items.splice(itemIndex, 1);
       updateCart(tempCart);
     }
 
     if (currItem.quantity > 1) {
+      // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
       const tempCart = { ...userCart };
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
@@ -60,7 +59,6 @@ const Cart = ({ cartShow, setCartShow }) => {
     const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
     const tempCart = { ...userCart };
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-    // delete tempCart.items[itemIndex];
     tempCart.items.splice(itemIndex, 1);
     updateCart(tempCart);
   };
@@ -86,15 +84,13 @@ const Cart = ({ cartShow, setCartShow }) => {
                 {item.title}
               </Col>
               <Col xs={2}>
-                {/* <input type="image" alt="delete item from cart" src={deleteIcon} onClick={() => { deleteHandler(item); }} /> */}
-                <img
-                  onClick={() => { deleteHandler(item); }}
+                <input
+                  type="image"
+                  alt="delete item from cart"
                   src={deleteIcon}
-                  width="auto"
                   height="12"
-                  className="justify-end"
-                  alt="x-shaped delete button"
-                  style={{ cursor: 'pointer' }}
+                  width="auto"
+                  onClick={() => { deleteHandler(item); }}
                 />
               </Col>
             </Row>
@@ -103,24 +99,24 @@ const Cart = ({ cartShow, setCartShow }) => {
                 <p><b>{formatAsCurrency(item.currentprice)}</b></p>
               </Col>
               <Col xs={3}>
-                <img
+                <input
+                  type="image"
                   onClick={() => { subtractHandler(item); }}
                   src={minus}
                   width="auto"
                   height="16"
-                  className="justify-end"
+                  className="pt-1"
                   alt="decrement item count"
-                  style={{ cursor: 'pointer' }}
                 />
                 {` ${item.quantity} `}
-                <img
+                <input
+                  type="image"
                   onClick={() => { addHandler(item); }}
                   src={plus}
                   width="auto"
                   height="16"
-                  className="justify-end"
+                  className="pt-1"
                   alt="increment item count"
-                  style={{ cursor: 'pointer' }}
                 />
               </Col>
             </Row>
@@ -154,21 +150,6 @@ const Cart = ({ cartShow, setCartShow }) => {
           </Row>
         </ListGroup.Item>
       </ListGroup>
-      {/* <Row
-        className="justify-content-end"
-      >
-        <Link
-          to="/order"
-        >
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => setCartShow(false)}
-          >
-            Checkout
-          </Button>
-        </Link>
-      </Row> */}
     </Offcanvas>
   );
 };
