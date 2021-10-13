@@ -76,13 +76,13 @@ const App = () => {
   }, [username]);
 
   useEffect(() => {
+    let total = 0;
     if (userCart && userCart.items.length) {
-      let total = 0;
       userCart.items.forEach((item) => {
         total += item.quantity;
       });
-      setBadgeNumber(total);
     }
+    setBadgeNumber(total);
   }, [userCart]);
 
   return (

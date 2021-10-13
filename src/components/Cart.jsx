@@ -31,6 +31,7 @@ const Cart = ({ cartShow, setCartShow }) => {
     // eslint-disable-next-line max-len
     const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
     const tempCart = { ...userCart };
+    console.log(tempCart);
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
     tempCart.items[itemIndex].quantity = quantity;
     updateCart(tempCart);
@@ -51,7 +52,8 @@ const Cart = ({ cartShow, setCartShow }) => {
     console.log(deletedItem);
     const tempCart = { ...userCart };
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-    delete tempCart.items[itemIndex];
+    // delete tempCart.items[itemIndex];
+    tempCart.items.splice(itemIndex, 1);
     updateCart(tempCart);
   };
 
@@ -76,6 +78,7 @@ const Cart = ({ cartShow, setCartShow }) => {
                 {item.title}
               </Col>
               <Col xs={2}>
+                {/* <input type="image" alt="delete item from cart" src={deleteIcon} onClick={() => { deleteHandler(item); }} /> */}
                 <img
                   onClick={() => { deleteHandler(item); }}
                   src={deleteIcon}
