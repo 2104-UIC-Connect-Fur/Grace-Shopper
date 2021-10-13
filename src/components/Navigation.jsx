@@ -4,7 +4,7 @@ import {
   Navbar, Container, Nav, NavDropdown, Badge,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { string, boolean, func } from 'prop-types';
+import { string, bool, func } from 'prop-types';
 import { store } from './State';
 import Login from './Login';
 import CartPic from '../images/CartPic.png';
@@ -112,7 +112,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
 
 Navigation.propTypes = {
   itemCount: string.isRequired,
-  cartShow: boolean.isRequired,
+  cartShow: bool.isRequired,
   setCartShow: func.isRequired,
 };
 
