@@ -8,19 +8,17 @@ import { formatAsCurrency } from '../utils';
 import deleteIcon from '../images/deleteIcon.svg';
 import plus from '../images/plus.png';
 import minus from '../images/minus.png';
-import { addOrSubtractItem } from '../api';
+import { addOrSubtractItem, removeItemFromOrder } from '../api';
 
 const Cart = ({ cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
   const { isLoggedIn, username, userCart } = state;
-  //   const [runningTotal, setRunningTotal] = useState(0);
 
   if (!userCart) {
     return '';
   }
   const subtotalArr = userCart.items.map((item) => item.currentprice * item.quantity);
   const subtotal = subtotalArr.reduce((a, b) => a + b, 0);
-  //   console.log(subtotal);
 
   const updateCart = (cartObject) => {
     dispatch({
@@ -32,7 +30,6 @@ const Cart = ({ cartShow, setCartShow }) => {
   const addHandler = async (currItem) => {
     // eslint-disable-next-line max-len
     const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
-    console.log(quantity);
     const tempCart = { ...userCart };
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
     tempCart.items[itemIndex].quantity = quantity;
@@ -40,14 +37,30 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   const subtractHandler = async (currItem) => {
-    if (currItem.quantity > 0) {
+    if (currItem.quantity === 1) {
+      const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      const tempCart = { ...userCart };
+      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+      tempCart.items.splice(itemIndex, 1);
+      updateCart(tempCart);
+    }
+
+    if (currItem.quantity > 1) {
+      // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
-      console.log(quantity);
       const tempCart = { ...userCart };
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
     }
+  };
+
+  const deleteHandler = async (currItem) => {
+    const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+    const tempCart = { ...userCart };
+    const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+    tempCart.items.splice(itemIndex, 1);
+    updateCart(tempCart);
   };
 
   return (
@@ -58,17 +71,26 @@ const Cart = ({ cartShow, setCartShow }) => {
       <ListGroup variant="flush">
         {userCart.items.map((item) => (
           <ListGroup.Item>
+            <Col>
+              <img
+                src={item.images[0].url}
+                width="auto"
+                height="60px"
+                alt="current product"
+              />
+            </Col>
             <Row>
               <Col>
                 {item.title}
               </Col>
               <Col xs={2}>
-                <img
+                <input
+                  type="image"
+                  alt="delete item from cart"
                   src={deleteIcon}
-                  width="auto"
                   height="12"
-                  className="justify-end"
-                  alt="x-shaped delete button"
+                  width="auto"
+                  onClick={() => { deleteHandler(item); }}
                 />
               </Col>
             </Row>
@@ -77,21 +99,23 @@ const Cart = ({ cartShow, setCartShow }) => {
                 <p><b>{formatAsCurrency(item.currentprice)}</b></p>
               </Col>
               <Col xs={3}>
-                <img
+                <input
+                  type="image"
                   onClick={() => { subtractHandler(item); }}
                   src={minus}
                   width="auto"
                   height="16"
-                  className="justify-end"
+                  className="pt-1"
                   alt="decrement item count"
                 />
                 {` ${item.quantity} `}
-                <img
+                <input
+                  type="image"
                   onClick={() => { addHandler(item); }}
                   src={plus}
                   width="auto"
                   height="16"
-                  className="justify-end"
+                  className="pt-1"
                   alt="increment item count"
                 />
               </Col>
@@ -109,23 +133,23 @@ const Cart = ({ cartShow, setCartShow }) => {
               <b>{formatAsCurrency(subtotal)}</b>
             </Col>
           </Row>
+          <Row
+            className="mt-3 justify-content-end"
+          >
+            <Link
+              to="/order"
+            >
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setCartShow(false)}
+              >
+                Checkout
+              </Button>
+            </Link>
+          </Row>
         </ListGroup.Item>
       </ListGroup>
-      <Row
-        className="justify-content-end"
-      >
-        <Link
-          to="/order"
-        >
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => setCartShow(false)}
-          >
-            Checkout
-          </Button>
-        </Link>
-      </Row>
     </Offcanvas>
   );
 };

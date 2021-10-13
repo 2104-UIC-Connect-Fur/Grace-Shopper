@@ -1,18 +1,13 @@
 const ordersRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const {
   updateItemQuantityOnOrder,
+  deleteItemFromOrder,
 } = require('../db');
-const { requireUser } = require('./utils');
-
-const { JWT_SECRET = 'default' } = process.env;
 
 ordersRouter.patch('/items', async (req, res, next) => {
   try {
-    console.log(`what is on the req body: ${req.body.itemId}`);
     const item = await updateItemQuantityOnOrder(req.body);
-    console.log(`in the updateItemQuantityOnOrder route: ${item}`);
     res.send({
       success: true,
       orderItem: item,
@@ -23,6 +18,22 @@ ordersRouter.patch('/items', async (req, res, next) => {
       success: false,
       name: 'itemQuanityChangeError',
       message: 'Unable to update item quantity.',
+    });
+  }
+});
+
+ordersRouter.delete('/items', async (req, res, next) => {
+  try {
+    const item = await deleteItemFromOrder(req.body);
+    res.send({
+      success: true,
+      deletedItem: item,
+    });
+  } catch (error) {
+    next({
+      success: false,
+      name: 'itemDeleteError',
+      message: 'Unable to delete item from order.',
     });
   }
 });

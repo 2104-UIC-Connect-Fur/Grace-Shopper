@@ -139,6 +139,22 @@ export const addOrSubtractItem = async (orderId, itemId, quantity) => {
   };
   const fetchResult = await fetch('/api/orders/items', config);
   const json = await fetchResult.json();
-  console.log(json);
+  return json;
+};
+
+export const removeItemFromOrder = async (orderId, itemId) => {
+  const body = {
+    orderId,
+    itemId,
+  };
+  const config = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const fetchResult = await fetch('/api/orders/items', config);
+  const json = await fetchResult.json();
   return json;
 };

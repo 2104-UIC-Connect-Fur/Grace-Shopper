@@ -92,13 +92,8 @@ userRouter.get('/cart', requireUser, async (req, res, next) => {
     const cart = await getUserCart(id);
     const { items } = cart;
     for (const item of items) {
-      console.log('item: ', item);
       item.images = await getItemImages(item.itemId);
     }
-    // items.forEach(async (item) => {
-    //   const fetchedImages = await getItemImages(item.itemId);
-    //   item.images = fetchedImages;
-    // });
     res.send({
       success: true,
       cart,
