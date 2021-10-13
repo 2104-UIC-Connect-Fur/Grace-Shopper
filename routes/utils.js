@@ -2,8 +2,8 @@ function requireUser(req, res, next) {
   if (!req.user) {
     next({
       success: false,
-      name: 'MissingUserError',
-      message: 'You must be logged in to perform this action',
+      name: "MissingUserError",
+      message: "You must be logged in to perform this action",
     });
   }
 
@@ -15,16 +15,16 @@ function requireAdmin(req, res, next) {
   if (denied) {
     next({
       success: false,
-      name: 'NotAdminError',
-      message: 'You do not have administrator access. Get lost.',
+      message: "PERMISSION DENIED. YOU DIDN'T SAY THE MAGIC WORD!",
     });
   }
   next();
 }
 
-const createQuerySetString = (obj) => Object.keys(obj).map(
-  (key, index) => `"${key}"=$${index + 1}`,
-).join(', ');
+const createQuerySetString = (obj) =>
+  Object.keys(obj)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
 module.exports = {
   requireUser,

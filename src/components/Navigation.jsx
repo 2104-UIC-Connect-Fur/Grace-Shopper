@@ -1,18 +1,21 @@
-import React, { useContext, useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState, useEffect } from 'react';
 import {
   Navbar, Container, Nav, NavDropdown, Badge,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { string, boolean, func } from 'prop-types';
 import { store } from './State';
 import Login from './Login';
 import CartPic from '../images/CartPic.png';
-import { logoutUser } from '../api';
+import { logoutUser, verifyAdmin } from '../api';
 
 const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
   const { isLoggedIn, username, userCart } = state;
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
+  const [isAdmin, updateAdmin] = useState(false);
 
   const signOutClickHandler = async () => {
     const { success } = await logoutUser();
@@ -36,6 +39,17 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     }
   };
 
+  useEffect(() => {
+    const checkforAdmin = async () => {
+      const { success, message } = await verifyAdmin();
+      if (success && message) {
+        console.log({ message });
+        updateAdmin(true);
+      }
+    };
+    checkforAdmin();
+  }, []);
+
   return (
     <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
       <Container>
@@ -58,13 +72,13 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
                 <NavDropdown.Item href="/">Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/">My Orders</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={signOutClickHandler}>Sign Out</NavDropdown.Item>
+                <NavDropdown.Item onClick={signOutClickHandler}>
+                  Sign Out
+                </NavDropdown.Item>
               </NavDropdown>
             ) : (
               <Container onClick={() => setLoginModalShow(true)}>
-                <Nav.Link>
-                  Login
-                </Nav.Link>
+                <Nav.Link>Login</Nav.Link>
                 <Login
                   loginModalShow={loginModalShow}
                   setLoginModalShow={setLoginModalShow}
@@ -85,11 +99,21 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             className="d-inline-block align-top"
             alt="shopping cart"
           />
-          {itemCount > 0 && <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>{itemCount}</Badge>}
+          {itemCount && (
+            <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
+              {itemCount}
+            </Badge>
+          )}
         </Navbar.Brand>
       </Container>
     </Navbar>
   );
+};
+
+Navigation.propTypes = {
+  itemCount: string.isRequired,
+  cartShow: boolean.isRequired,
+  setCartShow: func.isRequired,
 };
 
 export default Navigation;

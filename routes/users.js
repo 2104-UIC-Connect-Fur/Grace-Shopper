@@ -4,6 +4,7 @@
 const userRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+require('dotenv').config();
 const {
   createUser,
   getUser,

@@ -2,6 +2,7 @@ const apiRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const itemsRouter = require('./items');
 const userRouter = require('./users');
+const adminRouter = require('./admin');
 require('dotenv').config();
 const { getUserById } = require('../db');
 const ordersRouter = require('./orders');
@@ -28,5 +29,6 @@ apiRouter.use(async (req, res, next) => {
 apiRouter.use('/items', itemsRouter);
 apiRouter.use('/users', userRouter);
 apiRouter.use('/orders', ordersRouter);
+apiRouter.use('/admin', adminRouter);
 
 module.exports = apiRouter;
