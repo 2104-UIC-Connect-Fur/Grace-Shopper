@@ -11,6 +11,7 @@ const {
   getUserByUsername,
   getUserCart,
   getItemImages,
+  getUserByEmail,
 } = require('../db');
 const { requireUser } = require('./utils');
 
@@ -23,7 +24,15 @@ userRouter.post('/register', async (req, res, next) => {
       next({
         success: false,
         name: 'userAlreadyExistError',
-        message: 'A user already exists by that name.',
+        message: 'An account already exists with that username.',
+      });
+    }
+    const existingUserEmail = await getUserByEmail(req.body.email);
+    if (existingUserEmail) {
+      next({
+        success: false,
+        name: 'emailAlreadyUsedError',
+        message: 'An account with that email already exists.',
       });
     }
     const userToCreate = req.body;

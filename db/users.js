@@ -132,13 +132,6 @@ async function getUserByUsername(username) {
       `,
       [username],
     );
-    if (!user) {
-      // eslint-disable-next-line no-throw-literal
-      throw {
-        success: false,
-        message: 'This user does not exist.',
-      };
-    }
     return user;
   } catch (error) {
     throw error;
@@ -203,6 +196,20 @@ async function getUserCart(userId) {
   }
 }
 
+async function getUserByEmail(email) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+        SELECT * FROM users
+        WHERE email=$1;
+      `, [email]);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   createUserPayment,
@@ -211,4 +218,5 @@ module.exports = {
   getUserCart,
   getUser,
   getUserByUsername,
+  getUserByEmail,
 };

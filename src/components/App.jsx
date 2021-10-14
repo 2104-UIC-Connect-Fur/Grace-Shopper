@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
-import Axios from "axios";
-import Items from "./Items";
-import Cart from "./Cart";
-import Order from "./Order";
-import AdminPanel from "./AdminPanel";
-import { store } from "./State";
-import "./App.css";
-import Navigation from "./Navigation";
-import SingleItem from "./SingleItem";
-import { getCart } from "../api";
+import React, { useContext, useEffect, useState } from 'react';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import Axios from 'axios';
+import Items from './Items';
+import Cart from './Cart';
+import Order from './Order';
+import AdminPanel from './AdminPanel';
+import { store } from './State';
+import './App.css';
+import Navigation from './Navigation';
+import SingleItem from './SingleItem';
+import { getCart } from '../api';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
@@ -20,27 +20,27 @@ const App = () => {
   useEffect(() => {
     const checkForLogin = async () => {
       const config = {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
       const {
         data: { success, username },
-      } = await Axios.get("/api/users/me", config);
+      } = await Axios.get('/api/users/me', config);
       if (success) {
         dispatch({
-          type: "updateIsLoggedIn",
+          type: 'updateIsLoggedIn',
           value: true,
         });
         dispatch({
-          type: "setUsername",
+          type: 'setUsername',
           value: username,
         });
         const { success: cartSuccess, cart } = await getCart();
         if (cartSuccess) {
           dispatch({
-            type: "updateCart",
+            type: 'updateCart',
             value: cart,
           });
           let total = 0;
@@ -59,7 +59,7 @@ const App = () => {
       const { success: cartSuccess, cart } = await getCart();
       if (cartSuccess) {
         dispatch({
-          type: "updateCart",
+          type: 'updateCart',
           value: cart,
         });
         let total = 0;
@@ -69,7 +69,7 @@ const App = () => {
         setBadgeNumber(total);
       } else {
         dispatch({
-          type: "updateCart",
+          type: 'updateCart',
           value: null,
         });
         setBadgeNumber(null);
@@ -100,7 +100,6 @@ const App = () => {
         <Switch>
           <Route exact path="/items" component={Items} />
           <Route exact path="/items/:itemId" component={SingleItem} />
-          <Route exact path="/cart" component={Cart} />
           <Route exact path="/order" component={Order} />
           <Route exact path="/admin" component={AdminPanel} />
           <Route path="/">
