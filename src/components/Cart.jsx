@@ -8,7 +8,7 @@ import { formatAsCurrency } from '../utils';
 import deleteIcon from '../images/deleteIcon.svg';
 import plus from '../images/plus.png';
 import minus from '../images/minus.png';
-import { addOrSubtractItem, removeItemFromOrder } from '../api';
+import { addOrSubtractItem, removeItemFromOrder, getItemById } from '../api';
 
 const Cart = ({ cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
@@ -28,12 +28,17 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   const addHandler = async (currItem) => {
-    // eslint-disable-next-line max-len
-    const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
-    const tempCart = { ...userCart };
-    const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-    tempCart.items[itemIndex].quantity = quantity;
-    updateCart(tempCart);
+    const { item: fetchedItem } = await getItemById(currItem.itemId);
+    const { inventoryquantity } = fetchedItem;
+    console.log(inventoryquantity);
+    if (currItem.quantity < inventoryquantity) {
+      // eslint-disable-next-line max-len
+      const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
+      const tempCart = { ...userCart };
+      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+      tempCart.items[itemIndex].quantity = quantity;
+      updateCart(tempCart);
+    }
   };
 
   const subtractHandler = async (currItem) => {
