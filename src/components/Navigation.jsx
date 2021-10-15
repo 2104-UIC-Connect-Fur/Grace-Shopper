@@ -99,7 +99,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             className="d-inline-block align-top"
             alt="shopping cart"
           />
-          {itemCount && (
+          {itemCount > 0 && (
             <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
               {itemCount}
             </Badge>

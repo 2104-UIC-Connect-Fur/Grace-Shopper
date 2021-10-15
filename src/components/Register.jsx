@@ -20,10 +20,11 @@ const Register = ({
   const [currZipCode, setCurrZipCode] = useState();
   // eslint-disable-next-line no-unused-vars
   const [currIsAdmin, setCurrIsAdmin] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const { success, loggedInUser } = await registerUser(
+    const registerResult = await registerUser(
       currUsername,
       currPassword,
       currFirstName,
@@ -34,16 +35,19 @@ const Register = ({
       currIsAdmin,
     );
 
-    if (success) {
+    if (registerResult.success) {
       dispatch({
         type: 'updateIsLoggedIn',
         value: true,
       });
       dispatch({
         type: 'setUsername',
-        value: loggedInUser,
+        value: registerResult.loggedInUser,
       });
       setRegModalShow(false);
+    }
+    if (registerResult.message) {
+      setErrorMessage(registerResult.message);
     }
   };
 
@@ -140,6 +144,7 @@ const Register = ({
           <Button className="mb-3" variant="primary" type="submit">
             Submit
           </Button>
+          {errorMessage && <p className="mt-3" style={{ color: 'red' }}>{errorMessage}</p>}
         </Form>
         <p>Already a member?</p>
         <Container onClick={() => {

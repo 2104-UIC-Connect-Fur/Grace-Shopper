@@ -1,18 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Offcanvas, ListGroup, Button, Row, Col,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { store } from './State';
 import { formatAsCurrency } from '../utils';
 import deleteIcon from '../images/deleteIcon.svg';
 import plus from '../images/plus.png';
 import minus from '../images/minus.png';
-import { addOrSubtractItem, removeItemFromOrder } from '../api';
+import {
+  addOrSubtractItem, removeItemFromOrder, getItemById, getCart,
+} from '../api';
 
 const Cart = ({ cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
-  const { isLoggedIn, username, userCart } = state;
+  const { username, userCart } = state;
 
   if (!userCart) {
     return '';
@@ -28,18 +31,27 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   const addHandler = async (currItem) => {
-    // eslint-disable-next-line max-len
-    const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
-    const tempCart = { ...userCart };
-    const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-    tempCart.items[itemIndex].quantity = quantity;
-    updateCart(tempCart);
+    const { item: { inventoryquantity } } = await getItemById(currItem.itemId);
+    if (currItem.quantity < inventoryquantity) {
+      // eslint-disable-next-line max-len
+      const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
+      const tempCart = { ...userCart };
+      //   const { cart: tempCart } = await getCart();
+      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
+      tempCart.items[itemIndex].quantity = quantity;
+      updateCart(tempCart);
+      console.log(tempCart);
+    }
   };
 
   const subtractHandler = async (currItem) => {
     if (currItem.quantity === 1) {
       const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      console.log(deletedItem);
       const tempCart = { ...userCart };
+      //   const { cart: tempCartz } = await getCart();
+      //   console.log(tempCartz);
+      //   console.log(tempCart);
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items.splice(itemIndex, 1);
       updateCart(tempCart);
@@ -49,6 +61,7 @@ const Cart = ({ cartShow, setCartShow }) => {
       // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
       const tempCart = { ...userCart };
+      //   const { cart: tempCart } = await getCart();
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
@@ -56,7 +69,7 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   const deleteHandler = async (currItem) => {
-    const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+    await removeItemFromOrder(userCart.orderId, currItem.itemId);
     const tempCart = { ...userCart };
     const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
     tempCart.items.splice(itemIndex, 1);
@@ -152,6 +165,11 @@ const Cart = ({ cartShow, setCartShow }) => {
       </ListGroup>
     </Offcanvas>
   );
+};
+
+Cart.propTypes = {
+  cartShow: PropTypes.bool.isRequired,
+  setCartShow: PropTypes.func.isRequired,
 };
 
 export default Cart;

@@ -12,6 +12,7 @@ const {
   getUserCart,
   getItemImages,
   createOrder,
+  getUserByEmail,
 } = require('../db');
 const { requireUser } = require('./utils');
 
@@ -24,14 +25,22 @@ userRouter.post('/register', async (req, res, next) => {
       next({
         success: false,
         name: 'userAlreadyExistError',
-        message: 'A user already exists by that name.',
+        message: 'An account already exists with that username.',
+      });
+    }
+    const existingUserEmail = await getUserByEmail(req.body.email);
+    if (existingUserEmail) {
+      next({
+        success: false,
+        name: 'emailAlreadyUsedError',
+        message: 'An account with that email already exists.',
       });
     }
     const userToCreate = req.body;
     const { id, username } = await createUser(userToCreate);
     const token = jwt.sign({ userId: id, username }, JWT_SECRET);
     res.cookie('token', token, { httpOnly: true });
-    return res.send({
+    res.send({
       success: true,
       message: `success! user created: ${username}`,
       loggedInUser: username,
@@ -49,7 +58,7 @@ userRouter.post('/login', async (req, res, next) => {
     if (userId) {
       const token = jwt.sign({ userId, username }, JWT_SECRET);
       res.cookie('token', token, expiration, { httpOnly: true });
-      return res.send({
+      res.send({
         success: true,
         loggedInUser: username,
       });
