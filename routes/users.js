@@ -39,7 +39,7 @@ userRouter.post('/register', async (req, res, next) => {
     const { id, username } = await createUser(userToCreate);
     const token = jwt.sign({ userId: id, username }, JWT_SECRET);
     res.cookie('token', token, { httpOnly: true });
-    return res.send({
+    res.send({
       success: true,
       message: `success! user created: ${username}`,
       loggedInUser: username,
@@ -57,7 +57,7 @@ userRouter.post('/login', async (req, res, next) => {
     if (userId) {
       const token = jwt.sign({ userId, username }, JWT_SECRET);
       res.cookie('token', token, expiration, { httpOnly: true });
-      return res.send({
+      res.send({
         success: true,
         loggedInUser: username,
       });

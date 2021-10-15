@@ -1,65 +1,26 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-useless-catch */
 const { client } = require('./client');
+const { createQueryInsertString, createQueryValuesString } = require('./utils');
 
-async function createOrder({
-  userId,
-  total,
-  complete,
-  street,
-  apartment,
-  city,
-  state,
-  zipcode,
-  nameoncard,
-  billingaddress,
-  ccnumber,
-  ccsecuritycode,
-  ccexpiration,
-  cczipcode,
-  discountId,
-}) {
+async function createOrder(orderObj) {
+  const queryInsertString = createQueryInsertString(orderObj);
+  const queryValuesString = createQueryValuesString(orderObj);
+
+  if (queryInsertString.length === 0) {
+    return;
+  }
+
   try {
     const {
       rows: [order],
     } = await client.query(
       `
-            INSERT INTO orders(
-                "userId",
-                total,
-                complete,
-                street,
-                apartment,
-                city,
-                state,
-                zipcode,
-                nameoncard,
-                billingaddress,
-                ccnumber,
-                ccsecuritycode,
-                ccexpiration,
-                cczipcode,
-                "discountId"
-            )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+            INSERT INTO orders(${queryInsertString})
+            VALUES(${queryValuesString})
             RETURNING *;
         `,
-      [
-        userId,
-        total,
-        complete,
-        street,
-        apartment,
-        city,
-        state,
-        zipcode,
-        nameoncard,
-        billingaddress,
-        ccnumber,
-        ccsecuritycode,
-        ccexpiration,
-        cczipcode,
-        discountId,
-      ]
+      Object.values(orderObj),
     );
     return order;
   } catch (error) {
@@ -77,7 +38,7 @@ async function getOrderById(id) {
             FROM orders
             WHERE id=$1;
         `,
-      [id]
+      [id],
     );
     return order;
   } catch (error) {
@@ -93,7 +54,7 @@ async function getOrdersByUserId(userId) {
         FROM orders
         WHERE "userId"=$1;
     `,
-      [userId]
+      [userId],
     );
     return orders;
   } catch (error) {
@@ -122,7 +83,7 @@ async function getIncompleteOrdersByUserId(userId) {
             FROM orders
             WHERE "userId"=$1 AND complete=false;
         `,
-      [userId]
+      [userId],
     );
     return orders;
   } catch (error) {
@@ -151,7 +112,7 @@ async function getCompleteOrdersByUserId(userId) {
             FROM orders
             WHERE "userId"=$1 AND complete=true;
         `,
-      [userId]
+      [userId],
     );
     return orders;
   } catch (error) {
@@ -174,7 +135,7 @@ async function completeOrder(orderId) {
             WHERE id = $1
             RETURNING *;
         `,
-      [orderId]
+      [orderId],
     );
     const { rows: ordersitems } = await client.query(
       `
@@ -184,7 +145,7 @@ async function completeOrder(orderId) {
             WHERE "orderId" = $1 AND ordersitems."itemId" = items.id
             RETURNING *;
         `,
-      [orderId]
+      [orderId],
     );
     order.items = ordersitems;
     return order;
