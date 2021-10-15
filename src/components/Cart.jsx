@@ -49,9 +49,9 @@ const Cart = ({ cartShow, setCartShow }) => {
       const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
       console.log(deletedItem);
       const tempCart = { ...userCart };
-      const { cart: tempCartz } = await getCart();
-      console.log(tempCartz);
-      console.log(tempCart);
+      //   const { cart: tempCartz } = await getCart();
+      //   console.log(tempCartz);
+      //   console.log(tempCart);
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items.splice(itemIndex, 1);
       updateCart(tempCart);
