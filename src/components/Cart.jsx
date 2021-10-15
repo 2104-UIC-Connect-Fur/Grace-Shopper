@@ -9,7 +9,9 @@ import { formatAsCurrency } from '../utils';
 import deleteIcon from '../images/deleteIcon.svg';
 import plus from '../images/plus.png';
 import minus from '../images/minus.png';
-import { addOrSubtractItem, removeItemFromOrder, getItemById } from '../api';
+import {
+  addOrSubtractItem, removeItemFromOrder, getItemById, getCart,
+} from '../api';
 
 const Cart = ({ cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
@@ -34,16 +36,22 @@ const Cart = ({ cartShow, setCartShow }) => {
       // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
       const tempCart = { ...userCart };
+      //   const { cart: tempCart } = await getCart();
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
+      console.log(tempCart);
     }
   };
 
   const subtractHandler = async (currItem) => {
     if (currItem.quantity === 1) {
-      await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      console.log(deletedItem);
       const tempCart = { ...userCart };
+      const { cart: tempCartz } = await getCart();
+      console.log(tempCartz);
+      console.log(tempCart);
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items.splice(itemIndex, 1);
       updateCart(tempCart);
@@ -53,6 +61,7 @@ const Cart = ({ cartShow, setCartShow }) => {
       // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
       const tempCart = { ...userCart };
+      //   const { cart: tempCart } = await getCart();
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
