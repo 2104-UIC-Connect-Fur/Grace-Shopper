@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useContext, useState, useEffect } from "react";
 import { Navbar, Container, Nav, NavDropdown, Badge } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
@@ -44,7 +45,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
       }
     };
     checkforAdmin();
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
@@ -55,11 +56,9 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-
             <LinkContainer to="/items">
               <Nav.Link>Items</Nav.Link>
             </LinkContainer>
-
             <LinkContainer to="/">
               <Nav.Link>Categories</Nav.Link>
             </LinkContainer>
@@ -67,6 +66,9 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
               <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/">Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/">My Orders</NavDropdown.Item>
+                {isAdmin && (
+                  <NavDropdown.Item href="/admin">Admin</NavDropdown.Item>
+                )}
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={signOutClickHandler}>
                   Sign Out
