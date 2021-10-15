@@ -1,8 +1,10 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-useless-catch */
 const { client } = require('./client');
+const createQuerySetString = require('./utils');
 
 async function createItems({
   title, description, price, inventoryquantity,
@@ -117,18 +119,24 @@ async function getItemsFromQuery(queryObject) {
   }
 }
 
-async function updateItem({ id, price, inventoryquantity }) {
+async function updateItem(updateObject) {
+  const setString = createQuerySetString(updateObject);
+
+  if (setString.length === 0) {
+    return;
+  }
+
   try {
     const {
       rows: [item],
     } = await client.query(
       `
             UPDATE items
-            SET price=$2, inventoryquantity=$3
-            WHERE id=$1
+            SET ${setString}
+            WHERE id=${updateObject.id}
             Returning *;
         `,
-      [id, price, inventoryquantity],
+      Object.values(updateObject),
     );
     return item;
   } catch (error) {

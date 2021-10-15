@@ -11,6 +11,7 @@ const {
   getUserByUsername,
   getUserCart,
   getItemImages,
+  createOrder,
 } = require('../db');
 const { requireUser } = require('./utils');
 
@@ -104,6 +105,24 @@ userRouter.get('/cart', requireUser, async (req, res, next) => {
       success: false,
       name: 'cartFail',
       message: 'cart lookup failed',
+    });
+  }
+});
+
+userRouter.post('/cart', requireUser, async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { rows: [cart] } = await createOrder({ userId: id });
+    res.send({
+      success: true,
+      cart,
+    });
+  } catch (error) {
+    console.log(error);
+    next({
+      success: false,
+      name: 'cartCreationFail',
+      message: 'cart creation failed',
     });
   }
 });

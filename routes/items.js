@@ -6,6 +6,7 @@ const {
   getItemsFromQuery,
   getAllCategories,
   getItemsById,
+  updateItem,
 } = require('../db');
 
 const { requireUser } = require('./utils');
@@ -80,6 +81,22 @@ itemsRouter.post('/', async (req, res, next) => {
     console.log(error);
     next({
       name: 'itemCreationError',
+      message: 'something went wrong. please check your item information and try again.',
+    });
+  }
+});
+
+itemsRouter.patch('/', async (req, res, next) => {
+  try {
+    const updateObject = req.body;
+    await updateItem(updateObject);
+    return res.send({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    next({
+      name: 'itemUpdateError',
       message: 'something went wrong. please check your item information and try again.',
     });
   }

@@ -3,6 +3,7 @@ require('dotenv').config();
 const {
   updateItemQuantityOnOrder,
   deleteItemFromOrder,
+  addItemToOrder,
 } = require('../db');
 
 ordersRouter.patch('/items', async (req, res, next) => {
@@ -18,6 +19,23 @@ ordersRouter.patch('/items', async (req, res, next) => {
       success: false,
       name: 'itemQuanityChangeError',
       message: 'Unable to update item quantity.',
+    });
+  }
+});
+
+ordersRouter.post('/items', async (req, res, next) => {
+  try {
+    const orderItem = await addItemToOrder(req.body);
+    res.send({
+      success: true,
+      orderItem,
+    });
+  } catch (error) {
+    console.log(error);
+    next({
+      success: false,
+      name: 'itemAddError',
+      message: 'Unable to add item to order.',
     });
   }
 });

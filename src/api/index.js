@@ -1,15 +1,40 @@
 /* eslint-disable import/prefer-default-export */
-import axios from "axios";
+import axios from 'axios';
 
 export async function getMe() {
   try {
-    const { data } = await axios.get("/api/users/me");
+    const { data } = await axios.get('/api/users/me');
     return data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
+
+/**
+ *
+ * @param {*} updateObject
+ * expected input is an object with these properties
+ * orderId: the order id from the user's cart
+ * itemId: the id of the item to be added
+ * quantity: the number of items (in this case, 1)
+ * @returns
+ */
+export const addNewItemToCart = async (updateObject) => {
+  const body = updateObject;
+
+  const config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+
+  const fetchResult = await fetch('/api/orders/items', config);
+  const json = await fetchResult.json();
+  return json;
+};
 
 export const loginUser = async (username, password, rememberMe) => {
   const body = {
@@ -19,14 +44,14 @@ export const loginUser = async (username, password, rememberMe) => {
   };
 
   const config = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
   };
 
-  const fetchResult = await fetch("/api/users/login", config);
+  const fetchResult = await fetch('/api/users/login', config);
   const json = await fetchResult.json();
   return json;
 };
@@ -39,7 +64,7 @@ export const registerUser = async (
   email,
   phonenumber,
   zipcode,
-  isAdmin
+  isAdmin,
 ) => {
   const body = {
     username,
@@ -53,32 +78,32 @@ export const registerUser = async (
   };
 
   const config = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
   };
-  const fetchResult = await fetch("/api/users/register", config);
+  const fetchResult = await fetch('/api/users/register', config);
   const json = await fetchResult.json();
   return json;
 };
 
 export const logoutUser = async () => {
   const config = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
 
-  const fetchResult = await fetch("/api/users/logout", config);
+  const fetchResult = await fetch('/api/users/logout', config);
   const json = await fetchResult.json();
   return json;
 };
 export async function getAllItems() {
   try {
-    const { data } = await axios.get("/api/items");
+    const { data } = await axios.get('/api/items');
     return data;
   } catch (error) {
     console.log(error);
@@ -88,7 +113,7 @@ export async function getAllItems() {
 
 export async function getAllCategories() {
   try {
-    const { data } = await axios.get("/api/items/categories");
+    const { data } = await axios.get('/api/items/categories');
     return data;
   } catch (error) {
     console.log(error);
@@ -98,7 +123,7 @@ export async function getAllCategories() {
 
 export async function getItemsFromQuery(queryObject) {
   try {
-    const { data } = await axios.post("/api/items/search", queryObject);
+    const { data } = await axios.post('/api/items/search', queryObject);
     return data;
   } catch (error) {
     console.log(error);
@@ -118,7 +143,7 @@ export async function getItemById(id) {
 
 export async function getCart() {
   try {
-    const { data } = await axios.get("/api/users/cart");
+    const { data } = await axios.get('/api/users/cart');
     return data;
   } catch (error) {
     console.log(error);
@@ -133,13 +158,27 @@ export const addOrSubtractItem = async (orderId, itemId, quantity) => {
     quantity,
   };
   const config = {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
   };
-  const fetchResult = await fetch("/api/orders/items", config);
+  const fetchResult = await fetch('/api/orders/items', config);
+  const json = await fetchResult.json();
+  return json;
+};
+
+export const updateDbItem = async (updateObject) => {
+  const body = updateObject;
+  const config = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const fetchResult = await fetch('/api/items', config);
   const json = await fetchResult.json();
   return json;
 };
@@ -163,7 +202,7 @@ export const removeItemFromOrder = async (orderId, itemId) => {
 
 export async function verifyAdmin() {
   try {
-    const { data } = await axios.get("/api/admin/isAdmin");
+    const { data } = await axios.get('/api/admin/isAdmin');
     return data;
   } catch (error) {
     console.log(error);

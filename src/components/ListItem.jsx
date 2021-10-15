@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import {
   string, shape, arrayOf, number,
 } from 'prop-types';
+import AddToCartButton from './AddToCartButton';
 import { formatAsCurrency } from '../utils';
 
 const ListItem = ({
@@ -27,7 +28,9 @@ const ListItem = ({
         >
           <Card.Img variant="top" src={mainImage} />
         </Link>
-        <Button variant="primary">Add to Cart</Button>
+        <AddToCartButton
+          itemId={id}
+        />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>
