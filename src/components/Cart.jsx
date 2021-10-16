@@ -35,8 +35,7 @@ const Cart = ({ cartShow, setCartShow }) => {
     if (currItem.quantity < inventoryquantity) {
       // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity + 1);
-      const tempCart = { ...userCart };
-      //   const { cart: tempCart } = await getCart();
+      const { cart: tempCart } = await getCart();
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
@@ -46,22 +45,15 @@ const Cart = ({ cartShow, setCartShow }) => {
 
   const subtractHandler = async (currItem) => {
     if (currItem.quantity === 1) {
-      const { deletedItem } = await removeItemFromOrder(userCart.orderId, currItem.itemId);
-      console.log(deletedItem);
-      const tempCart = { ...userCart };
-      //   const { cart: tempCartz } = await getCart();
-      //   console.log(tempCartz);
-      //   console.log(tempCart);
-      const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-      tempCart.items.splice(itemIndex, 1);
+      await removeItemFromOrder(userCart.orderId, currItem.itemId);
+      const { cart: tempCart } = await getCart();
       updateCart(tempCart);
     }
 
     if (currItem.quantity > 1) {
       // eslint-disable-next-line max-len
       const { orderItem: { quantity } } = await addOrSubtractItem(userCart.orderId, currItem.itemId, currItem.quantity - 1);
-      const tempCart = { ...userCart };
-      //   const { cart: tempCart } = await getCart();
+      const { cart: tempCart } = await getCart();
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
@@ -70,9 +62,7 @@ const Cart = ({ cartShow, setCartShow }) => {
 
   const deleteHandler = async (currItem) => {
     await removeItemFromOrder(userCart.orderId, currItem.itemId);
-    const tempCart = { ...userCart };
-    const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
-    tempCart.items.splice(itemIndex, 1);
+    const { cart: tempCart } = await getCart();
     updateCart(tempCart);
   };
 
@@ -83,7 +73,7 @@ const Cart = ({ cartShow, setCartShow }) => {
       </Offcanvas.Header>
       <ListGroup variant="flush">
         {userCart.items.map((item) => (
-          <ListGroup.Item>
+          <ListGroup.Item key={item.itemId}>
             <Col>
               <img
                 src={item.images[0].url}
