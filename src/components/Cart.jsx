@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Offcanvas, ListGroup, Button, Row, Col,
+  Offcanvas, ListGroup, Button, Row, Col, Container,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -67,92 +67,94 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   return (
-    <Offcanvas show={cartShow} onHide={() => setCartShow(false)} placement="end">
-      <Offcanvas.Header closeButton>
-        <Offcanvas.Title>{username ? `${username}'s cart` : 'Your cart'}</Offcanvas.Title>
-      </Offcanvas.Header>
-      <ListGroup variant="flush">
-        {userCart.items.map((item) => (
-          <ListGroup.Item key={item.itemId}>
-            <Col>
-              <img
-                src={item.images[0].url}
-                width="auto"
-                height="60px"
-                alt="current product"
-              />
-            </Col>
+    <Offcanvas show={cartShow} onHide={() => setCartShow(false)} placement="end" style={{ overflow: 'auto' }}>
+      <Container>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>{username ? `${username}'s cart` : 'Your cart'}</Offcanvas.Title>
+        </Offcanvas.Header>
+        <ListGroup variant="flush">
+          {userCart.items.map((item) => (
+            <ListGroup.Item key={item.itemId}>
+              <Col>
+                <img
+                  src={item.images[0].url}
+                  width="auto"
+                  height="60px"
+                  alt="current product"
+                />
+              </Col>
+              <Row>
+                <Col>
+                  {item.title}
+                </Col>
+                <Col xs={2}>
+                  <input
+                    type="image"
+                    alt="delete item from cart"
+                    src={deleteIcon}
+                    height="12"
+                    width="auto"
+                    onClick={() => { deleteHandler(item); }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <p><b>{formatAsCurrency(item.currentprice)}</b></p>
+                </Col>
+                <Col xs={3}>
+                  <input
+                    type="image"
+                    onClick={() => { subtractHandler(item); }}
+                    src={minus}
+                    width="auto"
+                    height="16"
+                    className="pt-1"
+                    alt="decrement item count"
+                  />
+                  {` ${item.quantity} `}
+                  <input
+                    type="image"
+                    onClick={() => { addHandler(item); }}
+                    src={plus}
+                    width="auto"
+                    height="16"
+                    className="pt-1"
+                    alt="increment item count"
+                  />
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          ))}
+          <ListGroup.Item>
             <Row>
               <Col>
-                {item.title}
-              </Col>
-              <Col xs={2}>
-                <input
-                  type="image"
-                  alt="delete item from cart"
-                  src={deleteIcon}
-                  height="12"
-                  width="auto"
-                  onClick={() => { deleteHandler(item); }}
-                />
+                Subtotal
               </Col>
             </Row>
             <Row>
               <Col>
-                <p><b>{formatAsCurrency(item.currentprice)}</b></p>
+                <b>{formatAsCurrency(subtotal)}</b>
               </Col>
-              <Col xs={3}>
-                <input
-                  type="image"
-                  onClick={() => { subtractHandler(item); }}
-                  src={minus}
-                  width="auto"
-                  height="16"
-                  className="pt-1"
-                  alt="decrement item count"
-                />
-                {` ${item.quantity} `}
-                <input
-                  type="image"
-                  onClick={() => { addHandler(item); }}
-                  src={plus}
-                  width="auto"
-                  height="16"
-                  className="pt-1"
-                  alt="increment item count"
-                />
-              </Col>
+            </Row>
+            <Row
+              className="mt-3 justify-content-end"
+            >
+              <Link
+                to="/order"
+              >
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => setCartShow(false)}
+                >
+                  Checkout
+                </Button>
+              </Link>
             </Row>
           </ListGroup.Item>
-        ))}
-        <ListGroup.Item>
-          <Row>
-            <Col>
-              Subtotal
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <b>{formatAsCurrency(subtotal)}</b>
-            </Col>
-          </Row>
-          <Row
-            className="mt-3 justify-content-end"
-          >
-            <Link
-              to="/order"
-            >
-              <Button
-                type="button"
-                variant="primary"
-                onClick={() => setCartShow(false)}
-              >
-                Checkout
-              </Button>
-            </Link>
-          </Row>
-        </ListGroup.Item>
-      </ListGroup>
+        </ListGroup>
+      </Container>
     </Offcanvas>
   );
 };

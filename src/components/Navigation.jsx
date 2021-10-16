@@ -43,7 +43,6 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     const checkforAdmin = async () => {
       const { success, message } = await verifyAdmin();
       if (success && message) {
-        console.log({ message });
         updateAdmin(true);
       }
     };
@@ -51,7 +50,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   }, []);
 
   return (
-    <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
+    <Navbar collapseOnSelect expand="sm" bg="light" variant="light" className="sticky-top">
       <Container>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
