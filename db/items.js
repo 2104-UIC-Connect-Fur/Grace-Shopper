@@ -4,7 +4,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-useless-catch */
 const { client } = require('./client');
-const createQuerySetString = require('./utils');
+const { createQuerySetString } = require('./utils');
 
 async function createItems({
   title, description, price, inventoryquantity,

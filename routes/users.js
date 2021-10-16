@@ -101,15 +101,19 @@ userRouter.get('/cart', requireUser, async (req, res, next) => {
   try {
     const { id } = req.user;
     const cart = await getUserCart(id);
+    console.log('fetched cart: ', cart);
     const { items } = cart;
-    for (const item of items) {
-      item.images = await getItemImages(item.itemId);
+    if (items.length) {
+      for (const item of items) {
+        item.images = await getItemImages(item.itemId);
+      }
     }
     res.send({
       success: true,
       cart,
     });
   } catch (error) {
+    console.log(error);
     next({
       success: false,
       name: 'cartFail',
@@ -121,10 +125,10 @@ userRouter.get('/cart', requireUser, async (req, res, next) => {
 userRouter.post('/cart', requireUser, async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { rows: [cart] } = await createOrder({ userId: id });
+    const newCart = await createOrder({ userId: id });
     res.send({
       success: true,
-      cart,
+      newCart,
     });
   } catch (error) {
     console.log(error);

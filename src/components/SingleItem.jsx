@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
+import AddToCartButton from './AddToCartButton';
 import { getItemById } from '../api';
 import { formatAsCurrency } from '../utils';
 
@@ -66,6 +67,11 @@ const SingleItem = () => {
             ))
           }
         </Carousel>
+      </Row>
+      <Row className="mt-2 w-25 mx-auto">
+        <AddToCartButton
+          itemId={Number(itemId)}
+        />
       </Row>
       <Row className="mt-2">
         <h4>{itemToDisplay.description}</h4>

@@ -151,6 +151,16 @@ export async function getCart() {
   }
 }
 
+export async function createCart() {
+  try {
+    const { data } = await axios.post('/api/users/cart');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export const addOrSubtractItem = async (orderId, itemId, quantity) => {
   const body = {
     orderId,

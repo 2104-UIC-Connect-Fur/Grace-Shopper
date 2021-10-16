@@ -26,6 +26,7 @@ ordersRouter.patch('/items', async (req, res, next) => {
 ordersRouter.post('/items', async (req, res, next) => {
   try {
     const orderItem = await addItemToOrder(req.body);
+    console.log('add item:', orderItem);
     res.send({
       success: true,
       orderItem,
