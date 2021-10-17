@@ -22,7 +22,7 @@ const SingleItem = () => {
       }
     };
     getItem(itemId);
-  }, []);
+  }, [itemId]);
   if (errorState) return (<h1>Problem loading item. Please try again!</h1>);
   if (!itemToDisplay) return (<h1>Loading...</h1>);
 

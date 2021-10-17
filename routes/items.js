@@ -7,6 +7,7 @@ const {
   getAllCategories,
   getItemsById,
   updateItem,
+  getAllItemIds,
 } = require('../db');
 
 const { requireUser } = require('./utils');
@@ -24,8 +25,17 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
-    console.log(`items for category id ${categoryId}:`, items);
     res.send(items);
+  } catch (error) {
+    next(error);
+  }
+});
+
+itemsRouter.get('/ids', async (req, res, next) => {
+  try {
+    const itemIds = await getAllItemIds();
+    const itemsArray = itemIds.map(item => item.id);
+    res.send(itemsArray);
   } catch (error) {
     next(error);
   }

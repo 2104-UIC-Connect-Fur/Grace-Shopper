@@ -75,6 +75,15 @@ async function getAllItems() {
   }
 }
 
+async function getAllItemIds() {
+  try {
+    const { rows: itemIds } = await client.query('SELECT id FROM ITEMS;');
+    return itemIds;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getItemsFromQuery(queryObject) {
   try {
     const {
@@ -188,4 +197,5 @@ module.exports = {
   getItemsFromQuery,
   getAllCategories,
   getItemImages,
+  getAllItemIds,
 };

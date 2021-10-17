@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { store } from './State';
 import Login from './Login';
 import ItemSearch from './ItemSearch';
+import ItemShuffle from './ItemShuffle';
 import CartPic from '../images/CartPic.png';
 import { logoutUser, verifyAdmin, getAllCategories } from '../api';
 
@@ -96,6 +97,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
               ))}
             </NavDropdown>
             <ItemSearch setQuery={setQuery} setQueryObject={updateQuery} />
+            <ItemShuffle />
           </Nav>
         </Navbar.Collapse>
       </Container>

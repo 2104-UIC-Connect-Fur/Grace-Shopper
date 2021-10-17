@@ -132,6 +132,16 @@ export async function getAllCategories() {
   }
 }
 
+export async function getAllItemIds() {
+  try {
+    const { data } = await axios.get('/api/items/ids');
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function getItemsFromQuery(queryObject) {
   try {
     const { data } = await axios.post('/api/items/search', queryObject);

@@ -5,7 +5,6 @@ import Container from 'react-bootstrap/Container';
 import Pagination from 'react-bootstrap/Pagination';
 import Row from 'react-bootstrap/Row';
 import ListItem from './ListItem';
-import ItemSearch from './ItemSearch';
 import { store } from './State';
 import { getItemsFromQuery } from '../api/index';
 
