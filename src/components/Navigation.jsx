@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import {
-  Navbar, Container, Nav, NavDropdown, Badge,
+  Navbar, Container, Nav, NavDropdown, Badge, OverlayTrigger, Popover,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
@@ -59,6 +59,14 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     buildCategories();
   }, []);
 
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        Your cart is currently empty.
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <Navbar collapseOnSelect expand="sm" bg="light" variant="light" className="sticky-top">
       <Container>
@@ -107,20 +115,41 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
         </Navbar.Collapse>
       </Container>
       <Container className="justify-content-end">
-        <Navbar.Brand onClick={cartClickHandler} style={{ cursor: 'pointer' }}>
-          <img
-            src={CartPic}
-            width="30"
-            height="auto"
-            className="d-inline-block align-top"
-            alt="shopping cart"
-          />
-          {itemCount > 0 && (
-            <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
-              {itemCount}
-            </Badge>
+        {(userCart && userCart.items.length)
+          ? (
+            <Navbar.Brand onClick={cartClickHandler} style={{ cursor: 'pointer' }}>
+              <img
+                src={CartPic}
+                width="30"
+                height="auto"
+                className="d-inline-block align-top"
+                alt="shopping cart"
+              />
+              {itemCount > 0 && (
+              <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
+                {itemCount}
+              </Badge>
+              )}
+            </Navbar.Brand>
+          )
+          : (
+            <OverlayTrigger trigger="click" placement="left" overlay={popover}>
+              <Navbar.Brand style={{ cursor: 'pointer' }}>
+                <img
+                  src={CartPic}
+                  width="30"
+                  height="auto"
+                  className="d-inline-block align-top"
+                  alt="shopping cart"
+                />
+                {itemCount > 0 && (
+                <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
+                  {itemCount}
+                </Badge>
+                )}
+              </Navbar.Brand>
+            </OverlayTrigger>
           )}
-        </Navbar.Brand>
       </Container>
     </Navbar>
   );
