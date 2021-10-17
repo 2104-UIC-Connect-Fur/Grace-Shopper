@@ -5,11 +5,11 @@ export class Shuffleable {
 
     this.random = () => {
       const getrandomNumber = () => Math.floor(Math.random() * copiedData.length);
-      const splicedQuote = copiedData.splice(getrandomNumber(), 1);
+      const splicedItem = copiedData.splice(getrandomNumber(), 1);
       if (copiedData.length === 0) {
         copiedData = [...inputArray];
       }
-      return splicedQuote;
+      return splicedItem;
     };
   }
 }
