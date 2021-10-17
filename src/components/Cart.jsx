@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
-  Offcanvas, ListGroup, Button, Row, Col, Container,
+  Offcanvas, ListGroup, Button, Row, Col, Container, Alert,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ import {
 const Cart = ({ cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
   const { username, userCart } = state;
+  const [alertShow, setAlertShow] = useState(false);
 
   if (!userCart) {
     return '';
@@ -39,6 +40,9 @@ const Cart = ({ cartShow, setCartShow }) => {
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
+    }
+    if (currItem.quantity === inventoryquantity) {
+      setAlertShow(true);
     }
   };
 
@@ -151,6 +155,11 @@ const Cart = ({ cartShow, setCartShow }) => {
                 </Button>
               </Link>
             </Row>
+            {alertShow && (
+            <Alert className="mt-3" variant="danger" onClose={() => setAlertShow(false)} dismissible>
+              You have already added the maximum number of this product to your cart.
+            </Alert>
+            )}
           </ListGroup.Item>
         </ListGroup>
       </Container>

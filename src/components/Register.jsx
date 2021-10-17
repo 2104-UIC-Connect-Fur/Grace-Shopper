@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import {
-  Modal, Button, Form, Container, Nav,
+  Modal, Button, Form, Container, Nav, Alert,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { store } from './State';
@@ -21,6 +21,7 @@ const Register = ({
   // eslint-disable-next-line no-unused-vars
   const [currIsAdmin, setCurrIsAdmin] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [alertShow, setAlertShow] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -48,6 +49,7 @@ const Register = ({
     }
     if (registerResult.message) {
       setErrorMessage(registerResult.message);
+      setAlertShow(true);
     }
   };
 
@@ -144,7 +146,11 @@ const Register = ({
           <Button className="mb-3" variant="primary" type="submit">
             Submit
           </Button>
-          {errorMessage && <p className="mt-3" style={{ color: 'red' }}>{errorMessage}</p>}
+          {(errorMessage && alertShow) && (
+          <Alert className="mt-3" variant="danger" onClose={() => setAlertShow(false)} dismissible>
+            {errorMessage}
+          </Alert>
+          )}
         </Form>
         <p>Already a member?</p>
         <Container onClick={() => {
