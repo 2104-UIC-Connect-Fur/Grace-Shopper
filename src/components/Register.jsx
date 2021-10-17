@@ -153,13 +153,16 @@ const Register = ({
           )}
         </Form>
         <p>Already a member?</p>
-        <Container onClick={() => {
-          setRegModalShow(false);
-          setLoginModalShow(true);
-        }}
-        >
-          <Nav.Link>Sign in</Nav.Link>
-        </Container>
+        <input
+          type="text"
+          onClick={() => {
+            setRegModalShow(false);
+            setLoginModalShow(true);
+          }}
+          readOnly
+          value="Sign in"
+          style={{ cursor: 'pointer', color: '#0d6efd' }}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => setRegModalShow(false)}>Close</Button>

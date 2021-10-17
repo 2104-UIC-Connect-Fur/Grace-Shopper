@@ -94,13 +94,16 @@ const Login = ({
           </Button>
         </Form>
         <p>New to Rare Shit?</p>
-        <Container onClick={() => {
-          setLoginModalShow(false);
-          setRegModalShow(true);
-        }}
-        >
-          <Nav.Link>Join us!</Nav.Link>
-        </Container>
+        <input
+          type="text"
+          onClick={() => {
+            setLoginModalShow(false);
+            setRegModalShow(true);
+          }}
+          readOnly
+          value="Join us!"
+          style={{ cursor: 'pointer', color: '#0d6efd' }}
+        />
         <Register
           setLoginModalShow={setLoginModalShow}
           regModalShow={regModalShow}
