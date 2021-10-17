@@ -8,6 +8,7 @@ module.exports = {
       email: 'gus@psych.net',
       phonenumber: '555555555',
       zipcode: '93101',
+      isAdmin: false,
     },
     {
       username: 'catcatsby',
@@ -106,6 +107,66 @@ module.exports = {
       price: 200000,
       inventoryquantity: 1,
     },
+    {
+      title: 'Bob Dylan: The Freewheelin Bob Dylan',
+      description: 'Original vinyl pressing from 1963. Includes bonus tracks.',
+      price: 3500000,
+      inventoryquantity: 3,
+    },
+    {
+      title: 'George Washington Stamp',
+      description: 'Originally worth 3 cents. Can you believe it?',
+      price: 90000000,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'Apple II Computer',
+      description: 'One of the original personal computers.',
+      price: 250000,
+      inventoryquantity: 5,
+    },
+    {
+      title: 'Michael Jordan Rookie Card',
+      description: 'Autographed Michael Jordan rookie card from 1986-1987 NBA season.',
+      price: 9500000,
+      inventoryquantity: 1,
+    },
+    {
+      title: 'Kobe Bryant Rookie Card',
+      description: 'Kobe Bryant rookie card from 1996-1997 NBA season.',
+      price: 500000,
+      inventoryquantity: 2,
+    },
+    {
+      title: 'Apple Lisa Computer',
+      description: 'Original Apple Lisa computer model. Still in excellent working condition.',
+      price: 2500000,
+      inventoryquantity: 3,
+    },
+    {
+      title: 'Madvillain: Madvillainy',
+      description: 'MF Doom + Madlib. Original vinyl. Sealed.',
+      price: 30000,
+      inventoryquantity: 5,
+    },
+    {
+      title: 'Scottie Pippen Team USA Jersey',
+      description: 'Scottie Pippen Team USA jersey from the 1992 Dream Team.',
+      price: 50000,
+      inventoryquantity: 4,
+    },
+    {
+      title: 'Vintage Adidas Rod Lavers',
+      description: 'Rare vintage release of 1970s-style Adidas Rod Laver tennis shoes.',
+      price: 17500,
+      inventoryquantity: 10,
+    },
+    {
+      title: 'First-Edition Don Quixote',
+      description: 'Incredibly rare first-edition copy of Don Quixote by Miguel de Cervantes.',
+      price: 2000000,
+      inventoryquantity: 3,
+    },
   ],
   imagesOfItems: [
     {
@@ -150,6 +211,66 @@ module.exports = {
       description: "Oh, right. The poison. The poison for Kuzco. The poison chosen especially to kill Kuzco. Kusco's poison.",
       alttext: 'Pull the lever, Cronk.',
     },
+    {
+      itemId: 10,
+      url: '/images/bobdylan.jpg',
+      description: "Rare vinyl copy of Bob Dylan's Freewheelin Bob Dylan",
+      alttext: 'Bob Dylan record',
+    },
+    {
+      itemId: 11,
+      url: '/images/washington.jpg',
+      description: 'The first president on a stamp.',
+      alttext: 'George Washington on a stamp.',
+    },
+    {
+      itemId: 12,
+      url: '/images/Apple_II.jpeg',
+      description: 'Vintage Apple II computer.',
+      alttext: 'Vintage Apple II computer',
+    },
+    {
+      itemId: 13,
+      url: '/images/mjrookiecard.jpeg',
+      description: '1986 MJ Rookie Card. Like-new condition.',
+      alttext: '1986 MJ rookie basketball card',
+    },
+    {
+      itemId: 14,
+      url: '/images/Kobe.jpg',
+      description: 'Kobe Bryant rookie card',
+      alttext: 'Kobe Brynant rookie basketball card',
+    },
+    {
+      itemId: 15,
+      url: '/images/lisa2.jpeg',
+      description: 'Apple Lisa 2 computer.',
+      alttext: 'Apple Lisa 2 computer.',
+    },
+    {
+      itemId: 16,
+      url: '/images/Madvillain.jpeg',
+      description: 'Sealed copy of Madvillainy vinyl album',
+      alttext: 'Sealed copy of Madvillainy vinyl album',
+    },
+    {
+      itemId: 17,
+      url: '/images/scottie.jpg',
+      description: 'Scottie Pippen 1992 Team USA jersey',
+      alttext: 'New Scottie Pippen 1992 Team USA jersey',
+    },
+    {
+      itemId: 18,
+      url: '/images/rodlavers.jpeg',
+      description: 'Vintage Adidas Rod Lavers',
+      alttext: 'Vintage release of Adidas Rod Laver tennis shoes',
+    },
+    {
+      itemId: 19,
+      url: '/images/don-quixote.jpeg',
+      description: 'Leatherbound first-edition Don Quixote',
+      alttext: 'Leatherbound first-edition Don Quixote book',
+    },
   ],
   categories: [
     {
@@ -184,6 +305,10 @@ module.exports = {
       name: 'Bikes',
       description: 'Half as many wheels, twice as much fun.',
     },
+    {
+      name: 'Music',
+      description: 'Take a listen.',
+    },
   ],
   itemscategories: [
     {
@@ -197,6 +322,46 @@ module.exports = {
     {
       itemId: 3,
       categoryId: 1,
+    },
+    {
+      itemId: 10,
+      categoryId: 9,
+    },
+    {
+      itemId: 11,
+      categoryId: 6,
+    },
+    {
+      itemId: 12,
+      categoryId: 4,
+    },
+    {
+      itemId: 13,
+      categoryId: 1,
+    },
+    {
+      itemId: 14,
+      categoryId: 1,
+    },
+    {
+      itemId: 15,
+      categoryId: 4,
+    },
+    {
+      itemId: 16,
+      categoryId: 9,
+    },
+    {
+      itemId: 17,
+      categoryId: 1,
+    },
+    {
+      itemId: 18,
+      categoryId: 2,
+    },
+    {
+      itemId: 19,
+      categoryId: 6,
     },
   ],
   discounts: [
