@@ -136,6 +136,7 @@ async function completeOrder({
   ccSecurityCode,
   ccExpiration,
   ccZip,
+  total,
 }) {
   try {
     const {
@@ -143,7 +144,7 @@ async function completeOrder({
     } = await client.query(
       `
             UPDATE orders
-            SET complete = true, street = $2, apartment = $3, city = $4, state = $5, zipcode = $6, nameoncard = $7, ccnumber = $8, ccsecuritycode = $9, ccexpiration = $10, cczipcode = $11
+            SET complete = true, street = $2, apartment = $3, city = $4, state = $5, zipcode = $6, nameoncard = $7, ccnumber = $8, ccsecuritycode = $9, ccexpiration = $10, cczipcode = $11, total = $12
             WHERE id = $1
             RETURNING *;
         `,
@@ -159,6 +160,7 @@ async function completeOrder({
         ccSecurityCode,
         ccExpiration,
         ccZip,
+        total,
       ],
     );
     const { rows: ordersitems } = await client.query(

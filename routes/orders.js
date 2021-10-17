@@ -70,18 +70,26 @@ ordersRouter.post('/checkout', async (req, res, next) => {
         id: itemId,
         inventoryquantity: inventoryquantity - amountToSell,
       });
+      await updateItemQuantityOnOrder({ orderId, itemId, quantity: amountToSell });
       completedOrder.items.push({
         itemId,
         amountSold: amountToSell,
         price: currentprice,
         couldNotFulfillCompletely: useInventoryQuantity,
       });
-      completedOrder.total += currentprice * quantity;
+      completedOrder.total += currentprice * amountToSell;
     }
-    await completeOrder({ ...orderData, orderId });
+    const updatedOrder = await completeOrder({
+      ...orderData,
+      orderId,
+      total: completedOrder.total,
+    });
     res.send({
       success: true,
-      completedOrder,
+      data: {
+        metaData: completedOrder,
+        order: updatedOrder,
+      },
     });
   } catch (error) {
     console.log(error);
