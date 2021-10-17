@@ -16,17 +16,17 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [categoryIds, setCategoryIds] = useState([]);
-  const [priceLow, setPriceLow] = useState(0);
-  const [priceHigh, setPriceHigh] = useState(1000000);
-  const [userSearchTerm, setUserSearchTerm] = useState('');
+  const searchDefaults = {
+    categoryIds: [],
+    priceLow: 0,
+    priceHigh: 1000000,
+    userSearchTerm: '',
+  };
+  const [categoryIds, setCategoryIds] = useState(searchDefaults.categoryIds);
+  const [priceLow, setPriceLow] = useState(searchDefaults.priceLow);
+  const [priceHigh, setPriceHigh] = useState(searchDefaults.priceHigh);
+  const [userSearchTerm, setUserSearchTerm] = useState(searchDefaults.userSearchTerm);
   const [categories, setCategories] = useState([]);
-  // console.log('state: ', {
-  //   categoryIds,
-  //   priceLow,
-  //   priceHigh,
-  //   userSearchTerm,
-  // });
   useEffect(() => {
     const getCategories = async () => {
       const { success, categories: fetchedCategories } = await getAllCategories();
@@ -37,31 +37,36 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   const handleChange = (val) => setCategoryIds(val);
 
   const searchHandler = async () => {
+    const useQueryObject = (!categoryIds.length)
+    || (priceLow !== searchDefaults.priceLow)
+    || (priceHigh !== searchDefaults.priceHigh)
+    || (userSearchTerm !== searchDefaults.userSearchTerm);
     const queryObject = {
       categoryIds,
       priceLow,
       priceHigh,
       searchString: userSearchTerm,
     };
-    const query = queryString.stringify(queryObject);
+    const queryToUse = useQueryObject ? {} : queryObject;
+    const query = queryString.stringify(queryToUse);
     setQuery(query);
-    setQueryObject(queryObject);
+    setQueryObject(queryToUse);
     history.push({
-      pathname: '/items/',
+      pathname: '/',
       search: `${query}`,
     });
     setShow(false);
   };
 
   const clearSearch = () => {
-    setCategoryIds([]);
-    setPriceLow(0);
-    setPriceHigh(1000000);
-    setUserSearchTerm('');
+    setCategoryIds(searchDefaults.categoryIds);
+    setPriceLow(searchDefaults.priceLow);
+    setPriceHigh(searchDefaults.priceHigh);
+    setUserSearchTerm(searchDefaults.userSearchTerm);
     setQuery('');
     setQueryObject({});
     history.push({
-      pathname: '/items/',
+      pathname: '/',
       search: '',
     });
   };
@@ -72,11 +77,13 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
         variant="primary"
         onClick={handleShow}
         style={{
-          width: '10%',
           margin: 'auto',
+          backgroundColor: 'lightgray',
+          border: 'none',
+          color: 'black',
         }}
       >
-        🔎
+        Search 🔎
       </Button>
 
       <OffCanvas show={show} onHide={handleClose} className="content-align-center">

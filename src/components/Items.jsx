@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
-import queryString from "query-string";
-import Container from "react-bootstrap/Container";
-import Pagination from "react-bootstrap/Pagination";
-import Row from "react-bootstrap/Row";
-import ListItem from "./ListItem";
-import ItemSearch from "./ItemSearch";
-import { getItemsFromQuery } from "../api/index";
+import React, { useEffect, useState, useContext } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import queryString from 'query-string';
+import Container from 'react-bootstrap/Container';
+import Pagination from 'react-bootstrap/Pagination';
+import Row from 'react-bootstrap/Row';
+import ListItem from './ListItem';
+import ItemSearch from './ItemSearch';
+import { store } from './State';
+import { getItemsFromQuery } from '../api/index';
 
 const Items = () => {
+  const { state, dispatch } = useContext(store);
+  const { queryObject } = state;
   const [pages, setPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
   const [noResults, setNoResults] = useState(false);
@@ -16,14 +19,14 @@ const Items = () => {
   const { search } = useLocation();
   const history = useHistory();
   const [query, setQuery] = useState(search);
-  const [queryObject, setQueryObject] = useState(
-    queryString.parse(query, {
-      parseBooleans: true,
-      parseNumbers: true,
-    })
-  );
-  queryObject.page = activePage;
-  if (typeof queryObject.categoryIds === "number") {
+  const updateQuery = (newQueryObject) => {
+    dispatch({
+      type: 'updateSearchQuery',
+      value: newQueryObject,
+    });
+  };
+  if (queryObject) queryObject.page = activePage;
+  if (queryObject && (typeof queryObject.categoryIds === 'number')) {
     const categoryIdAsArray = [queryObject.categoryIds];
     queryObject.categoryIds = categoryIdAsArray;
   }
@@ -32,11 +35,11 @@ const Items = () => {
     const tempQueryObject = { ...queryObject };
     tempQueryObject.page = currentPage;
     const tempQuery = queryString.stringify(tempQueryObject);
-    setQueryObject(tempQueryObject);
+    updateQuery(tempQueryObject);
     setQuery(tempQuery);
     setActivePage(currentPage);
     history.push({
-      pathname: "/items/",
+      pathname: '/',
       search: `${tempQuery}`,
     });
   };
@@ -52,9 +55,19 @@ const Items = () => {
         }}
       >
         {currentPage}
-      </Pagination.Item>
+      </Pagination.Item>,
     );
   }
+
+  useEffect(() => {
+    if (query) {
+      const parsedQuery = queryString.parse(query, {
+        parseBooleans: true,
+        parseNumbers: true,
+      });
+      updateQuery(parsedQuery);
+    }
+  }, []);
   // console.log('queryObject: ', queryObject);
   useEffect(() => {
     const getItems = async () => {
@@ -65,7 +78,7 @@ const Items = () => {
         pages: apiPages,
       } = await getItemsFromQuery(queryObject);
       if (success && totalResults > 0) {
-        console.log("fetched items: ", items);
+        console.log('fetched items: ', items);
         updateDisplayItems(items);
         setPages(apiPages);
         setNoResults(false);
@@ -78,11 +91,6 @@ const Items = () => {
 
   return (
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
-      <Container className="mb-2">
-        <Row>
-          <ItemSearch setQuery={setQuery} setQueryObject={setQueryObject} />
-        </Row>
-      </Container>
       <Container>
         {noResults ? (
           <Row>

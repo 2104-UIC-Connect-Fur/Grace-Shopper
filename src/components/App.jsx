@@ -98,15 +98,10 @@ const App = () => {
         />
         <Cart cartShow={cartShow} setCartShow={setCartShow} />
         <Switch>
-          <Route exact path="/items" component={Items} />
+          <Route exact path="/" component={Items} />
           <Route exact path="/items/:itemId" component={SingleItem} />
           <Route exact path="/order" component={Order} />
           <Route exact path="/admin" component={AdminPanel} />
-          <Route path="/">
-            <header className="App-header">
-              <h1>RARE SHIT</h1>
-            </header>
-          </Route>
         </Switch>
       </div>
     </BrowserRouter>

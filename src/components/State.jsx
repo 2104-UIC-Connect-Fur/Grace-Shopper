@@ -6,6 +6,7 @@ const initialState = {
   isLoggedIn: false,
   username: null,
   userCart: null,
+  queryObject: null,
   // Add new data to state here
 };
 
@@ -54,6 +55,14 @@ const StateProvider = ({ children }) => {
         const newState = {
           ...oldData,
           userCart: action.value,
+        };
+        return newState;
+      }
+
+      case 'updateSearchQuery': {
+        const newState = {
+          ...oldData,
+          queryObject: action.value,
         };
         return newState;
       }
