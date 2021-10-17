@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from 'react';
 import {
-  Modal, Button, Form, Container, Nav,
+  Modal, Button, Form, Alert,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { store } from './State';
@@ -17,6 +17,7 @@ const Login = ({
   const [currUsername, setCurrUsername] = useState();
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [alertShow, setAlertShow] = useState(false);
 
   const checkHandler = () => {
     if (rememberMe) {
@@ -43,6 +44,7 @@ const Login = ({
       setLoginModalShow(false);
     } else {
       setErrorMessage(loginResult.message);
+      setAlertShow(true);
     }
   };
 
@@ -78,7 +80,11 @@ const Login = ({
                 setPassword(e.target.value);
               }}
             />
-            {errorMessage && <p className="mt-3" style={{ color: 'red' }}>{errorMessage}</p>}
+            {(errorMessage && alertShow) && (
+            <Alert className="mt-3" variant="danger" onClose={() => setAlertShow(false)} dismissible>
+              {errorMessage}
+            </Alert>
+            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Remember me" onChange={checkHandler} />
@@ -88,13 +94,16 @@ const Login = ({
           </Button>
         </Form>
         <p>New to Rare Shit?</p>
-        <Container onClick={() => {
-          setLoginModalShow(false);
-          setRegModalShow(true);
-        }}
-        >
-          <Nav.Link>Join us!</Nav.Link>
-        </Container>
+        <input
+          type="text"
+          onClick={() => {
+            setLoginModalShow(false);
+            setRegModalShow(true);
+          }}
+          readOnly
+          value="Join us!"
+          style={{ cursor: 'pointer', color: '#0d6efd' }}
+        />
         <Register
           setLoginModalShow={setLoginModalShow}
           regModalShow={regModalShow}

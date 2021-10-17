@@ -210,6 +210,17 @@ async function getUserByEmail(email) {
   }
 }
 
+async function getAllUsers() {
+  try {
+    const { rows: users } = await client.query(`
+      SELECT * FROM users
+    `);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   createUserPayment,
@@ -219,4 +230,5 @@ module.exports = {
   getUser,
   getUserByUsername,
   getUserByEmail,
+  getAllUsers,
 };

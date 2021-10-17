@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import {
-  Navbar, Container, Nav, NavDropdown, Badge,
+  Navbar, Container, Nav, NavDropdown, Badge, OverlayTrigger, Popover,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { store } from './State';
 import Login from './Login';
 import CartPic from '../images/CartPic.png';
-import { logoutUser, verifyAdmin } from '../api';
+import { logoutUser, verifyAdmin, getAllCategories } from '../api';
 
 const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
@@ -16,6 +17,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
   const [isAdmin, updateAdmin] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
 
   const signOutClickHandler = async () => {
     const { success } = await logoutUser();
@@ -43,15 +45,30 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     const checkforAdmin = async () => {
       const { success, message } = await verifyAdmin();
       if (success && message) {
-        console.log({ message });
         updateAdmin(true);
       }
     };
     checkforAdmin();
   }, []);
 
+  useEffect(() => {
+    const buildCategories = async () => {
+      const { categories } = await getAllCategories();
+      setAllCategories(categories);
+    };
+    buildCategories();
+  }, []);
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        Your cart is currently empty.
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
-    <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
+    <Navbar collapseOnSelect expand="sm" bg="light" variant="light" className="sticky-top">
       <Container>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
@@ -64,9 +81,16 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
               <Nav.Link>Items</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/">
-              <Nav.Link>Categories</Nav.Link>
-            </LinkContainer>
+            <NavDropdown title="Categories">
+              {allCategories.length > 0 && allCategories.map((category) => (
+                <NavDropdown.Item>
+                  <Link to={`/items/?categoryIds=${category.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {category.name}
+                  </Link>
+                </NavDropdown.Item>
+              ))}
+            </NavDropdown>
+
             {isLoggedIn ? (
               <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/">Profile</NavDropdown.Item>
@@ -91,20 +115,41 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
         </Navbar.Collapse>
       </Container>
       <Container className="justify-content-end">
-        <Navbar.Brand onClick={cartClickHandler} style={{ cursor: 'pointer' }}>
-          <img
-            src={CartPic}
-            width="30"
-            height="auto"
-            className="d-inline-block align-top"
-            alt="shopping cart"
-          />
-          {itemCount > 0 && (
-            <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
-              {itemCount}
-            </Badge>
+        {(userCart && userCart.items.length)
+          ? (
+            <Navbar.Brand onClick={cartClickHandler} style={{ cursor: 'pointer' }}>
+              <img
+                src={CartPic}
+                width="30"
+                height="auto"
+                className="d-inline-block align-top"
+                alt="shopping cart"
+              />
+              {itemCount > 0 && (
+              <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
+                {itemCount}
+              </Badge>
+              )}
+            </Navbar.Brand>
+          )
+          : (
+            <OverlayTrigger trigger="click" placement="left" overlay={popover}>
+              <Navbar.Brand style={{ cursor: 'pointer' }}>
+                <img
+                  src={CartPic}
+                  width="30"
+                  height="auto"
+                  className="d-inline-block align-top"
+                  alt="shopping cart"
+                />
+                {itemCount > 0 && (
+                <Badge pill bg="secondary" style={{ fontSize: 'xx-small' }}>
+                  {itemCount}
+                </Badge>
+                )}
+              </Navbar.Brand>
+            </OverlayTrigger>
           )}
-        </Navbar.Brand>
       </Container>
     </Navbar>
   );
