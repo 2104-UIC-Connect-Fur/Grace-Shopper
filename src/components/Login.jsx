@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from 'react';
 import {
-  Modal, Button, Form, Container, Nav, Alert,
+  Modal, Button, Form, Alert,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { store } from './State';
