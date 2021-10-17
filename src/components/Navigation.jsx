@@ -73,16 +73,15 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
               <Nav.Link>Items</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/">
-              <Nav.Link>Categories</Nav.Link>
-            </LinkContainer>
-            {/* <NavDropdown title="Categories">
+            <NavDropdown title="Categories">
               {allCategories.length > 0 && allCategories.map((category) => (
-                <NavDropdown.Item href={`/items/?categoryIds=${category.id}`}>
-                  {category.name}
+                <NavDropdown.Item>
+                  <Link to={`/items/?categoryIds=${category.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {category.name}
+                  </Link>
                 </NavDropdown.Item>
               ))}
-            </NavDropdown> */}
+            </NavDropdown>
 
             {isLoggedIn ? (
               <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
