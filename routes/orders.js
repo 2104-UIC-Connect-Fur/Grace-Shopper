@@ -78,7 +78,7 @@ ordersRouter.post('/checkout', async (req, res, next) => {
       });
       completedOrder.total += currentprice * quantity;
     }
-    const updatedOrder = await completeOrder({ ...orderData, orderId });
+    await completeOrder({ ...orderData, orderId });
     res.send({
       success: true,
       completedOrder,
