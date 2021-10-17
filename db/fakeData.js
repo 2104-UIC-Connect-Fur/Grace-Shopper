@@ -8,6 +8,7 @@ module.exports = {
       email: 'gus@psych.net',
       phonenumber: '555555555',
       zipcode: '93101',
+      isAdmin: false,
     },
     {
       username: 'catcatsby',

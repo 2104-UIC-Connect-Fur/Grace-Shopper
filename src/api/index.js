@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 /* eslint-disable import/prefer-default-export */
 import axios from 'axios';
 
@@ -216,6 +217,16 @@ export async function verifyAdmin() {
     return data;
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllUsersData() {
+  try {
+    const fetchResult = await fetch('/api/admin/users');
+    const json = await fetchResult.json();
+    return json;
+  } catch (error) {
     throw error;
   }
 }

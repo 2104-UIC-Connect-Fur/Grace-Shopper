@@ -39,7 +39,6 @@ const Cart = ({ cartShow, setCartShow }) => {
       const itemIndex = tempCart.items.findIndex((item) => item.itemId === currItem.itemId);
       tempCart.items[itemIndex].quantity = quantity;
       updateCart(tempCart);
-      console.log(tempCart);
     }
   };
 

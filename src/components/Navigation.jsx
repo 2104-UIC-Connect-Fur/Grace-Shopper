@@ -4,11 +4,12 @@ import {
   Navbar, Container, Nav, NavDropdown, Badge,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { store } from './State';
 import Login from './Login';
 import CartPic from '../images/CartPic.png';
-import { logoutUser, verifyAdmin } from '../api';
+import { logoutUser, verifyAdmin, getAllCategories } from '../api';
 
 const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
@@ -16,6 +17,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
   const [isAdmin, updateAdmin] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
 
   const signOutClickHandler = async () => {
     const { success } = await logoutUser();
@@ -49,6 +51,14 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     checkforAdmin();
   }, []);
 
+  useEffect(() => {
+    const buildCategories = async () => {
+      const { categories } = await getAllCategories();
+      setAllCategories(categories);
+    };
+    buildCategories();
+  }, []);
+
   return (
     <Navbar collapseOnSelect expand="sm" bg="light" variant="light" className="sticky-top">
       <Container>
@@ -66,6 +76,14 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             <LinkContainer to="/">
               <Nav.Link>Categories</Nav.Link>
             </LinkContainer>
+            {/* <NavDropdown title="Categories">
+              {allCategories.length > 0 && allCategories.map((category) => (
+                <NavDropdown.Item href={`/items/?categoryIds=${category.id}`}>
+                  {category.name}
+                </NavDropdown.Item>
+              ))}
+            </NavDropdown> */}
+
             {isLoggedIn ? (
               <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/">Profile</NavDropdown.Item>
