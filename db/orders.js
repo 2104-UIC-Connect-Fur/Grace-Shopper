@@ -124,18 +124,42 @@ async function getCompleteOrdersByUserId(userId) {
     update as they should. What other changes should happen when a customer completes
     their order?
 */
-async function completeOrder(orderId) {
+async function completeOrder({
+  orderId,
+  orderStreet,
+  orderApartment = null,
+  orderCity,
+  orderState,
+  orderZip,
+  nameOnCard,
+  ccNumber,
+  ccSecurityCode,
+  ccExpiration,
+  ccZip,
+}) {
   try {
     const {
       rows: [order],
     } = await client.query(
       `
             UPDATE orders
-            SET complete = true
+            SET complete = true, street = $2, apartment = $3, city = $4, state = $5, zipcode = $6, nameoncard = $7, ccnumber = $8, ccsecuritycode = $9, ccexpiration = $10, cczipcode = $11
             WHERE id = $1
             RETURNING *;
         `,
-      [orderId],
+      [
+        orderId,
+        orderStreet,
+        orderApartment,
+        orderCity,
+        orderState,
+        orderZip,
+        nameOnCard,
+        ccNumber,
+        ccSecurityCode,
+        ccExpiration,
+        ccZip,
+      ],
     );
     const { rows: ordersitems } = await client.query(
       `

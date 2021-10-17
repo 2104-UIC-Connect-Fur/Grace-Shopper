@@ -51,6 +51,7 @@ async function getItemImages(id) {
 
 async function getItemsById(id) {
   try {
+    console.log('input id: ', id);
     const { rows: [item] } = await client.query(
       `
         Select * from items

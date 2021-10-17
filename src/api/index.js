@@ -36,6 +36,16 @@ export const addNewItemToCart = async (updateObject) => {
   return json;
 };
 
+export async function checkout(queryObject) {
+  try {
+    const { data } = await axios.post('/api/orders/checkout', queryObject);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export const loginUser = async (username, password, rememberMe) => {
   const body = {
     username,

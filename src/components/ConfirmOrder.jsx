@@ -38,9 +38,6 @@ const ConfirmOrder = ({
         {' '}
         {orderZip}
       </Row>
-      <Row className="justify-content-center">
-        <Button type="button">Complete order</Button>
-      </Row>
     </Container>
   );
 };

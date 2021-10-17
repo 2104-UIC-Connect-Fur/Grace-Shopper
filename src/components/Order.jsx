@@ -10,7 +10,7 @@ import PaymentEntry from './PaymentEntry';
 import ConfirmOrder from './ConfirmOrder';
 import OrderItem from './OrderItem';
 import { store } from './State';
-import { getCart } from '../api';
+import { getCart, checkout } from '../api';
 import { formatAsCurrency } from '../utils/formatting';
 
 const Order = () => {
@@ -53,6 +53,24 @@ const Order = () => {
     };
     fetchCart();
   }, [userCart]);
+
+  const orderHandler = async () => {
+    const orderObject = {
+      name,
+      orderStreet,
+      orderApartment,
+      orderCity,
+      orderState,
+      orderZip,
+      nameOnCard,
+      ccNumber,
+      ccSecurityCode,
+      ccExpiration,
+      ccZip,
+    };
+    const result = await checkout(orderObject);
+    console.log('orderresult: ', result);
+  };
 
   if (!cart) return <h1>Loading...</h1>;
 
@@ -127,7 +145,9 @@ const Order = () => {
             </Accordion.Item>
             {readyToSubmit && (
               <Row>
-                <Accordion.Item eventKey="3">
+                <Accordion.Item
+                  eventKey="3"
+                >
                   <Accordion.Header>Review and confirm order</Accordion.Header>
                   <Accordion.Body>
                     <ConfirmOrder
@@ -139,6 +159,11 @@ const Order = () => {
                       orderState={orderState}
                       orderZip={orderZip}
                     />
+                    <Row className="justify-content-center">
+                      <Button type="button" onClick={orderHandler}>
+                        Complete order
+                      </Button>
+                    </Row>
                   </Accordion.Body>
                 </Accordion.Item>
               </Row>

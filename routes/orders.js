@@ -1,10 +1,18 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const ordersRouter = require('express').Router();
 require('dotenv').config();
 const {
   updateItemQuantityOnOrder,
   deleteItemFromOrder,
   addItemToOrder,
+  getUserCart,
+  updateItem,
+  completeOrder,
 } = require('../db');
+const { requireUser } = require('./utils');
+
+ordersRouter.use('*', requireUser);
 
 ordersRouter.patch('/items', async (req, res, next) => {
   try {
@@ -37,6 +45,50 @@ ordersRouter.post('/items', async (req, res, next) => {
       success: false,
       name: 'itemAddError',
       message: 'Unable to add item to order.',
+    });
+  }
+});
+
+ordersRouter.post('/checkout', async (req, res, next) => {
+  try {
+    const completedOrder = {
+      items: [],
+      total: 0,
+    };
+    const orderData = req.body;
+    const { id } = req.user;
+    const { items, orderId } = await getUserCart(id);
+    for (const item of items) {
+      // if we can't fulfill the requested item amount
+      // sell the current inventory quantity instead
+      const {
+        quantity, inventoryquantity, currentprice, itemId,
+      } = item;
+      const useInventoryQuantity = quantity > inventoryquantity;
+      const amountToSell = useInventoryQuantity ? inventoryquantity : quantity;
+      await updateItem({
+        id: itemId,
+        inventoryquantity: inventoryquantity - amountToSell,
+      });
+      completedOrder.items.push({
+        itemId,
+        amountSold: amountToSell,
+        price: currentprice,
+        couldNotFulfillCompletely: useInventoryQuantity,
+      });
+      completedOrder.total += currentprice * quantity;
+    }
+    const updatedOrder = await completeOrder({ ...orderData, orderId });
+    res.send({
+      success: true,
+      completedOrder,
+    });
+  } catch (error) {
+    console.log(error);
+    next({
+      success: false,
+      name: 'checkoutError',
+      message: 'Unable to complete checkout.',
     });
   }
 });

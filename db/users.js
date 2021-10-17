@@ -184,7 +184,7 @@ async function getUserCart(userId) {
       [userId],
     );
     const { rows: ordersitems } = await client.query(`
-      SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
+      SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.inventoryquantity, items.price AS "currentprice"
       FROM ordersitems
       JOIN items ON ordersitems."itemId" = items.id
       WHERE ordersitems."orderId" = ${userCart.orderId};
