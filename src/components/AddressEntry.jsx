@@ -4,6 +4,8 @@ import Row from 'react-bootstrap/Row';
 import { string, func } from 'prop-types';
 
 const AddressEntry = ({
+  name,
+  updateName,
   orderStreet,
   updateOrderStreet,
   orderApartment,
@@ -16,6 +18,20 @@ const AddressEntry = ({
   updateOrderZip,
 }) => (
   <Form>
+    <Form.Group as={Row} className="mb-3" controlId="Title">
+      <Form.Label as={Row}>
+        Name
+      </Form.Label>
+      <Form.Control
+        size="lg"
+        type="text"
+        placeholder="name"
+        value={name}
+        onChange={(event) => {
+          updateName(event.target.value);
+        }}
+      />
+    </Form.Group>
     <Form.Group as={Row} className="mb-3" controlId="Title">
       <Form.Label as={Row}>
         Street
@@ -90,6 +106,8 @@ const AddressEntry = ({
 );
 
 AddressEntry.propTypes = {
+  name: string.isRequired,
+  updateName: func.isRequired,
   orderStreet: string.isRequired,
   updateOrderStreet: func.isRequired,
   orderApartment: string.isRequired,

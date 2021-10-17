@@ -7,6 +7,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import AddressEntry from './AddressEntry';
 import PaymentEntry from './PaymentEntry';
+import ConfirmOrder from './ConfirmOrder';
 import OrderItem from './OrderItem';
 import { store } from './State';
 import { getCart } from '../api';
@@ -17,6 +18,7 @@ const Order = () => {
   const { userCart } = state;
   const [cart, updateCart] = useState(null);
   const [subTotal, updateSubtotal] = useState(null);
+  const [name, updateName] = useState('');
   const [orderStreet, updateOrderStreet] = useState('');
   const [orderApartment, updateOrderApartment] = useState('');
   const [orderCity, updateOrderCity] = useState('');
@@ -27,19 +29,34 @@ const Order = () => {
   const [ccSecurityCode, updateccSecurityCode] = useState('');
   const [ccExpiration, updateccExpiration] = useState('');
   const [ccZip, updateccZip] = useState('');
+  const readyToSubmit = name
+    && orderStreet
+    && orderCity
+    && orderState
+    && orderZip
+    && nameOnCard
+    && ccNumber
+    && ccSecurityCode
+    && ccExpiration
+    && ccZip;
   useEffect(() => {
     const fetchCart = async () => {
-      const { success, cart } = await getCart();
+      const { success, cart: fetchedCart } = await getCart();
       if (success) {
-        const fetchedSubtotal = cart.items.reduce((a, b) => a + (b.currentprice * b.quantity), 0);
+        const fetchedSubtotal = fetchedCart.items.reduce(
+          (a, b) => a + b.currentprice * b.quantity,
+          0,
+        );
         updateSubtotal(fetchedSubtotal);
-        updateCart(cart);
+        updateCart(fetchedCart);
       }
     };
     fetchCart();
   }, [userCart]);
 
-  if (!cart) return (<h1>Loading...</h1>);
+  if (!cart) return <h1>Loading...</h1>;
+
+  if (cart && !cart.items.length) return <h1>No items in cart...</h1>;
   return (
     <Container>
       <Row>
@@ -53,42 +70,31 @@ const Order = () => {
         </h1>
       </Row>
       <Row>
-        <Col
-          sm={12}
-          md={6}
-        >
-          <h5
-            className="mb-3"
-          >
+        <Col sm={12} md={6}>
+          <h5 className="mb-3">
             Look at all this rare shit. You have
             {' '}
             <i>exquisite</i>
             {' '}
             taste.
           </h5>
-          {
-                        cart.items.map((item) => (
-                          <OrderItem
-                            key={item.itemId}
-                            item={item}
-                          />
-                        ))
-                    }
+          {cart.items.map((item) => (
+            <OrderItem key={item.itemId} item={item} />
+          ))}
           <h3 className="font-weight-bold">
-            Subtotal:
+            Total:
             {' '}
             {formatAsCurrency(subTotal)}
           </h3>
         </Col>
-        <Col
-          sm={12}
-          md={6}
-        >
+        <Col sm={12} md={6}>
           <Accordion defaultActiveKey="0" flush>
             <Accordion.Item eventKey="0">
               <Accordion.Header>Shipping Information</Accordion.Header>
               <Accordion.Body>
                 <AddressEntry
+                  name={name}
+                  updateName={updateName}
                   orderStreet={orderStreet}
                   updateOrderStreet={updateOrderStreet}
                   orderApartment={orderApartment}
@@ -119,15 +125,25 @@ const Order = () => {
                 />
               </Accordion.Body>
             </Accordion.Item>
+            {readyToSubmit && (
+              <Row>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header>Review and confirm order</Accordion.Header>
+                  <Accordion.Body>
+                    <ConfirmOrder
+                      subTotal={subTotal}
+                      name={name}
+                      orderStreet={orderStreet}
+                      orderApartment={orderApartment}
+                      orderCity={orderCity}
+                      orderState={orderState}
+                      orderZip={orderZip}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Row>
+            )}
           </Accordion>
-          <Row>
-            <Button
-              className="mt-5"
-            >
-              Place Order
-
-            </Button>
-          </Row>
         </Col>
       </Row>
     </Container>
