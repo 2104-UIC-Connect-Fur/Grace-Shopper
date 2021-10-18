@@ -1,4 +1,2 @@
 /* eslint-disable global-require */
-module.exports = {
-  ...require('./formatting'),
-};
+export * from "./formatting";

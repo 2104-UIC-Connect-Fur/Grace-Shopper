@@ -2,21 +2,25 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-useless-catch */
-const { client } = require('./client');
+const { client } = require("./client");
 
 async function createItems({
-  title, description, price, inventoryquantity,
+  title,
+  description,
+  price,
+  inventoryQuantity,
+  active,
 }) {
   try {
     const {
       rows: [item],
     } = await client.query(
       `
-            INSERT INTO items(title, description, price,inventoryquantity) 
-            VALUES($1, $2, $3, $4) 
+            INSERT INTO items(title, description, price,inventoryquantity,active) 
+            VALUES($1, $2, $3, $4, $5) 
             RETURNING *;
           `,
-      [title, description, price, inventoryquantity],
+      [title, description, price, inventoryQuantity, active]
     );
     return item;
   } catch (error) {
@@ -27,16 +31,18 @@ async function createItems({
 async function getItemImages(id) {
   try {
     const placeHolderImage = {
-      url: '/images/rareshit.png',
-      description: 'This item is so rare and exclusive that we cannot even photograph it. Please accept this doggo pic instead.',
-      alttext: 'woof',
+      url: "/images/rareshit.png",
+      description:
+        "This item is so rare and exclusive that we cannot even photograph it. Please accept this doggo pic instead.",
+      alttext: "woof",
     };
     const { rows: images } = await client.query(
       `
       SELECT url, description, alttext
       FROM itemsimages
       WHERE "itemId"=$1;
-      `, [id],
+      `,
+      [id]
     );
     if (!images.length) {
       images.push(placeHolderImage);
@@ -49,12 +55,14 @@ async function getItemImages(id) {
 
 async function getItemsById(id) {
   try {
-    const { rows: [item] } = await client.query(
+    const {
+      rows: [item],
+    } = await client.query(
       `
         Select * from items
         WHERE id=$1; 
         `,
-      [id],
+      [id]
     );
     item.images = await getItemImages(id);
     return item;
@@ -65,7 +73,12 @@ async function getItemsById(id) {
 
 async function getAllItems() {
   try {
-    const { rows: items } = await client.query('SELECT * FROM ITEMS;');
+    const { rows: items } = await client.query("SELECT * FROM ITEMS;");
+    const itemId = items.id;
+    const images = await getItemImages(itemId);
+
+    items.images = images;
+
     return items;
   } catch (error) {
     throw error;
@@ -83,7 +96,7 @@ async function getItemsFromQuery(queryObject) {
       resultsPerPage = 25,
     } = queryObject;
     const whereConditions = priceLow || priceHigh || searchString;
-    const joinedCategories = categoryIds.join(',');
+    const joinedCategories = categoryIds.join(",");
     const categoryString = `JOIN itemscategories ON itemscategories."categoryId" IN (${joinedCategories})
     AND itemscategories."itemId"=items.id
     `;
@@ -95,13 +108,13 @@ async function getItemsFromQuery(queryObject) {
     const queryString = `
     SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id, COUNT(items.id) OVER() as totalresults
     FROM ITEMS
-    ${categoryIds.length ? categoryString : ''}
-    ${whereConditions ? 'WHERE' : ''}
-    ${priceLow ? `price >= ${priceLow}` : ''}
-    ${(priceLow && priceHigh) ? 'AND' : ''}
-    ${priceHigh ? `price <= ${priceHigh}` : ''}
-    ${(priceLow || priceHigh) && searchString ? 'AND' : ''}
-    ${searchString ? `${searchStringforQuery}` : ''}
+    ${categoryIds.length ? categoryString : ""}
+    ${whereConditions ? "WHERE" : ""}
+    ${priceLow ? `price >= ${priceLow}` : ""}
+    ${priceLow && priceHigh ? "AND" : ""}
+    ${priceHigh ? `price <= ${priceHigh}` : ""}
+    ${(priceLow || priceHigh) && searchString ? "AND" : ""}
+    ${searchString ? `${searchStringforQuery}` : ""}
     OFFSET ${rowsToSkip} ROWS
     FETCH NEXT ${resultsPerPage} ROWS ONLY;
     ;
@@ -117,18 +130,21 @@ async function getItemsFromQuery(queryObject) {
   }
 }
 
-async function updateItem({ id, price, inventoryquantity }) {
+async function updateItem(
+  id,
+  { title, price, description, inventoryQuantity }
+) {
   try {
     const {
       rows: [item],
     } = await client.query(
       `
             UPDATE items
-            SET price=$2, inventoryquantity=$3
-            WHERE id=$1
+            SET title=$1, price=$2, description=$3, inventoryquantity=$4
+            WHERE id=$5
             Returning *;
         `,
-      [id, price, inventoryquantity],
+      [title, price, description, inventoryQuantity, id]
     );
     return item;
   } catch (error) {
@@ -146,7 +162,7 @@ async function createItemsCategories({ itemId, categoryId }) {
                 VALUES($1, $2) 
                 RETURNING *;
               `,
-      [itemId, categoryId],
+      [itemId, categoryId]
     );
     return itemcategory;
   } catch (error) {
@@ -156,15 +172,32 @@ async function createItemsCategories({ itemId, categoryId }) {
 
 async function getAllCategories() {
   try {
-    const {
-      rows,
-    } = await client.query(
+    const { rows } = await client.query(
       `
       SELECT categories.name, categories.id
       FROM categories;
-      `,
+      `
     );
     return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteItemFromDb(id) {
+  try {
+    const {
+      rows: [item],
+    } = await client.query(
+      `
+  UPDATE items
+  SET active=false
+  WHERE id=$1
+  RETURNING *; 
+  `,
+      [id]
+    );
+    return item;
   } catch (error) {
     throw error;
   }
@@ -178,4 +211,5 @@ module.exports = {
   createItemsCategories,
   getItemsFromQuery,
   getAllCategories,
+  deleteItemFromDb,
 };

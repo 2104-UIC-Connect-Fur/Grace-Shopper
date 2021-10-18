@@ -163,3 +163,46 @@ export async function verifyAdmin() {
     throw error;
   }
 }
+
+export const updateItemInDB = async (queryObject) => {
+  const body = queryObject;
+  const itemId = queryObject.id;
+  const config = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  };
+  const result = await fetch(`/api/items/updateItem/${itemId}`, config);
+  console.log(result);
+};
+
+export const deleteItemInDb = async (queryObject) => {
+  const body = queryObject;
+  const itemId = queryObject.id;
+  const config = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  };
+  const result = await fetch(`/api/items/setItemToInactive/${itemId}`, config);
+  const json = await result.json();
+  return json;
+};
+
+export const createItemInDb = async (queryObject) => {
+  const body = queryObject;
+  const config = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  };
+  const result = await fetch(`/api/items/createItem`, config);
+  const json = await result.json();
+  return json;
+};

@@ -1,17 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap/Image';
-import Carousel from 'react-bootstrap/Carousel';
-import { useParams } from 'react-router-dom';
-import { getItemById } from '../api';
-import { formatAsCurrency } from '../utils';
+import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Image from "react-bootstrap/Image";
+import Carousel from "react-bootstrap/Carousel";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import {
+  getItemById,
+  verifyAdmin,
+  updateItemInDB,
+  deleteItemInDb,
+} from "../api";
+import { formatAsCurrency } from "../utils";
+import Button from "react-bootstrap/Button";
 
 const SingleItem = () => {
   const { itemId } = useParams();
+  const [isAdmin, updateAdmin] = useState(false);
   const [errorState, setErrorState] = useState(false);
-  const [itemToDisplay, setItemToDisplay] = useState(null);
-  const showGalleryControls = itemToDisplay && itemToDisplay.images.length > 1;
+  const [itemToDisplay, setItemToDisplay] = useState({});
+  const [title, updateTitle] = useState(itemToDisplay.title);
+  const [description, updateDescription] = useState(itemToDisplay.description);
+  const [price, updatePrice] = useState(itemToDisplay.price);
+  const [active, setToActive] = useState(true);
+  const [inventoryQuantity, updateQuantity] = useState(itemToDisplay.quantity);
+
+  const showGalleryControls =
+    itemToDisplay && itemToDisplay.images && itemToDisplay.images.length > 1;
+
+  useEffect(() => {
+    const checkforAdmin = async () => {
+      const { success, message } = await verifyAdmin();
+      if (success && message) {
+        updateAdmin(true);
+      }
+    };
+    checkforAdmin();
+  }, [isAdmin]);
+
   useEffect(() => {
     const getItem = async (id) => {
       const { item, success } = await getItemById(id);
@@ -23,82 +52,72 @@ const SingleItem = () => {
     };
     getItem(itemId);
   }, []);
-  if (errorState) return (<h1>Problem loading item. Please try again!</h1>);
-  if (!itemToDisplay) return (<h1>Loading...</h1>);
 
-  // return (
-  //   <Container>
-  //     <Row>
-  //       <h1>{itemToDisplay.title}</h1>
-  //     </Row>
-  //     <Row>
-  //       <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
-  //     </Row>
-  //     <Row className="justify-content-center">
-  //       {
-  //         showGalleryControls
-  //           ? (
-  //             <Carousel
-  //               className="d-block w-75"
-  //             >
-  //               {
-  //           itemToDisplay.images.map((image) => (
-  //             <Carousel.Item
-  //               key={image.id}
-  //             >
-  //               <img
-  //                 className="d-block w-100"
-  //                 src={image.url}
-  //                 alt={image.alttext}
-  //               />
-  //               <Carousel.Caption style={{
-  //                 backgroundColor: 'rgba(188,193,191,0.5)',
-  //                 color: 'black',
-  //                 padding: '.5vw',
-  //                 fontSize: '1.5vw',
-  //                 fontWeight: 'bold',
-  //               }}
-  //               >
-  //                 <p>{image.description}</p>
-  //               </Carousel.Caption>
-  //             </Carousel.Item>
-  //           ))
-  //         }
-  //             </Carousel>
-  //           )
-  //           : (
-  //             <Image src={itemToDisplay.images[0].url} className="d-block w-75" />
-  //           )
-  //       }
-  //     </Row>
-  //     <Row className="mt-2">
-  //       <h4>{itemToDisplay.description}</h4>
-  //     </Row>
-  //   </Container>
-  // );
+  const updateItem = async () => {
+    const queryObject = {
+      id: itemId,
+      title,
+      description,
+      price,
+      inventoryQuantity,
+    };
+    const response = await updateItemInDB(queryObject);
+    console.log(response);
+  };
+
+  const updateItemToInactive = async () => {
+    const queryObject = {
+      id: itemId,
+      active: false,
+    };
+    const response = await deleteItemInDb(queryObject);
+    console.log(response);
+  };
+
+  if (errorState) return <h1>Problem loading item. Please try again!</h1>;
+  if (!itemToDisplay) return <h1>Loading...</h1>;
 
   return (
     <Container>
-      <Row>
-        <h1>
-          {itemToDisplay.title}
-        </h1>
-      </Row>
-      <Row>
-        <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
-      </Row>
-      <Row
-        className="justify-content-center"
-      >
+      {isAdmin ? (
+        <>
+          <FloatingLabel controlId="string" label="Item name" className="mb-3">
+            <Form.Control
+              type="string"
+              value={title}
+              onChange={(event) => updateTitle(event.target.value)}
+              placeholder={itemToDisplay.title}
+            />
+          </FloatingLabel>
+        </>
+      ) : (
+        <Row>
+          <h1>{itemToDisplay.title}</h1>
+        </Row>
+      )}
+      {isAdmin ? (
+        <FloatingLabel controlId="string" label="Item Price">
+          <Form.Control
+            type="string"
+            size="sm"
+            value={price}
+            onChange={(event) => updatePrice(event.target.value)}
+            placeholder={formatAsCurrency(itemToDisplay.price)}
+          />
+        </FloatingLabel>
+      ) : (
+        <Row>
+          <h2>{formatAsCurrency(itemToDisplay.price)}</h2>
+        </Row>
+      )}
+      <Row className="justify-content-center">
         <Carousel
           className="d-block col-sm-4 col-md-6 col-lg-8"
           controls={showGalleryControls}
         >
-          {
+          {itemToDisplay.images &&
             itemToDisplay.images.map((image) => (
-              <Carousel.Item
-                key={image.id}
-              >
+              <Carousel.Item key={image.id}>
                 <img
                   className="d-block w-100"
                   src={image.url}
@@ -106,22 +125,68 @@ const SingleItem = () => {
                 />
                 <Carousel.Caption
                   style={{
-                    backgroundColor: 'rgba(188,193,191,0.65)',
-                    color: 'white',
-                    fontSize: '1.5vw',
-                    fontWeight: 'bold',
+                    backgroundColor: "rgba(188,193,191,0.65)",
+                    color: "white",
+                    fontSize: "1.5vw",
+                    fontWeight: "bold",
                   }}
                 >
                   <p>{image.description}</p>
                 </Carousel.Caption>
               </Carousel.Item>
-            ))
-          }
+            ))}
         </Carousel>
       </Row>
-      <Row className="mt-2">
-        <h4>{itemToDisplay.description}</h4>
-      </Row>
+      {isAdmin ? (
+        <FloatingLabel controlId="string" label="Item Descpription">
+          <Form.Control
+            type="string"
+            placeholder={itemToDisplay.description}
+            value={description}
+            onChange={(event) => updateDescription(event.target.value)}
+          />
+        </FloatingLabel>
+      ) : (
+        <Row className="mt-2">
+          <h4>{itemToDisplay.description}</h4>
+        </Row>
+      )}
+      {isAdmin ? (
+        <FloatingLabel controlId="string" label="Item Quantity">
+          <Form.Control
+            type="string"
+            placeholder={itemToDisplay.quantity}
+            value={inventoryQuantity}
+            onChange={(event) => updateQuantity(event.target.value)}
+          />
+        </FloatingLabel>
+      ) : null}
+      <Link to={`/items/`}>
+        {isAdmin ? (
+          <Button
+            style={{
+              color: "white",
+              background: "blue",
+              border: "blue",
+            }}
+            onClick={updateItem}
+          >
+            Submit
+          </Button>
+        ) : null}
+        {isAdmin ? (
+          <Button
+            style={{
+              color: "black",
+              background: "red",
+              border: "red",
+            }}
+            onClick={updateItemToInactive}
+          >
+            Delete
+          </Button>
+        ) : null}
+      </Link>
     </Container>
   );
 };

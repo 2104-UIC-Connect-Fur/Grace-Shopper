@@ -15,3 +15,12 @@ adminRouter.get("/isAdmin", async (req, res, next) => {
   }
 });
 module.exports = adminRouter;
+
+adminRouter.post("/search", async (req, res, next) => {
+  try {
+    const items = await getAllItems();
+    console.log(items);
+  } catch (error) {
+    next(error);
+  }
+});

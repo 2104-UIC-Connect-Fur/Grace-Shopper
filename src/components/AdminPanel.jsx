@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom";
 import { verifyAdmin } from "../api";
+import { store } from "./State";
 
 const AdminPanel = () => {
+  const { state } = useContext(store);
   const [isAdmin, updateAdmin] = useState(false);
+  const { username } = state;
+
   console.log("sup");
 
   useEffect(() => {
     const checkforAdmin = async () => {
       const { success, message } = await verifyAdmin();
+
       if (success && message) {
         console.log({ message });
         updateAdmin(true);
@@ -16,6 +22,7 @@ const AdminPanel = () => {
     };
     checkforAdmin();
   }, []);
+
   console.log("Made the request for admin verification");
   if (!isAdmin) {
     return (
@@ -27,13 +34,17 @@ const AdminPanel = () => {
           scrolling="no"
           width="720"
           height="484"
-        ></iframe>
+        />
         `
       </h1>
     );
   }
 
-  return <h1>Admin stuff goes here.</h1>;
+  return (
+    <Container>
+      <h1>Hello admin, {username} </h1>
+    </Container>
+  );
 };
 
 export default AdminPanel;

@@ -1,4 +1,4 @@
-const itemsRouter = require('express').Router();
+const itemsRouter = require("express").Router();
 const {
   getAllItems,
   createItems,
@@ -6,11 +6,13 @@ const {
   getItemsFromQuery,
   getAllCategories,
   getItemsById,
-} = require('../db');
+  updateItem,
+  deleteItemFromDb,
+} = require("../db");
 
-const { requireUser } = require('./utils');
+const { requireUser } = require("./utils");
 
-itemsRouter.get('/', requireUser, async (req, res, next) => {
+itemsRouter.get("/", requireUser, async (req, res, next) => {
   try {
     const items = await getAllItems();
     res.send(items);
@@ -19,7 +21,7 @@ itemsRouter.get('/', requireUser, async (req, res, next) => {
   }
 });
 
-itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
+itemsRouter.get("/bycategory/:categoryId", async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
@@ -30,9 +32,9 @@ itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
   }
 });
 
-itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
+itemsRouter.get("/byItemId/:itemId", async (req, res, next) => {
   try {
-    console.log('in item id route');
+    console.log("in item id route");
     const { itemId } = req.params;
     const item = await getItemsById(itemId);
     res.send({
@@ -45,7 +47,7 @@ itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
   }
 });
 
-itemsRouter.post('/search', async (req, res, next) => {
+itemsRouter.post("/search", async (req, res, next) => {
   try {
     const queryObject = req.body;
     if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 12;
@@ -72,7 +74,7 @@ itemsRouter.post('/search', async (req, res, next) => {
 });
 
 // make this require authentication
-itemsRouter.post('/', async (req, res, next) => {
+itemsRouter.post("/createItem", async (req, res, next) => {
   try {
     const itemToCreate = req.body;
     const item = await createItems(itemToCreate);
@@ -80,13 +82,14 @@ itemsRouter.post('/', async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next({
-      name: 'itemCreationError',
-      message: 'something went wrong. please check your item information and try again.',
+      name: "itemCreationError",
+      message:
+        "something went wrong. please check your item information and try again.",
     });
   }
 });
 
-itemsRouter.get('/categories', async (req, res, next) => {
+itemsRouter.get("/categories", async (req, res, next) => {
   try {
     const categories = await getAllCategories();
     res.send({
@@ -95,6 +98,39 @@ itemsRouter.get('/categories', async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+});
+
+itemsRouter.post("/updateItem/:itemId", async (req, res, next) => {
+  try {
+    console.log("IN HERE 2 Sending updated Item");
+    const { itemId } = req.params;
+    const item = await updateItem(itemId, req.body);
+    res.send({
+      success: true,
+      item,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+itemsRouter.patch("/setItemToInactive/:itemId", async (req, res, next) => {
+  try {
+    console.log("IN HERE 3 Sending Deleted Item");
+    const { itemId } = req.params;
+    const item = await deleteItemFromDb(itemId);
+    res.send({
+      success: true,
+      inactiveItem: item,
+    });
+  } catch (error) {
+    next({
+      succes: false,
+      name: "itemNotSetToInactive",
+      message: "Unable to deactivate item from database.",
+    });
   }
 });
 
