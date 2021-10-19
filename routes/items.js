@@ -36,7 +36,10 @@ itemsRouter.get('/ids', async (req, res, next) => {
   try {
     const itemIds = await getAllItemIds();
     const itemsArray = itemIds.map((item) => item.id);
-    res.send(itemsArray);
+    res.send({
+      success: true,
+      itemsArray,
+    });
   } catch (error) {
     next(error);
   }

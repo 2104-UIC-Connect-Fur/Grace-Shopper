@@ -9,14 +9,16 @@ const ItemShuffle = () => {
   const [shuffleObject, setShuffleObject] = useState(null);
   useEffect(() => {
     const getItemIds = async () => {
-      const itemIds = await getAllItemIds();
-      const shuffleableIds = new Shuffleable(itemIds);
-      setShuffleObject(shuffleableIds);
+      const { success, itemsArray } = await getAllItemIds();
+      if (success) {
+        const shuffleableIds = new Shuffleable(itemsArray);
+        setShuffleObject(shuffleableIds);
+      }
     };
     getItemIds();
   }, []);
   const history = useHistory();
-  return (
+  if (shuffleObject) return (
     <Button
       variant="primary"
       style={{
@@ -37,6 +39,7 @@ const ItemShuffle = () => {
       <Shuffle />
     </Button>
   );
+return null;
 };
 
 export default ItemShuffle;
