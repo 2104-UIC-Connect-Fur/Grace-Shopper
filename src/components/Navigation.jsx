@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useHistory } from "react-router-dom";
 import {
   Navbar,
   Container,
@@ -21,13 +21,14 @@ import { logoutUser, verifyAdmin, getAllCategories } from "../api";
 
 const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
-  const { isLoggedIn, username, userCart } = state;
+  const { isLoggedIn, username, userCart, queryObject } = state;
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
   const [isAdmin, updateAdmin] = useState(false);
   const { search } = useLocation();
   const [query, setQuery] = useState(search);
   const [allCategories, setAllCategories] = useState([]);
+  const history = useHistory();
 
   const signOutClickHandler = async () => {
     const { success } = await logoutUser();
@@ -102,7 +103,14 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
                 allCategories.map((category) => (
                   <NavDropdown.Item>
                     <Link
-                      to={`/items/?categoryIds=${category.id}`}
+                      to={`/?categoryIds=${category.id}`}
+                      onClick={() => {
+                        updateQuery({
+                          categoryIds: [
+                            category.id,
+                          ]
+                        })
+                      }}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       {category.name}
