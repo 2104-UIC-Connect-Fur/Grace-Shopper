@@ -13,7 +13,8 @@ const CreateItem = () => {
   const [active, setToActive] = useState(true);
   const [inventoryquantity, updateQuantity] = useState("");
 
-  const createItem = async () => {
+  const createItem = async (e) => {
+    e.preventDefault();
     const queryObject = {
       title,
       description,
@@ -21,8 +22,8 @@ const CreateItem = () => {
       inventoryquantity,
       active,
     };
-    const response = await createItemInDb(queryObject);
-    console.log(response);
+    const { success } = await createItemInDb(queryObject);
+    if (success) setShow(false);
   };
 
   return (

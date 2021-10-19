@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
 import ListItem from "./ListItem";
-import ItemSearch from "./ItemSearch";
 import CreateItem from "./CreateItem";
 import { getItemsFromQuery } from "../api/index";
 import Button from "react-bootstrap/Button";
@@ -114,18 +113,6 @@ const Items = () => {
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
       <Container className="mb-2">
         <Row>
-          {isAdmin ? (
-            <Button
-              onClick={toggleClick}
-              variant="info"
-              style={{
-                width: "10%",
-                margin: "auto",
-              }}
-            >
-              Modify Items
-            </Button>
-          ) : null}
           {isAdmin ? <CreateItem /> : null}
         </Row>
       </Container>

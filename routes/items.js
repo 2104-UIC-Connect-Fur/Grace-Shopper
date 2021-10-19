@@ -1,4 +1,4 @@
-const itemsRouter = require("express").Router();
+const itemsRouter = require('express').Router();
 const {
   getAllItems,
   createItems,
@@ -9,11 +9,11 @@ const {
   updateItem,
   deleteItemFromDb,
   getAllItemIds,
-} = require("../db");
+} = require('../db');
 
-const { requireUser } = require("./utils");
+const { requireUser } = require('./utils');
 
-itemsRouter.get("/", requireUser, async (req, res, next) => {
+itemsRouter.get('/', requireUser, async (req, res, next) => {
   try {
     const items = await getAllItems();
     res.send(items);
@@ -22,7 +22,7 @@ itemsRouter.get("/", requireUser, async (req, res, next) => {
   }
 });
 
-itemsRouter.get("/bycategory/:categoryId", async (req, res, next) => {
+itemsRouter.get('/bycategory/:categoryId', async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
@@ -32,7 +32,7 @@ itemsRouter.get("/bycategory/:categoryId", async (req, res, next) => {
   }
 });
 
-itemsRouter.get("/ids", async (req, res, next) => {
+itemsRouter.get('/ids', async (req, res, next) => {
   try {
     const itemIds = await getAllItemIds();
     const itemsArray = itemIds.map((item) => item.id);
@@ -42,7 +42,7 @@ itemsRouter.get("/ids", async (req, res, next) => {
   }
 });
 
-itemsRouter.get("/byItemId/:itemId", async (req, res, next) => {
+itemsRouter.get('/byItemId/:itemId', async (req, res, next) => {
   try {
     const { itemId } = req.params;
     const item = await getItemsById(itemId);
@@ -56,7 +56,7 @@ itemsRouter.get("/byItemId/:itemId", async (req, res, next) => {
   }
 });
 
-itemsRouter.post("/search", async (req, res, next) => {
+itemsRouter.post('/search', async (req, res, next) => {
   try {
     const queryObject = req.body;
     if (!queryObject.resultsPerPage) queryObject.resultsPerPage = 12;
@@ -83,22 +83,25 @@ itemsRouter.post("/search", async (req, res, next) => {
 });
 
 // make this require authentication
-itemsRouter.post("/createItem", async (req, res, next) => {
+itemsRouter.post('/createItem', async (req, res, next) => {
   try {
     const itemToCreate = req.body;
     const item = await createItems(itemToCreate);
-    return res.send(`success! item created: ${item.title}`);
+    return res.send({
+      success: true,
+      item,
+    });
   } catch (error) {
     console.log(error);
     next({
-      name: "itemCreationError",
+      name: 'itemCreationError',
       message:
-        "something went wrong. please check your item information and try again.",
+        'something went wrong. please check your item information and try again.',
     });
   }
 });
 
-itemsRouter.patch("/", async (req, res, next) => {
+itemsRouter.patch('/', async (req, res, next) => {
   try {
     const updateObject = req.body;
     await updateItem(updateObject);
@@ -108,14 +111,14 @@ itemsRouter.patch("/", async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next({
-      name: "itemUpdateError",
+      name: 'itemUpdateError',
       message:
-        "something went wrong. please check your item information and try again.",
+        'something went wrong. please check your item information and try again.',
     });
   }
 });
 
-itemsRouter.get("/categories", async (req, res, next) => {
+itemsRouter.get('/categories', async (req, res, next) => {
   try {
     const categories = await getAllCategories();
     res.send({
@@ -127,9 +130,9 @@ itemsRouter.get("/categories", async (req, res, next) => {
   }
 });
 
-itemsRouter.patch("/updateItem/", async (req, res, next) => {
+itemsRouter.patch('/updateItem/', async (req, res, next) => {
   try {
-    console.log("IN HERE 2 Sending updated Item");
+    console.log('IN HERE 2 Sending updated Item');
     const item = await updateItem(req.body);
     res.send({
       success: true,
@@ -141,9 +144,9 @@ itemsRouter.patch("/updateItem/", async (req, res, next) => {
   }
 });
 
-itemsRouter.patch("/setItemToInactive/:itemId", async (req, res, next) => {
+itemsRouter.patch('/setItemToInactive/:itemId', async (req, res, next) => {
   try {
-    console.log("IN HERE 3 Sending Deleted Item");
+    console.log('IN HERE 3 Sending Deleted Item');
     const { itemId } = req.params;
     const item = await deleteItemFromDb(itemId);
     res.send({
@@ -153,8 +156,8 @@ itemsRouter.patch("/setItemToInactive/:itemId", async (req, res, next) => {
   } catch (error) {
     next({
       succes: false,
-      name: "itemNotSetToInactive",
-      message: "Unable to deactivate item from database.",
+      name: 'itemNotSetToInactive',
+      message: 'Unable to deactivate item from database.',
     });
   }
 });

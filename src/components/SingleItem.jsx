@@ -27,6 +27,7 @@ const SingleItem = () => {
   const [price, updatePrice] = useState(itemToDisplay.price);
   const [active, setToActive] = useState(true);
   const [inventoryquantity, updateQuantity] = useState(itemToDisplay.quantity);
+  const [showEditControls, setShowEditControls] = useState(false);
 
   const showGalleryControls =
     itemToDisplay && itemToDisplay.images && itemToDisplay.images.length > 1;
@@ -79,7 +80,23 @@ const SingleItem = () => {
 
   return (
     <Container>
-      {isAdmin ? (
+      {
+        isAdmin
+        && (
+          <Button
+              className="mt-2 mb-2"
+              onClick={() => {setShowEditControls(!showEditControls)}}
+              variant="info"
+              style={{
+                width: "10%",
+                margin: "auto",
+              }}
+            >
+              Edit Item
+            </Button>
+        )
+      }
+      {showEditControls ? (
         <>
           <FloatingLabel controlId="string" label="Item name" className="mb-3">
             <Form.Control
@@ -95,7 +112,7 @@ const SingleItem = () => {
           <h1>{itemToDisplay.title}</h1>
         </Row>
       )}
-      {isAdmin ? (
+      {showEditControls ? (
         <FloatingLabel controlId="string" label="Item Price">
           <Form.Control
             type="number"
@@ -137,7 +154,7 @@ const SingleItem = () => {
             ))}
         </Carousel>
       </Row>
-      {isAdmin ? (
+      {showEditControls ? (
         <FloatingLabel controlId="string" label="Item Descpription">
           <Form.Control
             type="string"
@@ -157,7 +174,7 @@ const SingleItem = () => {
           </Row>
         </>
       )}
-      {isAdmin ? (
+      {showEditControls ? (
         <FloatingLabel controlId="string" label="Item Quantity">
           <Form.Control
             type="number"
@@ -168,7 +185,7 @@ const SingleItem = () => {
         </FloatingLabel>
       ) : null}
       <Link to={`/`}>
-        {isAdmin ? (
+        {showEditControls ? (
           <Button
             style={{
               color: "white",
@@ -180,7 +197,7 @@ const SingleItem = () => {
             Submit
           </Button>
         ) : null}
-        {isAdmin ? (
+        {showEditControls ? (
           <Button
             style={{
               color: "black",

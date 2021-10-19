@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import { string, shape, arrayOf, number } from "prop-types";
 import { formatAsCurrency } from "../utils";
 import { verifyAdmin } from "../api";
 import AddToCartButton from "./AddToCartButton";
 
-const ListItem = ({ item, showModifyItemsButton }) => {
+const ListItem = ({ item }) => {
   const { title, description, price, images, id } = item;
   const mainImage = images[0].url;
   const [isAdmin, updateAdmin] = useState(false);
@@ -37,21 +36,6 @@ const ListItem = ({ item, showModifyItemsButton }) => {
             <Card.Text>{description}</Card.Text>
             <Card.Text>{formatAsCurrency(price)}</Card.Text>
             <AddToCartButton itemId={id} />
-            {isAdmin && showModifyItemsButton ? (
-              <Link to={`/items/${id}`}>
-                <Button
-                  variant="outline-warning"
-                  style={{
-                    margin: "auto",
-                    color: "black",
-                    background: "green",
-                    border: "black",
-                  }}
-                >
-                  Update Item
-                </Button>
-              </Link>
-            ) : null}
           </Card.Body>
         </Card>
       </Col>

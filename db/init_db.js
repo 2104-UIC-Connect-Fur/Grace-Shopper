@@ -98,7 +98,7 @@ async function buildTables() {
       description TEXT NOT NULL,
       price INTEGER NOT NULL,
       inventoryquantity INTEGER NOT NULL,
-      active BOOLEAN DEFAULT true
+      active BOOLEAN DEFAULT FALSE
       );
 
     CREATE TABLE itemsimages(

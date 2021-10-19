@@ -120,7 +120,8 @@ async function getItemsFromQuery(queryObject) {
     SELECT DISTINCT items.title, items.description, items.price, items.inventoryquantity, items.id, COUNT(items.id) OVER() as totalresults
     FROM ITEMS
     ${categoryIds.length ? categoryString : ""}
-    ${whereConditions ? "WHERE" : ""}
+    WHERE items.active=true
+    ${whereConditions ? "AND" : ""}
     ${priceLow ? `price >= ${priceLow}` : ""}
     ${priceLow && priceHigh ? "AND" : ""}
     ${priceHigh ? `price <= ${priceHigh}` : ""}
