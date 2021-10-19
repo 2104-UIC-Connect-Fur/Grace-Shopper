@@ -193,30 +193,6 @@ module.exports = {
       inventoryquantity: 3,
       active: true,
     },
-    {
-      title: 'Nic Cage Pillow',
-      description:
-        "Who wouldn't want to rest their head on Nic Cage's mug?",
-      price: 350000,
-      inventoryquantity: 10,
-      active: true,
-    },
-    {
-      title: 'Towering Pillar of Hats',
-      description:
-        'It is a stack of three hats, consisting of a boater with a black ribbon perched atop a Noble Amassment of Hats.',
-      price: 150000,
-      inventoryquantity: 4,
-      active: true,
-    },
-    {
-      title: 'Cadillac 16',
-      description:
-        'A concept car so powerful it never made it into production. This is one of five models ever made.',
-      price: 50000000,
-      inventoryquantity: 1,
-      active: true,
-    },
   ],
   imagesOfItems: [
     {
@@ -323,24 +299,6 @@ module.exports = {
       description: 'Leatherbound first-edition Don Quixote',
       alttext: 'Leatherbound first-edition Don Quixote book',
     },
-    {
-      itemId: 20,
-      url: '/images/nic_cage.png',
-      description: "Sorry boss, but there's only two men I trust. One of them's me. The other's not you.",
-      alttext: "I'm a vampire! I'm a vampire! I'm a vampire!",
-    },
-    {
-      itemId: 21,
-      url: '/images/towering_Pillar_of_Hats.png',
-      description: 'Tarnish notte the majesty of my TOWER of HATS.',
-      alttext: 'TF24ever',
-    },
-    {
-      itemId: 22,
-      url: '/images/cadillac_16.png',
-      description: 'The engine was said to produce a minimum of 1,000HP.',
-      alttext: 'vroom',
-    },
   ],
   categories: [
     {
@@ -432,26 +390,6 @@ module.exports = {
     {
       itemId: 19,
       categoryId: 6,
-    },
-    {
-      itemId: 20,
-      categoryId: 6,
-    },
-    {
-      itemId: 21,
-      categoryId: 5,
-    },
-    {
-      itemId: 22,
-      categoryId: 7,
-    },
-    {
-      itemId: 7,
-      categoryId: 3,
-    },
-    {
-      itemId: 8,
-      categoryId: 3,
     },
   ],
   discounts: [

@@ -19,7 +19,7 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   const searchDefaults = {
     categoryIds: [],
     priceLow: 0,
-    priceHigh: 100000000,
+    priceHigh: 1000000,
     userSearchTerm: "",
   };
   const [categoryIds, setCategoryIds] = useState(searchDefaults.categoryIds);
@@ -39,7 +39,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
     getCategories();
   }, []);
   const handleChange = (val) => setCategoryIds(val);
-
 
   const searchHandler = async () => {
     const useQueryObject =
@@ -77,13 +76,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
     });
   };
 
-  const handleKeyPress = (event) => {
-    if(event.key === 'Enter'){
-      event.preventDefault();
-      searchHandler();
-    }
-  }
-
   return (
     <>
       <Button
@@ -116,7 +108,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
                 type="text"
                 placeholder="type your search here"
                 value={userSearchTerm}
-                onKeyPress={handleKeyPress}
                 onChange={(event) => {
                   setUserSearchTerm(event.target.value);
                 }}
@@ -131,8 +122,8 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
                 lg={12}
                 type="range"
                 value={priceLow}
-                min={searchDefaults.priceLow}
-                max={searchDefaults.priceHigh}
+                min="0"
+                max="1000000"
                 step={1000}
                 onChange={(e) => {
                   e.preventDefault();
@@ -149,8 +140,8 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
                 lg={12}
                 type="range"
                 value={priceHigh}
-                min={searchDefaults.priceLow}
-                max={searchDefaults.priceHigh}
+                min="0"
+                max="1000000"
                 step={1000}
                 onChange={(e) => {
                   e.preventDefault();
