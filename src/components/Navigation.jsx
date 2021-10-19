@@ -170,7 +170,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             )}
           </Navbar.Brand>
         ) : (
-          <OverlayTrigger trigger="click" placement="left" overlay={popover}>
+          <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
             <Navbar.Brand style={{ cursor: "pointer" }}>
               <img
                 src={CartPic}
