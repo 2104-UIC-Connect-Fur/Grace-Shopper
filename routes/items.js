@@ -8,6 +8,7 @@ const {
   getItemsById,
   updateItem,
   deleteItemFromDb,
+  getAllItemIds,
 } = require("../db");
 
 const { requireUser } = require("./utils");
@@ -25,8 +26,17 @@ itemsRouter.get("/bycategory/:categoryId", async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const items = await getItemsByCategoryId(categoryId);
-    console.log(`items for category id ${categoryId}:`, items);
     res.send(items);
+  } catch (error) {
+    next(error);
+  }
+});
+
+itemsRouter.get("/ids", async (req, res, next) => {
+  try {
+    const itemIds = await getAllItemIds();
+    const itemsArray = itemIds.map((item) => item.id);
+    res.send(itemsArray);
   } catch (error) {
     next(error);
   }
@@ -34,7 +44,6 @@ itemsRouter.get("/bycategory/:categoryId", async (req, res, next) => {
 
 itemsRouter.get("/byItemId/:itemId", async (req, res, next) => {
   try {
-    console.log("in item id route");
     const { itemId } = req.params;
     const item = await getItemsById(itemId);
     res.send({
@@ -89,6 +98,23 @@ itemsRouter.post("/createItem", async (req, res, next) => {
   }
 });
 
+itemsRouter.patch("/", async (req, res, next) => {
+  try {
+    const updateObject = req.body;
+    await updateItem(updateObject);
+    return res.send({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    next({
+      name: "itemUpdateError",
+      message:
+        "something went wrong. please check your item information and try again.",
+    });
+  }
+});
+
 itemsRouter.get("/categories", async (req, res, next) => {
   try {
     const categories = await getAllCategories();
@@ -101,11 +127,10 @@ itemsRouter.get("/categories", async (req, res, next) => {
   }
 });
 
-itemsRouter.post("/updateItem/:itemId", async (req, res, next) => {
+itemsRouter.patch("/updateItem/", async (req, res, next) => {
   try {
     console.log("IN HERE 2 Sending updated Item");
-    const { itemId } = req.params;
-    const item = await updateItem(itemId, req.body);
+    const item = await updateItem(req.body);
     res.send({
       success: true,
       item,

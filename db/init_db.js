@@ -79,7 +79,7 @@ async function buildTables() {
       nameoncard VARCHAR(255) NOT NULL,
       billingaddress VARCHAR(255) NOT NULL,
       ccnumber VARCHAR(255) UNIQUE NOT NULL,
-      ccsecuritycode INTEGER NOT NULL,
+      ccsecuritycode VARCHAR(255) NOT NULL,
       ccexpiration VARCHAR(255) NOT NULL,
       zipcode VARCHAR(255) NOT NULL
     );
@@ -138,8 +138,8 @@ async function buildTables() {
         zipcode VARCHAR(255),
         nameoncard VARCHAR(255),
         billingaddress VARCHAR(255),
-        ccnumber INTEGER,
-        ccsecuritycode INTEGER,
+        ccnumber VARCHAR(255),
+        ccsecuritycode VARCHAR(255),
         ccexpiration VARCHAR(255),
         cczipcode VARCHAR(255),
         "discountId" INTEGER REFERENCES discounts(id)

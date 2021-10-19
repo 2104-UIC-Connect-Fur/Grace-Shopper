@@ -132,13 +132,6 @@ async function getUserByUsername(username) {
       `,
       [username],
     );
-    if (!user) {
-      // eslint-disable-next-line no-throw-literal
-      throw {
-        success: false,
-        message: 'This user does not exist.',
-      };
-    }
     return user;
   } catch (error) {
     throw error;
@@ -191,13 +184,38 @@ async function getUserCart(userId) {
       [userId],
     );
     const { rows: ordersitems } = await client.query(`
-      SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.price AS "currentprice"
+      SELECT ordersitems."itemId", ordersitems.quantity, ordersitems.priceatpurchase, items.title, items.inventoryquantity, items.price AS "currentprice"
       FROM ordersitems
       JOIN items ON ordersitems."itemId" = items.id
       WHERE ordersitems."orderId" = ${userCart.orderId};
     `);
     userCart.items = ordersitems;
     return userCart;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserByEmail(email) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+        SELECT * FROM users
+        WHERE email=$1;
+      `, [email]);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllUsers() {
+  try {
+    const { rows: users } = await client.query(`
+      SELECT * FROM users
+    `);
+    return users;
   } catch (error) {
     throw error;
   }
@@ -211,4 +229,6 @@ module.exports = {
   getUserCart,
   getUser,
   getUserByUsername,
+  getUserByEmail,
+  getAllUsers,
 };

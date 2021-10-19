@@ -1,14 +1,16 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-useless-catch */
 const { client } = require("./client");
+const { createQuerySetString } = require("./utils");
 
 async function createItems({
   title,
   description,
   price,
-  inventoryQuantity,
+  inventoryquantity,
   active,
 }) {
   try {
@@ -16,11 +18,11 @@ async function createItems({
       rows: [item],
     } = await client.query(
       `
-            INSERT INTO items(title, description, price,inventoryquantity,active) 
+            INSERT INTO items(title, description, price, inventoryquantity, active) 
             VALUES($1, $2, $3, $4, $5) 
             RETURNING *;
           `,
-      [title, description, price, inventoryQuantity, active]
+      [title, description, price, inventoryquantity, active]
     );
     return item;
   } catch (error) {
@@ -85,6 +87,15 @@ async function getAllItems() {
   }
 }
 
+async function getAllItemIds() {
+  try {
+    const { rows: itemIds } = await client.query("SELECT id FROM ITEMS;");
+    return itemIds;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getItemsFromQuery(queryObject) {
   try {
     const {
@@ -130,21 +141,24 @@ async function getItemsFromQuery(queryObject) {
   }
 }
 
-async function updateItem(
-  id,
-  { title, price, description, inventoryQuantity }
-) {
+async function updateItem(updateObject) {
+  const setString = createQuerySetString(updateObject);
+
+  if (setString.length === 0) {
+    return;
+  }
+
   try {
     const {
       rows: [item],
     } = await client.query(
       `
             UPDATE items
-            SET title=$1, price=$2, description=$3, inventoryquantity=$4
-            WHERE id=$5
+            SET ${setString}
+            WHERE id=${updateObject.id}
             Returning *;
         `,
-      [title, price, description, inventoryQuantity, id]
+      Object.values(updateObject)
     );
     return item;
   } catch (error) {
@@ -212,4 +226,6 @@ module.exports = {
   getItemsFromQuery,
   getAllCategories,
   deleteItemFromDb,
+  getItemImages,
+  getAllItemIds,
 };

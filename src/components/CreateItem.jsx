@@ -11,14 +11,14 @@ const CreateItem = () => {
   const [description, updateDescription] = useState("");
   const [price, updatePrice] = useState("");
   const [active, setToActive] = useState(true);
-  const [inventoryQuantity, updateQuantity] = useState("");
+  const [inventoryquantity, updateQuantity] = useState("");
 
   const createItem = async () => {
     const queryObject = {
       title,
       description,
       price,
-      inventoryQuantity,
+      inventoryquantity,
       active,
     };
     const response = await createItemInDb(queryObject);
@@ -71,7 +71,7 @@ const CreateItem = () => {
               />
               <Form.Label>Inventory Quantity </Form.Label>
               <Form.Control
-                value={inventoryQuantity}
+                value={inventoryquantity}
                 onChange={(event) => updateQuantity(event.target.value)}
               />
             </Form.Group>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import queryString from "query-string";
 import Container from "react-bootstrap/Container";
@@ -10,9 +10,12 @@ import CreateItem from "./CreateItem";
 import { getItemsFromQuery } from "../api/index";
 import Button from "react-bootstrap/Button";
 import { verifyAdmin } from "../api";
+import { store } from "./State";
 
 const Items = () => {
   const [isAdmin, updateAdmin] = useState(false);
+  const { state, dispatch } = useContext(store);
+  const { queryObject } = state;
   const [pages, setPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
   const [noResults, setNoResults] = useState(false);
@@ -21,14 +24,15 @@ const Items = () => {
   const history = useHistory();
   const [query, setQuery] = useState(search);
   const [toggleModifyItems, setToggleModifyItems] = useState(false);
-  const [queryObject, setQueryObject] = useState(
-    queryString.parse(query, {
-      parseBooleans: true,
-      parseNumbers: true,
-    })
-  );
-  queryObject.page = activePage;
-  if (typeof queryObject.categoryIds === "number") {
+
+  const updateQuery = (newQueryObject) => {
+    dispatch({
+      type: "updateSearchQuery",
+      value: newQueryObject,
+    });
+  };
+  if (queryObject) queryObject.page = activePage;
+  if (queryObject && typeof queryObject.categoryIds === "number") {
     const categoryIdAsArray = [queryObject.categoryIds];
     queryObject.categoryIds = categoryIdAsArray;
   }
@@ -37,11 +41,11 @@ const Items = () => {
     const tempQueryObject = { ...queryObject };
     tempQueryObject.page = currentPage;
     const tempQuery = queryString.stringify(tempQueryObject);
-    setQueryObject(tempQueryObject);
+    updateQuery(tempQueryObject);
     setQuery(tempQuery);
     setActivePage(currentPage);
     history.push({
-      pathname: "/items/",
+      pathname: "/",
       search: `${tempQuery}`,
     });
   };
@@ -60,6 +64,17 @@ const Items = () => {
       </Pagination.Item>
     );
   }
+
+  useEffect(() => {
+    if (query) {
+      const parsedQuery = queryString.parse(query, {
+        parseBooleans: true,
+        parseNumbers: true,
+      });
+      updateQuery(parsedQuery);
+    }
+  }, []);
+
   useEffect(() => {
     const getItems = async () => {
       const {
@@ -99,7 +114,6 @@ const Items = () => {
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
       <Container className="mb-2">
         <Row>
-          <ItemSearch setQuery={setQuery} setQueryObject={setQueryObject} />
           {isAdmin ? (
             <Button
               onClick={toggleClick}

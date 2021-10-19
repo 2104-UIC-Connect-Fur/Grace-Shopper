@@ -7,7 +7,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import AddToCartButton from "./AddToCartButton";
 import {
   getItemById,
   verifyAdmin,
@@ -26,7 +26,7 @@ const SingleItem = () => {
   const [description, updateDescription] = useState(itemToDisplay.description);
   const [price, updatePrice] = useState(itemToDisplay.price);
   const [active, setToActive] = useState(true);
-  const [inventoryQuantity, updateQuantity] = useState(itemToDisplay.quantity);
+  const [inventoryquantity, updateQuantity] = useState(itemToDisplay.quantity);
 
   const showGalleryControls =
     itemToDisplay && itemToDisplay.images && itemToDisplay.images.length > 1;
@@ -51,15 +51,15 @@ const SingleItem = () => {
       }
     };
     getItem(itemId);
-  }, []);
+  }, [itemId]);
 
   const updateItem = async () => {
     const queryObject = {
-      id: itemId,
+      id: Number(itemId),
       title,
       description,
-      price,
-      inventoryQuantity,
+      price: Number(price),
+      inventoryquantity: Number(inventoryquantity),
     };
     const response = await updateItemInDB(queryObject);
     console.log(response);
@@ -98,7 +98,7 @@ const SingleItem = () => {
       {isAdmin ? (
         <FloatingLabel controlId="string" label="Item Price">
           <Form.Control
-            type="string"
+            type="number"
             size="sm"
             value={price}
             onChange={(event) => updatePrice(event.target.value)}
@@ -147,21 +147,27 @@ const SingleItem = () => {
           />
         </FloatingLabel>
       ) : (
-        <Row className="mt-2">
-          <h4>{itemToDisplay.description}</h4>
-        </Row>
+        <>
+          <Row className="mt-2 w-25 mx-auto">
+            <AddToCartButton itemId={Number(itemId)} />
+          </Row>
+
+          <Row className="mt-2">
+            <h4>{itemToDisplay.description}</h4>
+          </Row>
+        </>
       )}
       {isAdmin ? (
         <FloatingLabel controlId="string" label="Item Quantity">
           <Form.Control
-            type="string"
+            type="number"
             placeholder={itemToDisplay.quantity}
-            value={inventoryQuantity}
+            value={inventoryquantity}
             onChange={(event) => updateQuantity(event.target.value)}
           />
         </FloatingLabel>
       ) : null}
-      <Link to={`/items/`}>
+      <Link to={`/`}>
         {isAdmin ? (
           <Button
             style={{

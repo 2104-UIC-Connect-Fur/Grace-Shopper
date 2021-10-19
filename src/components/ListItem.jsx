@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import { string, shape, arrayOf, number } from "prop-types";
 import { formatAsCurrency } from "../utils";
 import { verifyAdmin } from "../api";
+import AddToCartButton from "./AddToCartButton";
 
 const ListItem = ({ item, showModifyItemsButton }) => {
   const { title, description, price, images, id } = item;
@@ -31,13 +32,13 @@ const ListItem = ({ item, showModifyItemsButton }) => {
           <Link to={`/items/${id}`}>
             <Card.Img variant="top" src={mainImage} />
           </Link>
-          <Button variant="primary">Add to Cart</Button>
           <Card.Body>
             <Card.Title>{title}</Card.Title>
             <Card.Text>{description}</Card.Text>
             <Card.Text>{formatAsCurrency(price)}</Card.Text>
-            <Link to={`/items/${id}`}>
-              {isAdmin && showModifyItemsButton ? (
+            <AddToCartButton itemId={id} />
+            {isAdmin && showModifyItemsButton ? (
+              <Link to={`/items/${id}`}>
                 <Button
                   variant="outline-warning"
                   style={{
@@ -49,8 +50,8 @@ const ListItem = ({ item, showModifyItemsButton }) => {
                 >
                   Update Item
                 </Button>
-              ) : null}
-            </Link>
+              </Link>
+            ) : null}
           </Card.Body>
         </Card>
       </Col>

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import {
-  Modal, Button, Form, Container, Nav,
+  Modal, Button, Form, Alert,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { store } from './State';
@@ -20,10 +20,12 @@ const Register = ({
   const [currZipCode, setCurrZipCode] = useState();
   // eslint-disable-next-line no-unused-vars
   const [currIsAdmin, setCurrIsAdmin] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [alertShow, setAlertShow] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const { success, loggedInUser } = await registerUser(
+    const registerResult = await registerUser(
       currUsername,
       currPassword,
       currFirstName,
@@ -34,16 +36,20 @@ const Register = ({
       currIsAdmin,
     );
 
-    if (success) {
+    if (registerResult.success) {
       dispatch({
         type: 'updateIsLoggedIn',
         value: true,
       });
       dispatch({
         type: 'setUsername',
-        value: loggedInUser,
+        value: registerResult.loggedInUser,
       });
       setRegModalShow(false);
+    }
+    if (registerResult.message) {
+      setErrorMessage(registerResult.message);
+      setAlertShow(true);
     }
   };
 
@@ -140,15 +146,23 @@ const Register = ({
           <Button className="mb-3" variant="primary" type="submit">
             Submit
           </Button>
+          {(errorMessage && alertShow) && (
+          <Alert className="mt-3" variant="danger" onClose={() => setAlertShow(false)} dismissible>
+            {errorMessage}
+          </Alert>
+          )}
         </Form>
         <p>Already a member?</p>
-        <Container onClick={() => {
-          setRegModalShow(false);
-          setLoginModalShow(true);
-        }}
-        >
-          <Nav.Link>Sign in</Nav.Link>
-        </Container>
+        <input
+          type="text"
+          onClick={() => {
+            setRegModalShow(false);
+            setLoginModalShow(true);
+          }}
+          readOnly
+          value="Sign in"
+          style={{ cursor: 'pointer', color: '#0d6efd' }}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => setRegModalShow(false)}>Close</Button>
