@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import ListItem from "./ListItem";
 import CreateItem from "./CreateItem";
 import { getItemsFromQuery } from "../api/index";
-import Button from "react-bootstrap/Button";
 import { verifyAdmin } from "../api";
 import { store } from "./State";
 
@@ -64,15 +63,6 @@ const Items = () => {
     );
   }
 
-  useEffect(() => {
-    if (query) {
-      const parsedQuery = queryString.parse(query, {
-        parseBooleans: true,
-        parseNumbers: true,
-      });
-      updateQuery(parsedQuery);
-    }
-  }, []);
 
   useEffect(() => {
     const getItems = async () => {
@@ -91,8 +81,16 @@ const Items = () => {
         setNoResults(true);
       }
     };
-    getItems();
+    if (queryObject != null) getItems();
   }, [queryObject, activePage]);
+
+  useEffect(() => {
+      const parsedQuery = queryString.parse(query, {
+        parseBooleans: true,
+        parseNumbers: true,
+      });
+      updateQuery(parsedQuery);
+  }, []);
 
   useEffect(() => {
     const checkforAdmin = async () => {
