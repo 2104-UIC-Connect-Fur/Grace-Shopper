@@ -198,7 +198,7 @@ const Order = () => {
           {showNothingSoldMessage ? (
             <h1
               style={{
-                fontSize: '3vw',
+                fontSize: '2vw',
                 marginBottom: '1vh',
               }}
             >
@@ -207,7 +207,7 @@ const Order = () => {
           ) : (
             <h1
               style={{
-                fontSize: '3vw',
+                fontSize: '2vw',
                 marginBottom: '1vh',
               }}
             >
