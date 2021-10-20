@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Container } from "react-bootstrap";
+import { Table, Container, Row, Col } from "react-bootstrap";
 import { verifyAdmin, getAllUsersData } from "../api";
 import { store } from "./State";
 
@@ -45,7 +45,7 @@ const AdminPanel = () => {
     <>
       <h1>Users</h1>
       <Container>
-        <Table striped bordered size="sm">
+        <Table responsive striped bordered size="sm">
           <thead>
             <tr>
               {usersData.length > 0 &&
