@@ -64,10 +64,10 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
       const { success, message } = await verifyAdmin();
       if (success && message) {
         updateAdmin(true);
-      }
+      } else updateAdmin(false);
     };
     checkforAdmin();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isAdmin]);
 
   useEffect(() => {
     const buildCategories = async () => {
@@ -106,10 +106,8 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
                       to={`/?categoryIds=${category.id}`}
                       onClick={() => {
                         updateQuery({
-                          categoryIds: [
-                            category.id,
-                          ]
-                        })
+                          categoryIds: [category.id],
+                        });
                       }}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >

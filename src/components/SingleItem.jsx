@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Image from "react-bootstrap/Image";
@@ -16,9 +16,12 @@ import {
 } from "../api";
 import { formatAsCurrency } from "../utils";
 import Button from "react-bootstrap/Button";
+import { store } from "./State";
 
 const SingleItem = () => {
   const { itemId } = useParams();
+  const { state } = useContext(store);
+  const { isLoggedIn } = state;
   const [isAdmin, updateAdmin] = useState(false);
   const [errorState, setErrorState] = useState(false);
   const [itemToDisplay, setItemToDisplay] = useState({});
@@ -34,13 +37,13 @@ const SingleItem = () => {
 
   useEffect(() => {
     const checkforAdmin = async () => {
-      const { success, message } = await verifyAdmin();
-      if (success && message) {
+      const { success } = await verifyAdmin();
+      if (success) {
         updateAdmin(true);
-      }
+      } else updateAdmin(false);
     };
     checkforAdmin();
-  }, [isAdmin]);
+  }, [isAdmin, isLoggedIn]);
 
   useEffect(() => {
     const getItem = async (id) => {
@@ -80,22 +83,21 @@ const SingleItem = () => {
 
   return (
     <Container>
-      {
-        isAdmin
-        && (
-          <Button
-              className="mt-2 mb-2"
-              onClick={() => {setShowEditControls(!showEditControls)}}
-              variant="info"
-              style={{
-                width: "10%",
-                margin: "auto",
-              }}
-            >
-              Edit Item
-            </Button>
-        )
-      }
+      {isAdmin && (
+        <Button
+          className="mt-2 mb-2"
+          onClick={() => {
+            setShowEditControls(!showEditControls);
+          }}
+          variant="info"
+          style={{
+            width: "10%",
+            margin: "auto",
+          }}
+        >
+          Edit Item
+        </Button>
+      )}
       {showEditControls ? (
         <>
           <FloatingLabel controlId="string" label="Item name" className="mb-3">

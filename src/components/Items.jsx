@@ -13,7 +13,7 @@ import { store } from "./State";
 const Items = () => {
   const [isAdmin, updateAdmin] = useState(false);
   const { state, dispatch } = useContext(store);
-  const { queryObject } = state;
+  const { queryObject, isLoggedIn } = state;
   const [pages, setPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
   const [noResults, setNoResults] = useState(false);
@@ -63,7 +63,6 @@ const Items = () => {
     );
   }
 
-
   useEffect(() => {
     const getItems = async () => {
       const {
@@ -85,34 +84,27 @@ const Items = () => {
   }, [queryObject, activePage]);
 
   useEffect(() => {
-      const parsedQuery = queryString.parse(query, {
-        parseBooleans: true,
-        parseNumbers: true,
-      });
-      updateQuery(parsedQuery);
+    const parsedQuery = queryString.parse(query, {
+      parseBooleans: true,
+      parseNumbers: true,
+    });
+    updateQuery(parsedQuery);
   }, []);
 
   useEffect(() => {
     const checkforAdmin = async () => {
-      const { success, message } = await verifyAdmin();
-      if (success && message) {
+      const { success } = await verifyAdmin();
+      if (success) {
         updateAdmin(true);
-      }
+      } else updateAdmin(false);
     };
     checkforAdmin();
-  }, [isAdmin]);
-
-  const toggleClick = () => {
-    setToggleModifyItems(!toggleModifyItems);
-    console.log(toggleModifyItems);
-  };
+  }, [isAdmin, isLoggedIn]);
 
   return (
     <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
       <Container className="mb-2">
-        <Row>
-          {isAdmin ? <CreateItem /> : null}
-        </Row>
+        <Row>{isAdmin ? <CreateItem /> : null}</Row>
       </Container>
       <Container>
         {noResults ? (
@@ -122,11 +114,7 @@ const Items = () => {
         ) : (
           <Row>
             {displayItems.map((item) => (
-              <ListItem
-                showModifyItemsButton={toggleModifyItems}
-                item={item}
-                key={item.id}
-              />
+              <ListItem item={item} key={item.id} />
             ))}
           </Row>
         )}
