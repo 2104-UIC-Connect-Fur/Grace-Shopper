@@ -65,6 +65,7 @@ const Login = ({
             <Form.Control
               type="text"
               placeholder="Username"
+              required
               onChange={(e) => {
                 e.preventDefault();
                 setCurrUsername(e.target.value);
@@ -75,6 +76,7 @@ const Login = ({
             <Form.Control
               type="password"
               placeholder="Password"
+              required
               onChange={(e) => {
                 e.preventDefault();
                 setPassword(e.target.value);

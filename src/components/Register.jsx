@@ -134,7 +134,7 @@ const Register = ({
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicZipCode">
             <Form.Control
-              type="number"
+              type="text"
               placeholder="Zip Code"
               onChange={(e) => {
                 e.preventDefault();

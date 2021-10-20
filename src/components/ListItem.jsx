@@ -8,7 +8,7 @@ import { verifyAdmin } from "../api";
 import AddToCartButton from "./AddToCartButton";
 
 const ListItem = ({ item }) => {
-  const { title, description, price, images, id } = item;
+  const { title, description, price, images, id, inventoryquantity } = item;
   const mainImage = images[0].url;
   const [isAdmin, updateAdmin] = useState(false);
 
@@ -35,7 +35,10 @@ const ListItem = ({ item }) => {
             <Card.Title>{title}</Card.Title>
             <Card.Text>{description}</Card.Text>
             <Card.Text>{formatAsCurrency(price)}</Card.Text>
-            <AddToCartButton itemId={id} />
+            <AddToCartButton
+            itemId={id}
+            inventoryquantity={inventoryquantity}
+            />
           </Card.Body>
         </Card>
       </Col>
@@ -48,6 +51,7 @@ ListItem.propTypes = {
     id: number.isRequired,
     title: string.isRequired,
     description: string.isRequired,
+    inventoryquantity: number.isRequired,
     images: arrayOf(
       shape({
         url: string.isRequired,

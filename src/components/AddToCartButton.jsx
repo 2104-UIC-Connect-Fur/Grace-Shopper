@@ -5,10 +5,11 @@ import { store } from './State';
 import {
   getItemById, addOrSubtractItem, getCart, addNewItemToCart, createCart,
 } from '../api';
+import Alert from 'react-bootstrap/Alert';
 
-const AddToCartButton = ({ itemId }) => {
+const AddToCartButton = ({ itemId, inventoryquantity }) => {
   const { state, dispatch } = useContext(store);
-  const { userCart } = state;
+  const { userCart, isLoggedIn } = state;
   // console.log("user cart: ", userCart);
   const clickHandler = async () => {
     const { success, item } = await getItemById(itemId);
@@ -61,6 +62,22 @@ const AddToCartButton = ({ itemId }) => {
     }
   };
 
+  if (inventoryquantity === 0) return (
+    <Alert
+    variant="info"
+    >
+      This item is out of stock. Please check back later!
+    </Alert>
+  )
+
+  if (!isLoggedIn) return (
+    <Alert
+    variant="success"
+    >
+      You must be logged in to purchase this rare item!
+    </Alert>
+  )
+
   return (
     <Button
       type="button"
@@ -73,6 +90,7 @@ const AddToCartButton = ({ itemId }) => {
 
 AddToCartButton.propTypes = {
   itemId: number.isRequired,
+  itemQuantity: number.isRequired,
 };
 
 export default AddToCartButton;

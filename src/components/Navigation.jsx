@@ -61,10 +61,12 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
 
   useEffect(() => {
     const checkforAdmin = async () => {
-      const { success, message } = await verifyAdmin();
-      if (success && message) {
+      const { success } = await verifyAdmin();
+      if (success) {
         updateAdmin(true);
-      } else updateAdmin(false);
+      } else {
+        updateAdmin(false);
+      }
     };
     checkforAdmin();
   }, [isLoggedIn, isAdmin]);
@@ -101,19 +103,17 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             <NavDropdown title="Categories">
               {allCategories.length > 0 &&
                 allCategories.map((category) => (
-                  <NavDropdown.Item>
-                    <Link
-                      to={`/?categoryIds=${category.id}`}
-                      onClick={() => {
+                    <LinkContainer to={`/?categoryIds=${category.id}`}>
+                      <NavDropdown.Item onClick={() => {
                         updateQuery({
-                          categoryIds: [category.id],
-                        });
-                      }}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
+                          categoryIds: [
+                            category.id,
+                          ]
+                        })
+                      }}>
                       {category.name}
-                    </Link>
-                  </NavDropdown.Item>
+                      </NavDropdown.Item>
+                      </LinkContainer>
                 ))}
             </NavDropdown>
             <ItemSearch setQuery={setQuery} setQueryObject={updateQuery} />
@@ -124,12 +124,14 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
       <Container className="justify-content-end">
         {isLoggedIn ? (
           <NavDropdown title={`Hi, ${username}`} id="basic-nav-dropdown">
-            <NavDropdown.Item href="/">Profile</NavDropdown.Item>
-            <NavDropdown.Item href="/">My Orders</NavDropdown.Item>
+            {/* <NavDropdown.Item href="/">Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/">My Orders</NavDropdown.Item> */}
             {isAdmin && (
-              <NavDropdown.Item href="/admin">Admin</NavDropdown.Item>
+              <LinkContainer to="/admin">
+                <NavDropdown.Item>Admin</NavDropdown.Item>
+              </LinkContainer>
             )}
-            <NavDropdown.Divider />
+            {isAdmin && (<NavDropdown.Divider />)}
             <NavDropdown.Item onClick={signOutClickHandler}>
               Sign Out
             </NavDropdown.Item>
@@ -168,7 +170,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             )}
           </Navbar.Brand>
         ) : (
-          <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+          <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={popover}>
             <Navbar.Brand style={{ cursor: "pointer" }}>
               <img
                 src={CartPic}

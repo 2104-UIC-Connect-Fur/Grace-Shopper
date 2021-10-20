@@ -151,7 +151,11 @@ async function getUser({ username, password }) {
       message: 'Username or password does not match. Please try again.',
     };
   } catch (error) {
-    throw error;
+    console.log(error);
+    throw {
+      success: false,
+      message: 'Username or password does not match. Please try again.',
+    };
   }
 }
 
