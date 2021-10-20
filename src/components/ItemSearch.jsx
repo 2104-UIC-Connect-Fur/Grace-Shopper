@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import OffCanvas from "react-bootstrap/OffCanvas";
+import Offcanvas from "react-bootstrap/Offcanvas";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
@@ -99,15 +99,15 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
         Search 🔎
       </Button>
 
-      <OffCanvas
+      <Offcanvas
         show={show}
         onHide={handleClose}
         className="content-align-center"
       >
-        <OffCanvas.Header closeButton>
-          <OffCanvas.Title>Refine Items</OffCanvas.Title>
-        </OffCanvas.Header>
-        <OffCanvas.Body>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Refine Items</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
           <Form onSubmit={searchHandler}>
             <Form.Group as={Row} className="mb-3" controlId="Title">
               <Form.Label as={Row}>Search title or description</Form.Label>
@@ -190,8 +190,8 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
               Search
             </Button>
           </Row>
-        </OffCanvas.Body>
-      </OffCanvas>
+        </Offcanvas.Body>
+      </Offcanvas>
     </>
   );
 };
