@@ -10,6 +10,16 @@ module.exports = {
       zipcode: '93101',
       isAdmin: false,
     },
+    {
+      username: 'catcatsby',
+      password: 'password',
+      firstname: 'sydney',
+      lastname: 'kitteh',
+      email: 'grump@grump.net',
+      phonenumber: '555555555',
+      zipcode: '60615',
+      isAdmin: true,
+    },
   ],
   userpayments: [
     {
