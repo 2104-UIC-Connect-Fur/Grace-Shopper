@@ -18,7 +18,7 @@ module.exports = {
       email: 'grump@grump.net',
       phonenumber: '555555555',
       zipcode: '60615',
-      isAdmin: false,
+      isAdmin: true,
     },
   ],
   userpayments: [
