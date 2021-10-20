@@ -166,7 +166,10 @@ const SingleItem = () => {
       ) : (
         <>
           <Row className="mt-2 w-25 mx-auto">
-            <AddToCartButton itemId={Number(itemId)} />
+          <AddToCartButton
+            itemId={Number(itemId)}
+            inventoryquantity={itemToDisplay.inventoryquantity}
+            />
           </Row>
 
           <Row className="mt-2">
