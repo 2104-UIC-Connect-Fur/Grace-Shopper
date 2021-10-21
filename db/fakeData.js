@@ -364,7 +364,7 @@ module.exports = {
       description: 'For your noggin.',
     },
     {
-      name: 'Random shit',
+      name: 'Random',
       description: 'Would you look at that',
     },
     {

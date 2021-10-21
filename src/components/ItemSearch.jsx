@@ -87,7 +87,7 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   return (
     <>
       <Button
-        variant="primary"
+        variant="outline-primary"
         onClick={handleShow}
         style={{
           margin: "auto",
@@ -183,10 +183,10 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
             </Form.Group>
           </Form>
           <Row className="mt-2">
-            <Button variant="secondary" onClick={clearSearch} className="w-50">
+            <Button variant="outline-secondary" onClick={clearSearch} className="w-50">
               Clear Search
             </Button>
-            <Button variant="primary" onClick={searchHandler} className="w-50">
+            <Button variant="outline-primary" onClick={searchHandler} className="w-50">
               Search
             </Button>
           </Row>

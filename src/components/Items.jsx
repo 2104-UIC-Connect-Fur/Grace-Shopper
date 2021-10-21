@@ -29,6 +29,7 @@ const Items = () => {
       value: newQueryObject,
     });
   };
+
   if (queryObject) queryObject.page = activePage;
   if (queryObject && typeof queryObject.categoryIds === "number") {
     const categoryIdAsArray = [queryObject.categoryIds];
@@ -54,6 +55,7 @@ const Items = () => {
       <Pagination.Item
         key={currentPage}
         active={currentPage === activePage}
+        variant="outline-dark"
         onClick={() => {
           changePage(currentPage);
         }}
@@ -77,6 +79,7 @@ const Items = () => {
         setPages(apiPages);
         setNoResults(false);
       } else if (success && totalResults === 0) {
+        setPages(1);
         setNoResults(true);
       }
     };
@@ -88,6 +91,9 @@ const Items = () => {
       parseBooleans: true,
       parseNumbers: true,
     });
+    if (parsedQuery.categoryIds && typeof parsedQuery.categoryIds === 'string') {
+      parsedQuery.categoryIds = Number(parsedQuery.categoryIds);
+    }
     updateQuery(parsedQuery);
   }, []);
 
@@ -102,7 +108,7 @@ const Items = () => {
   }, [isAdmin, isLoggedIn]);
 
   return (
-    <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto mt-3">
+    <Container className="d-flex flex-row flex-wrap content-align-center justify-content-space-evenly mx-auto pt-3 main-content">
       <Container className="mb-2">
         <Row>{isAdmin ? <CreateItem /> : null}</Row>
       </Container>
@@ -114,7 +120,10 @@ const Items = () => {
         ) : (
           <Row>
             {displayItems.map((item) => (
-              <ListItem item={item} key={item.id} />
+              <ListItem
+              item={item}
+              key={item.id}
+              />
             ))}
           </Row>
         )}

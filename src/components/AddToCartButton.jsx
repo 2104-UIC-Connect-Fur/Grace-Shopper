@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Popover from 'react-bootstrap/Popover';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { number } from 'prop-types';
 import { store } from './State';
 import {
@@ -10,6 +12,13 @@ import Alert from 'react-bootstrap/Alert';
 const AddToCartButton = ({ itemId, inventoryquantity }) => {
   const { state, dispatch } = useContext(store);
   const { userCart, isLoggedIn } = state;
+  const loginPopover = (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        Please login or create an account to purchase this rare item!
+      </Popover.Body>
+    </Popover>
+  );
   // console.log("user cart: ", userCart);
   const clickHandler = async () => {
     const { success, item } = await getItemById(itemId);
@@ -64,28 +73,39 @@ const AddToCartButton = ({ itemId, inventoryquantity }) => {
 
   if (inventoryquantity === 0) return (
     <Alert
-    variant="info"
+    variant="light"
     >
       This item is out of stock. Please check back later!
     </Alert>
   )
 
-  if (!isLoggedIn) return (
-    <Alert
-    variant="success"
-    >
-      You must be logged in to purchase this rare item!
-    </Alert>
-  )
-
   return (
-    <Button
-      type="button"
-      onClick={() => clickHandler()}
-    >
-      Add to Cart
-    </Button>
-  );
+    <>
+    {
+    isLoggedIn
+    ? (
+      <Button
+        type="button"
+        variant="outline-dark"
+        onClick={clickHandler}
+      >
+        Add to Cart
+      </Button>
+    )
+    :
+    (
+      <OverlayTrigger trigger="click" placement="bottom" overlay={loginPopover}>
+        <Button
+        type="button"
+        variant="outline-dark"
+      >
+        Add to Cart
+      </Button>
+      </OverlayTrigger>
+    )
+  }
+  </>
+  )
 };
 
 AddToCartButton.propTypes = {

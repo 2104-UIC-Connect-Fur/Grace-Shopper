@@ -29,12 +29,11 @@ const CreateItem = () => {
   return (
     <>
       <Button
-        variant="secondary"
+        variant="outline-danger"
         onClick={handleShow}
         style={{
-          width: "10%",
+          width: "15%",
           margin: "auto",
-          background: "grey",
         }}
       >
         Create Item

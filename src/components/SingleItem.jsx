@@ -78,18 +78,22 @@ const SingleItem = () => {
     console.log(response);
   };
 
+  const showLoading = !itemToDisplay.hasOwnProperty('title');
+
+  if (showLoading) return <h1>Loading...</h1>;
   if (errorState) return <h1>Problem loading item. Please try again!</h1>;
-  if (!itemToDisplay) return <h1>Loading...</h1>;
 
   return (
-    <Container>
+    <Container
+    className="main-content"
+    >
       {isAdmin && (
         <Button
-          className="mt-2 mb-2"
+          className="mt-2 pb-2"
           onClick={() => {
             setShowEditControls(!showEditControls);
           }}
-          variant="info"
+          variant="outline-danger"
           style={{
             width: "10%",
             margin: "auto",
@@ -174,7 +178,7 @@ const SingleItem = () => {
             />
           </Row>
 
-          <Row className="mt-2">
+          <Row className="mt-2 pb-5">
             <h4>{itemToDisplay.description}</h4>
           </Row>
         </>
@@ -192,11 +196,7 @@ const SingleItem = () => {
       <Link to={`/`}>
         {showEditControls ? (
           <Button
-            style={{
-              color: "white",
-              background: "blue",
-              border: "blue",
-            }}
+            variant="outline-success"
             onClick={updateItem}
           >
             Submit
@@ -204,12 +204,8 @@ const SingleItem = () => {
         ) : null}
         {showEditControls ? (
           <Button
-            style={{
-              color: "black",
-              background: "red",
-              border: "red",
-            }}
             onClick={updateItemToInactive}
+            variant="danger"
           >
             Delete
           </Button>

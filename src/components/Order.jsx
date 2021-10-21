@@ -102,7 +102,7 @@ const Order = () => {
         <Row>
           <Col sm={12} md={6}>
             <h5 className="mb-3">
-              Look at all this rare shit. You have
+              Look at all this rare stuff. You have
               {' '}
               <i>exquisite</i>
               {' '}
@@ -172,7 +172,7 @@ const Order = () => {
                         orderZip={orderZip}
                       />
                       <Row className="justify-content-center">
-                        <Button type="button" onClick={orderHandler}>
+                        <Button type="button" variant="outline-primary" onClick={orderHandler}>
                           Complete order
                         </Button>
                       </Row>
@@ -211,13 +211,13 @@ const Order = () => {
                 marginBottom: '1vh',
               }}
             >
-              😍 OMG THANK YOU FOR BUYING OUR RARE SHIT 😍
+              😍 OMG THANK YOU FOR BUYING OUR RARE STUFF 😍
             </h1>
           )}
         </Row>
         {showItemQuantityMessage && (
           <Alert variant="info">
-            NOTICE: Our shit is rare and sells quickly! It looks like part of
+            NOTICE: Our stuff is rare and sells quickly! It looks like part of
             your order could not be fulfilled completely. We&apos;ve updated
             your order accordingly.
           </Alert>
@@ -225,7 +225,7 @@ const Order = () => {
         {showNothingSoldMessage ? (
           <Alert variant="danger">
             We&apos;re really sorry but we sold out while you were trying to buy
-            our rare shit! This shit flies off the shelves!
+            our rare stuff! This stuff flies off the shelves!
           </Alert>
         ) : (
           <>

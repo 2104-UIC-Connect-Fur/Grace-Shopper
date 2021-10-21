@@ -21,7 +21,7 @@ import { logoutUser, verifyAdmin, getAllCategories } from "../api";
 
 const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const { state, dispatch } = useContext(store);
-  const { isLoggedIn, username, userCart, queryObject } = state;
+  const { isLoggedIn, username, userCart } = state;
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
   const [isAdmin, updateAdmin] = useState(false);
@@ -85,22 +85,38 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     </Popover>
   );
 
+  const homeHandler = () => {
+    dispatch({
+      type: 'updateSearchQuery',
+      value: {},
+    });
+  };
+
   return (
     <Navbar
       collapseOnSelect
       expand="sm"
       bg="light"
       variant="light"
-      className="sticky-top"
+      className="sticky-top nav-shadow"
     >
       <Container>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <LinkContainer to="/">
-              <Nav.Link>Home</Nav.Link>
+            <LinkContainer 
+            className="mr-2"
+            to="/"
+            >
+              <Nav.Link
+              className="Nav-Brand"
+              onClick={homeHandler}
+              >Rare Stuff</Nav.Link>
             </LinkContainer>
-            <NavDropdown title="Categories">
+            <NavDropdown
+            title="Categories"
+            className="mx-auto mt-3"
+            >
               {allCategories.length > 0 &&
                 allCategories.map((category) => (
                     <LinkContainer to={`/?categoryIds=${category.id}`}>

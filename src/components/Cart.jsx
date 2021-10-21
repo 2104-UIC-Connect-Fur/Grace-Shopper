@@ -148,7 +148,7 @@ const Cart = ({ cartShow, setCartShow }) => {
               >
                 <Button
                   type="button"
-                  variant="primary"
+                  variant="outline-primary"
                   onClick={() => setCartShow(false)}
                 >
                   Checkout
