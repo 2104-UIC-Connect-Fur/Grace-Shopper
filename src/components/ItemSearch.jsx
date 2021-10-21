@@ -87,14 +87,14 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   return (
     <>
       <Button
-        variant="outline-primary"
-        onClick={handleShow}
+        variant="outline-secondary"
         style={{
+          width: "70%",
           margin: "auto",
-          backgroundColor: "lightgray",
           border: "none",
-          color: "black",
+          fontSize: "2rem",
         }}
+        onClick={handleShow}
       >
         Search 🔎
       </Button>

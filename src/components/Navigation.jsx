@@ -10,7 +10,10 @@ import {
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import Accordion from 'react-bootstrap/Accordion';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import PropTypes from "prop-types";
 import { store } from "./State";
 import Login from "./Login";
@@ -101,41 +104,43 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
       className="sticky-top nav-shadow"
     >
       <Container>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <LinkContainer 
-            className="mr-2"
+          <Nav className="mx-auto mx-md-0">
+            <NavDropdown 
+            className="mr-2 Nav-Brand"
             to="/"
+            title="Rare Stuff"
             >
-              <Nav.Link
-              className="Nav-Brand"
-              onClick={homeHandler}
-              >Rare Stuff</Nav.Link>
-            </LinkContainer>
-            <NavDropdown
-            title="Categories"
-            className="mx-auto mt-3"
-            >
+              <Col
+              className="nav-category"
+              >
               {allCategories.length > 0 &&
                 allCategories.map((category) => (
-                    <LinkContainer to={`/?categoryIds=${category.id}`}>
-                      <NavDropdown.Item onClick={() => {
-                        updateQuery({
-                          categoryIds: [
-                            category.id,
+                  <Button
+                  variant="outline-dark"
+                  onClick={() => {
+                    updateQuery({
+                      categoryIds: [
+                        category.id,
                           ]
                         })
                       }}>
+                            <Link
+                            className="nav-category"
+                            to={`/?categoryIds=${category.id}`}
+                            >
                       {category.name}
-                      </NavDropdown.Item>
-                      </LinkContainer>
+                      </Link>
+                      </Button>
                 ))}
-            </NavDropdown>
-            <ItemSearch setQuery={setQuery} setQueryObject={updateQuery} />
+                </Col>
+            <Row
+            className="d-flex flex-column"
+            >
+            <ItemSearch setQuery={setQuery} setQueryObject={updateQuery}/>
             <ItemShuffle />
+            </Row>
+        </NavDropdown>
           </Nav>
-        </Navbar.Collapse>
       </Container>
       <Container className="justify-content-end">
         {isLoggedIn ? (
@@ -143,9 +148,9 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             {/* <NavDropdown.Item href="/">Profile</NavDropdown.Item>
             <NavDropdown.Item href="/">My Orders</NavDropdown.Item> */}
             {isAdmin && (
-              <LinkContainer to="/admin">
+              <Link to="/admin">
                 <NavDropdown.Item>Admin</NavDropdown.Item>
-              </LinkContainer>
+              </Link>
             )}
             {isAdmin && (<NavDropdown.Divider />)}
             <NavDropdown.Item onClick={signOutClickHandler}>

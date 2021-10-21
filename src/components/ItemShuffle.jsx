@@ -20,16 +20,12 @@ const ItemShuffle = () => {
   const history = useHistory();
   if (shuffleObject) return (
     <Button
-      variant="primary"
+      variant="outline-dark"
       style={{
-        marginRight: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-        marginLeft: '5px',
-        backgroundColor: 'lightgray',
-        border: 'none',
-        color: 'black',
-        paddingLeft: '5px',
+        width: "70%",
+        margin: "auto",
+        border: "none",
+        fontSize: "2rem",
       }}
       onClick={() => {
         const itemId = shuffleObject.random();
