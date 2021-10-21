@@ -10,10 +10,10 @@ import {
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
-import Accordion from 'react-bootstrap/Accordion';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import { LinkContainer } from "react-router-bootstrap";
 import PropTypes from "prop-types";
 import { store } from "./State";
 import Login from "./Login";
@@ -90,8 +90,10 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
 
   const homeHandler = () => {
     dispatch({
-      type: 'updateSearchQuery',
-      value: {},
+      type: "updateSearchQuery",
+      value: {
+        page: 1,
+      },
     });
   };
 
@@ -101,46 +103,52 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
       expand="sm"
       bg="light"
       variant="light"
-      className="sticky-top nav-shadow"
+      className="sticky-top nav-shadow mb-4"
     >
       <Container>
-          <Nav className="mx-auto mx-md-0">
-            <NavDropdown 
-            className="mr-2 Nav-Brand"
-            to="/"
-            title="Rare Stuff"
+        <Nav className="mx-auto mx-md-0">
+          <NavDropdown className="Nav-Brand" title="Rare Stuff">
+            <Nav.Item
+            className="nav-category"
             >
-              <Col
-              className="nav-category"
+              <Link
+              to="/"
+              onClick={homeHandler}
+              style={{
+                fontSize: '2.5rem',
+                color: 'black',
+                textDecoration: 'none',
+              }}
               >
+                Home
+              </Link>
+            </Nav.Item>
+            <Col className="nav-category">
               {allCategories.length > 0 &&
                 allCategories.map((category) => (
                   <Button
-                  variant="outline-dark"
-                  onClick={() => {
-                    updateQuery({
-                      categoryIds: [
-                        category.id,
-                          ]
-                        })
-                      }}>
-                            <Link
-                            className="nav-category"
-                            to={`/?categoryIds=${category.id}`}
-                            >
+                    variant="outline-dark"
+                    onClick={() => {
+                      updateQuery({
+                        categoryIds: [category.id],
+                      });
+                    }}
+                  >
+                    <Link
+                      className="nav-category"
+                      to={`/?categoryIds=${category.id}`}
+                    >
                       {category.name}
-                      </Link>
-                      </Button>
+                    </Link>
+                  </Button>
                 ))}
-                </Col>
-            <Row
-            className="d-flex flex-column"
-            >
-            <ItemSearch setQuery={setQuery} setQueryObject={updateQuery}/>
-            <ItemShuffle />
+            </Col>
+            <Row className="d-flex flex-column">
+              <ItemSearch setQuery={setQuery} setQueryObject={updateQuery} />
+              <ItemShuffle />
             </Row>
-        </NavDropdown>
-          </Nav>
+          </NavDropdown>
+        </Nav>
       </Container>
       <Container className="justify-content-end">
         {isLoggedIn ? (
@@ -148,11 +156,17 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             {/* <NavDropdown.Item href="/">Profile</NavDropdown.Item>
             <NavDropdown.Item href="/">My Orders</NavDropdown.Item> */}
             {isAdmin && (
-              <Link to="/admin">
-                <NavDropdown.Item>Admin</NavDropdown.Item>
-              </Link>
+              <>
+                  <LinkContainer
+                    to="/admin"
+                  >
+                <NavDropdown.Item>
+                    Admin
+                </NavDropdown.Item>
+                  </LinkContainer>
+                <NavDropdown.Divider />
+              </>
             )}
-            {isAdmin && (<NavDropdown.Divider />)}
             <NavDropdown.Item onClick={signOutClickHandler}>
               Sign Out
             </NavDropdown.Item>
@@ -191,7 +205,12 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             )}
           </Navbar.Brand>
         ) : (
-          <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={popover}>
+          <OverlayTrigger
+            trigger="click"
+            rootClose
+            placement="bottom"
+            overlay={popover}
+          >
             <Navbar.Brand style={{ cursor: "pointer" }}>
               <img
                 src={CartPic}

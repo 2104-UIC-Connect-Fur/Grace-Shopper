@@ -94,7 +94,7 @@ const AddToCartButton = ({ itemId, inventoryquantity }) => {
     )
     :
     (
-      <OverlayTrigger trigger="click" placement="bottom" overlay={loginPopover}>
+      <OverlayTrigger trigger="click" placement="bottom" rootClose overlay={loginPopover}>
         <Button
         type="button"
         variant="outline-dark"

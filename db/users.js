@@ -217,7 +217,7 @@ async function getUserByEmail(email) {
 async function getAllUsers() {
   try {
     const { rows: users } = await client.query(`
-      SELECT * FROM users
+      SELECT id, username, firstname, lastname, email, phonenumber, zipcode, isadmin FROM users
     `);
     return users;
   } catch (error) {
