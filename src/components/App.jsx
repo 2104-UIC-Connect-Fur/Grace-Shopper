@@ -10,6 +10,7 @@ import './App.css';
 import Navigation from './Navigation';
 import SingleItem from './SingleItem';
 import { getCart } from '../api';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const { state, dispatch } = useContext(store);
