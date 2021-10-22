@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 const adminRouter = require('express').Router();
 const { requireAdmin } = require('./utils');
 const { getAllUsers } = require('../db');
@@ -33,12 +34,3 @@ adminRouter.get('/users', async (req, res, next) => {
 });
 
 module.exports = adminRouter;
-
-adminRouter.post("/search", async (req, res, next) => {
-  try {
-    const items = await getAllItems();
-    console.log(items);
-  } catch (error) {
-    next(error);
-  }
-});
