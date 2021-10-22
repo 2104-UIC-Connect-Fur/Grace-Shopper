@@ -84,7 +84,9 @@ const Order = () => {
     }
   };
 
-  if (!cart || (cart && !cart.items.length)) return <h1>No items in cart...</h1>;
+  if (!cart) return <h1>Loading...</h1>;
+
+  if (cart && !cart.items.length) return <h1>No items in cart...</h1>;
 
   if (!orderResult) {
     return (

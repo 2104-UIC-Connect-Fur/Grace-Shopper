@@ -95,7 +95,7 @@ const Login = ({
             Submit
           </Button>
         </Form>
-        <p>New to Rare Shit?</p>
+        <p>New to Rare Stuff?</p>
         <input
           type="text"
           onClick={() => {
