@@ -1,6 +1,9 @@
-const { client } = require("./client");
+/* eslint-disable no-useless-catch */
+const { client } = require('./client');
 
-async function createItemImages({ itemId, url, description, alttext }) {
+async function createItemImages({
+  itemId, url, description, alttext,
+}) {
   try {
     const {
       rows: [image],
@@ -8,7 +11,7 @@ async function createItemImages({ itemId, url, description, alttext }) {
       `INSERT INTO itemsimages("itemId", url, description,alttext) 
        VALUES($1, $2, $3, $4) 
        RETURNING *;`,
-      [itemId, url, description, alttext]
+      [itemId, url, description, alttext],
     );
     return image;
   } catch (error) {
@@ -24,7 +27,7 @@ async function itemsMissingImages() {
       `
           SELECT * from itemsimages
           WHERE url = '';
-          `
+          `,
     );
     return item;
   } catch (error) {
@@ -41,7 +44,7 @@ async function getImagesByItemId({ itemId }) {
         SELECT * FROM itemsimages
         WHERE "itemId" = $1;
         `,
-      [itemId]
+      [itemId],
     );
 
     return images;
@@ -56,7 +59,7 @@ async function getAllImages() {
       `
           SELECT * FROM itemsimages
           WHERE URL is not null
-          and URL not in ('');`
+          and URL not in ('');`,
     );
     return items;
   } catch (error) {
