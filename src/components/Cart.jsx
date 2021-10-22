@@ -70,7 +70,7 @@ const Cart = ({ cartShow, setCartShow }) => {
   };
 
   return (
-    <Offcanvas show={cartShow} onHide={() => setCartShow(false)} placement="end" style={{ overflow: 'auto' }}>
+    <Offcanvas backdrop={true} show={cartShow} onHide={() => setCartShow(false)} placement="end" style={{ overflow: 'auto' }}>
       <Container>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>{username ? `${username}'s cart` : 'Your cart'}</Offcanvas.Title>

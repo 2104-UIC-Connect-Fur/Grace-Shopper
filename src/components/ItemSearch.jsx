@@ -102,6 +102,7 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
       <Offcanvas
         show={show}
         onHide={handleClose}
+        backdrop={true}
         className="content-align-center"
       >
         <Offcanvas.Header closeButton>

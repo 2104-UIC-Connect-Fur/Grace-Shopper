@@ -136,6 +136,7 @@ const SingleItem = () => {
       <Row className="justify-content-center">
         <Carousel
           className="d-block col-sm-4 col-md-6 col-lg-8"
+          variant="dark"
           controls={showGalleryControls}
         >
           {itemToDisplay.images &&

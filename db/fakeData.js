@@ -277,14 +277,14 @@ module.exports = {
       title: 'The Starry Night',
       description:
         'Van Gogh knew what he was doing with this one!',
-      price: 350000000,
+      price: 35000000,
       inventoryquantity: 1,
       active: true,
     },
     {
       title: 'Michael Jackson Thriller Jacket',
       description: 'Made with Thriller Zombies from the music video the red on this jacket is all but a thrill!',
-      price: 230000000,
+      price: 23000000,
       inventoryquantity: 2,
       active: true,
     },
@@ -298,7 +298,7 @@ module.exports = {
     {
       title: 'Bugatti Chiron',
       description: 'Vroom Vroom!!!',
-      price: 210000000,
+      price: 80000000,
       inventoryquantity: 1,
       active: true,
     },
@@ -767,7 +767,7 @@ module.exports = {
     },
     {
       itemId: 34,
-      categoryId: 5,
+      categoryId: 7,
     },
     {
       itemId: 35,
