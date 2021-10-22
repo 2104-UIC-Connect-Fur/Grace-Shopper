@@ -218,7 +218,7 @@ module.exports = {
       active: true,
     },
     {
-      title: 'Jordan 1 High Off-White Chicage',
+      title: 'Jordan 1 High Off-White Chicago',
       description: 'The amount of shots that will go in will make this shoe a must buy!!',
       price: 4600000,
       inventoryquantity: 3,
@@ -261,7 +261,7 @@ module.exports = {
     },
     {
       title: 'Nike Mag Back To the Future',
-      description: 'Marty McFly was a head of his time.. or was he?',
+      description: 'Marty McFly was ahead of his time.. or was he?',
       price: 20000000,
       inventoryquantity: 1,
       active: true,
