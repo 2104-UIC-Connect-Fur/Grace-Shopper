@@ -33,6 +33,7 @@ if (priceLow != null && priceLow > 0) {
 if (priceHigh != null) {
   tempQuery.priceHigh = Number(priceHigh);
 }
+if (typeof categoryIds === 'number') tempQuery.categoryIds = [categoryIds];
 if (typeof categoryIds === 'string') tempQuery.categoryIds = [Number(categoryIds)];
 if (categoryIds && categoryIds.length > 1) tempQuery.categoryIds = categoryIds;
 if (searchString) tempQuery.searchString = searchString;
