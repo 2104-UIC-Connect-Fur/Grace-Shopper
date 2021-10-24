@@ -1,4 +1,6 @@
 /* eslint-disable import/prefer-default-export */
+import queryString from 'query-string';
+
 export class Shuffleable {
   constructor(inputArray) {
     let copiedData = [...inputArray];
@@ -13,3 +15,27 @@ export class Shuffleable {
     };
   }
 }
+
+export const formatQuery = ({
+  searchString,
+  categoryIds,
+  priceLow,
+  priceHigh,
+  page = 1,
+}, returnType) => {
+  const tempQuery = {
+    page,
+    categoryIds
+  };
+if (priceLow != null && priceLow > 0) {
+  tempQuery.priceLow = Number(priceLow);
+}
+if (priceHigh != null) {
+  tempQuery.priceHigh = Number(priceHigh);
+}
+if (typeof categoryIds === 'string') tempQuery.categoryIds = [Number(categoryIds)];
+if (categoryIds && categoryIds.length > 1) tempQuery.categoryIds = categoryIds;
+if (searchString) tempQuery.searchString = searchString;
+return (returnType === 'string') ? queryString.stringify(tempQuery) : tempQuery;
+}
+

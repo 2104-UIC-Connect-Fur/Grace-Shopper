@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from "react";
-import { useLocation, Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Navbar,
   Container,
@@ -28,10 +28,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [regModalShow, setRegModalShow] = useState(false);
   const [isAdmin, updateAdmin] = useState(false);
-  const { search } = useLocation();
-  const [query, setQuery] = useState(search);
   const [allCategories, setAllCategories] = useState([]);
-  const history = useHistory();
 
   const signOutClickHandler = async () => {
     const { success } = await logoutUser();
@@ -88,15 +85,6 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
     </Popover>
   );
 
-  const homeHandler = () => {
-    dispatch({
-      type: "updateSearchQuery",
-      value: {
-        page: 1,
-      },
-    });
-  };
-
   return (
     <Navbar
       collapseOnSelect
@@ -112,8 +100,10 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
             className="nav-category"
             >
               <Link
-              to="/"
-              onClick={homeHandler}
+              to={{
+                pathname: '/',
+                search: null,
+              }}
               style={{
                 fontSize: '2.5rem',
                 color: 'black',
@@ -128,15 +118,13 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
                 allCategories.map((category) => (
                   <Button
                     variant="outline-dark"
-                    onClick={() => {
-                      updateQuery({
-                        categoryIds: [category.id],
-                      });
-                    }}
                   >
                     <Link
                       className="nav-category"
-                      to={`/?categoryIds=${category.id}`}
+                      to={{
+                        pathname: '/',
+                        search: `?categoryIds=${category.id}`
+                      }}
                     >
                       {category.name}
                     </Link>
@@ -144,7 +132,7 @@ const Navigation = ({ itemCount, cartShow, setCartShow }) => {
                 ))}
             </Col>
             <Row className="d-flex flex-column">
-              <ItemSearch setQuery={setQuery} setQueryObject={updateQuery} />
+              <ItemSearch />
               <ItemShuffle />
             </Row>
           </NavDropdown>

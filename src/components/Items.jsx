@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import queryString from "query-string";
 import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
@@ -9,43 +9,31 @@ import CreateItem from "./CreateItem";
 import { getItemsFromQuery } from "../api/index";
 import { verifyAdmin } from "../api";
 import { store } from "./State";
+import { formatQuery } from "../utils/data";
 
 const Items = () => {
   const [isAdmin, updateAdmin] = useState(false);
   const { state, dispatch } = useContext(store);
-  const { queryObject, isLoggedIn } = state;
+  const { isLoggedIn } = state;
   const [pages, setPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
   const [noResults, setNoResults] = useState(false);
   const [displayItems, updateDisplayItems] = useState([]);
-  const { search } = useLocation();
   const history = useHistory();
-  const [query, setQuery] = useState(search);
-  const [toggleModifyItems, setToggleModifyItems] = useState(false);
-
-  const updateQuery = (newQueryObject) => {
-    dispatch({
-      type: "updateSearchQuery",
-      value: newQueryObject,
-    });
-  };
-
-  if (queryObject) queryObject.page = activePage;
-  if (queryObject && typeof queryObject.categoryIds === "number") {
-    const categoryIdAsArray = [queryObject.categoryIds];
-    queryObject.categoryIds = categoryIdAsArray;
-  }
+  const { location: { search } } = history;
+  const queryObject = queryString.parse(search, {
+    parseBooleans: true,
+    parseNumbers: true,
+  });
 
   const changePage = (currentPage) => {
-    const tempQueryObject = { ...queryObject };
+    const tempQueryObject = {...queryObject};
     tempQueryObject.page = currentPage;
-    const tempQuery = queryString.stringify(tempQueryObject);
-    updateQuery(tempQueryObject);
-    setQuery(tempQuery);
+    const newQuery = formatQuery(tempQueryObject, 'string');
     setActivePage(currentPage);
     history.push({
       pathname: "/",
-      search: `${tempQuery}`,
+      search: `${newQuery}`,
     });
   };
 
@@ -67,14 +55,18 @@ const Items = () => {
 
   useEffect(() => {
     const getItems = async () => {
+      const parsedSearch = queryString.parse(search, {
+        parseNumbers: true,
+        parseBooleans: true,
+      });
+      const formattedQuery = formatQuery(parsedSearch, 'object');
       const {
         items,
         success,
         totalResults,
         pages: apiPages,
-      } = await getItemsFromQuery(queryObject);
+      } = await getItemsFromQuery(formattedQuery);
       if (success && totalResults > 0) {
-        console.log("fetched items: ", items);
         updateDisplayItems(items);
         setPages(apiPages);
         setNoResults(false);
@@ -83,19 +75,8 @@ const Items = () => {
         setNoResults(true);
       }
     };
-    if (queryObject != null) getItems();
-  }, [queryObject, activePage]);
-
-  useEffect(() => {
-    const parsedQuery = queryString.parse(query, {
-      parseBooleans: true,
-      parseNumbers: true,
-    });
-    if (parsedQuery.categoryIds && typeof parsedQuery.categoryIds === 'string') {
-      parsedQuery.categoryIds = Number(parsedQuery.categoryIds);
-    }
-    updateQuery(parsedQuery);
-  }, []);
+    getItems();
+  }, [search]);
 
   useEffect(() => {
     const checkforAdmin = async () => {

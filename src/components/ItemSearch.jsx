@@ -7,11 +7,10 @@ import Row from "react-bootstrap/Row";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import { func } from "prop-types";
-import queryString from "query-string";
-import { formatAsCurrency } from "../utils";
+import { formatAsCurrency, formatQuery } from "../utils";
 import { getAllCategories } from "../api";
 
-const ItemSearch = ({ setQuery, setQueryObject }) => {
+const ItemSearch = () => {
   const history = useHistory();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -40,7 +39,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   }, []);
   const handleChange = (val) => setCategoryIds(val);
 
-
   const searchHandler = async () => {
     const useQueryObject =
       categoryIds.length ||
@@ -49,14 +47,12 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
       userSearchTerm !== searchDefaults.userSearchTerm;
     const queryObject = {
       categoryIds,
-      priceLow,
-      priceHigh,
       searchString: userSearchTerm,
     };
+    if (priceLow !== searchDefaults.priceLow) queryObject.priceLow = priceLow;
+    if (priceHigh !== searchDefaults.priceHigh) queryObject.priceHigh = priceHigh;
     const queryToUse = useQueryObject ? queryObject : {};
-    const query = queryString.stringify(queryToUse);
-    setQuery(query);
-    setQueryObject(queryToUse);
+    const query = formatQuery(queryToUse, "string");
     history.push({
       pathname: "/",
       search: `${query}`,
@@ -69,8 +65,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
     setPriceLow(searchDefaults.priceLow);
     setPriceHigh(searchDefaults.priceHigh);
     setUserSearchTerm(searchDefaults.userSearchTerm);
-    setQuery("");
-    setQueryObject({});
     history.push({
       pathname: "/",
       search: "",
@@ -78,11 +72,11 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
   };
 
   const handleKeyPress = (event) => {
-    if(event.key === 'Enter'){
+    if (event.key === "Enter") {
       event.preventDefault();
       searchHandler();
     }
-  }
+  };
 
   return (
     <>
@@ -184,10 +178,18 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
             </Form.Group>
           </Form>
           <Row className="mt-2">
-            <Button variant="outline-secondary" onClick={clearSearch} className="w-50">
+            <Button
+              variant="outline-secondary"
+              onClick={clearSearch}
+              className="w-50"
+            >
               Clear Search
             </Button>
-            <Button variant="outline-primary" onClick={searchHandler} className="w-50">
+            <Button
+              variant="outline-primary"
+              onClick={searchHandler}
+              className="w-50"
+            >
               Search
             </Button>
           </Row>
@@ -195,11 +197,6 @@ const ItemSearch = ({ setQuery, setQueryObject }) => {
       </Offcanvas>
     </>
   );
-};
-
-ItemSearch.propTypes = {
-  setQuery: func.isRequired,
-  setQueryObject: func.isRequired,
 };
 
 export default ItemSearch;
