@@ -152,6 +152,7 @@ async function getUser({ username, password }) {
     };
   } catch (error) {
     console.log(error);
+    // eslint-disable-next-line no-throw-literal
     throw {
       success: false,
       message: 'Username or password does not match. Please try again.',
