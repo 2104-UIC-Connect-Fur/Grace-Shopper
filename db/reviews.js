@@ -55,9 +55,6 @@ async function deleteReview(id) {
   }
 }
 
-/* Will we need to take the userId as a parameter as well in order to verify that the
-    updater is the author?
-*/
 async function updateReview(id, title, bodytext) {
   try {
     const { rows: [review] } = await client.query(`

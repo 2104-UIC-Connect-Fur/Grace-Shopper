@@ -1,8 +1,8 @@
 # Rare Stuff
 
-Team members: [Miguel Arias](https://github.com/Miguel2493), [Michael Meidenbauer](https://github.com/michaelmeidenbauer), and [Lucas Wakefield](https://github.com/llwakefield)
+#### Team members: [Miguel Arias](https://github.com/Miguel2493), [Michael Meidenbauer](https://github.com/michaelmeidenbauer), and [Lucas Wakefield](https://github.com/llwakefield)
 
-Together, we built [Rare Stuff](http://rare-stuff.herokuapp.com), which is a full-stack e-commerce website. Rare Stuff is a reflection of our affinity for exclusive, often nostalgic, and occasionally off-the-wall items in categories like music, sports, and sneakers. The technical foundation of our project is an Express.js web server, a PostgreSQL database, and a React.js front end.
+Together, we built [Rare Stuff](http://rare-stuff.herokuapp.com), a full-stack e-commerce website and source for exclusive, often nostalgic, and occasionally off-the-wall items in categories like music, sports, and sneakers. The technical foundation of our project is an Express.js web server, a PostgreSQL database, and a React.js front end.
 
 ## So, What Does It Do?
 
@@ -10,18 +10,18 @@ As an online store, Rare Stuff displays items that are for sale, and it allows t
 
 Once a user creates an account and logs in, they are able to add items to their cart, modify the cart, and proceed to checkout. From there, the user enters essential purchase information and completes the checkout process.
 
-For Admin users, additional features are baked into the front end to allow the individual to add items, edit item details, delete items, and view user information.
+For Admin users, additional features are baked into the front end to allow the individual to add items to the store, edit item details, delete items, and view user information.
 
 
 ## And How Does It Do That?
 
 #### React.js:
 - Allows for the creation of a single-page app full of hooks that detect changes in state and trigger rendering of content as needed
-- This design makes for a smoother user experience, as it limits the reloading of content
+- Makes for a smoother user experience, as it limits the reloading of content
 
 #### Express.js:
 - Lightweight and efficient as it serves up data from the back end to the front end
-- Using middleware, we can attach and later check for a JSON web token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
+- Using middleware, we can attach and later check for a JSON Web Token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
 
 #### PostgreSQL:
 - Database management system used to store and update information related to items, users, orders, and more
@@ -30,100 +30,28 @@ For Admin users, additional features are baked into the front end to allow the i
 - Improves security by hashing user passwords
 
 #### React-Bootstrap:
-- Given our tight 4-5-week project timeline, React-Bootstrap provided us with a clean, easily implemented foundation for the styling of our app
+- Provided us with a clean, easy-to-implement, and customizable foundation for the styling of our app
 
 #### ESLint:
-- Using the Airbnb style guide, ESLint helped to keep our code consistent, clean, and readable, which likely saved us from a few unexpected bugs
+- Using the Airbnb style guide, ESLint helped to keep our code consistent, clean, and readable, which likely saved us from a number of unexpected bugs
+
+## Lessons Learned
+
+#### Authentication:
+- To create a convenient and secure authentication process, for a successfully logged-in user, we attached a server-side cookie, which included the JWT that resulted from the confirmation of their login. Using middleware, we could then pull the JWT off a user's cookie, determine the user information, and then attach those details to the `req` object. This made it more convenient to access the current user's ID anytime it was required to return user-specific information
+- Since the current user and their login status need to permeate the app, we resolved to store current username and login status in global state, with the help of useContext
+
+#### User Cart:
+- One complicated decision that we made in the beginning while designing our database was how to construct the user's cart. Our solution was to define the cart as a user's incomplete order. We then wrote a database method to pull the required information from the orders, users, items, and ordersitems tables to build the user's cart
+- On the front end, since the cart needs to be dynamic, we carefully set up hooks to detect updates, such as the cart contents and the user's login status. Storing the cart in global state allowed for more convenient access to the cart throughout the app
 
 
-## Local Development
+#### Styling:
+- We took advantage of React-Bootstrap's built-in components, such as popovers and alerts, to provide helpful, well-positioned feedback to the user to guide them toward the action that they are attempting to make
+- Similarly, we sought to create a dynamic, engaging user experience by using modals, offcanvases, and image carousels
 
-### Setting Up
+## Challenges and Ideas for the Future
 
-First, clone this repo locally, then remove the current `.git` folder. Follow this up with making it a new git repo.
-
-```bash
-rm -rf .git
-
-git init
-```
-
-Then go to GitHub, create a new repository, and add that remote to this local repo.
-
-Then, run `npm install` to install all node modules.
-
-You should decide on a name for your local testing database, and edit `db/index.js` changing the value of `DB_NAME`.
-
-Once you decide on that name, make sure to run `createdb` from your command line so it exists (and can be connected to).
-
-Finally you can run `npm run server:dev` to start the web server.
-
-In a second terminal navigate back to the local repo and run `npm run client:dev` to start the react server. 
-
-This is set up to run on a proxy, so that you can make calls back to your `api` without needing absolute paths. You can instead `axios.get('/api/posts')` or whatever without needing to know the root URL.
-
-Once both dev commands are running, you can start developing... the server restarts thanks to `nodemon`, and the client restarts thanks to `react-scripts`.
-
-### Project Structure
-
-```bash
-├── db
-│   ├── index.js
-│   └── init_db.js
-├── index.js
-├── package.json
-├── public
-│   └── index.html
-├── routes
-│   └── index.js
-└── src
-    ├── api
-    │   └── index.js
-    ├── components
-    │   ├── App.js
-    │   └── index.js
-    └── index.js
-```
-
-Top level `index.js` is your Express Server. This should be responsible for setting up your API, starting your server, and connecting to your database.
-
-Inside `/db` you have `index.js` which is responsible for creating all of your database connection functions, and `init_db.js` which should be run when you need to rebuild your tables and seed data.
-
-Inside `/routes` you have `index.js` which is responsible for building the `apiRouter`, which is attached in the express server. This will build all routes that your React application will use to send/receive data via JSON.
-
-Lastly `/public` and `/src` are the two puzzle pieces for your React front-end. `/public` contains any static files necessary for your front-end. This can include images, a favicon, and most importantly the `index.html` that is the root of your React application.
-
-### Command Line Tools
-
-In addition to `client:dev` and `server:dev`, you have access to `db:build` which (you will write to) rebuilds the database, all the tables, and ensures that there is meaningful data present.
-
-## Deployment
-
-### Setting up Heroku (once)
-
-```bash
-heroku create hopeful-project-name
-
-heroku addons:create heroku-postgresql:hobby-dev
-```
-
-This creates a heroku project which will live at https://hopeful-project-name.herokuapp.com (note, you should change this to be relevant to your project).
-
-It will also create a postgres database for you, on the free tier.
-
-
-### Deploying
-
-Once you've built the front-end you're ready to deploy, simply run `git push heroku master`. Note, your git has to be clean for this to work (which is why our two git commands live as part of getting ready to deploy, above).
-
-This will send off the new code to heroku, will install the node modules on their server, and will run `npm start`, starting up your express server.
-
-If you need to rebuild your database on heroku, you can do so right now with this command:
-
-```bash
-heroku run npm run db:build
-```
-
-Which will run `npm run db:build` on the heroku server.
-
-Once that command runs, you can type `heroku open` to get a browser to open up locally with your full-stack application running remotely.
+- One issue that we still hope to solve is how best to create a guest cart and, in the event that a user would then log in or create an account, merge carts in a way that would make sense to the user
+- We built some of the foundation on the back end to allow for discounts and product reviews, and we would like to complete the development on the front end to further enhance the user experience on our website
+- We would like to develop a user profile section where users can update their personal information and view their order history
