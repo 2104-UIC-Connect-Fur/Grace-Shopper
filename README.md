@@ -1,8 +1,8 @@
 # Rare Stuff
 
-Team members: [Miguel Arias] (https://github.com/Miguel2493), [Michael Meidenbauer] (https://github.com/michaelmeidenbauer), and [Lucas Wakefield] (https://github.com/llwakefield)
+Team members: [Miguel Arias](https://github.com/Miguel2493), [Michael Meidenbauer](https://github.com/michaelmeidenbauer), and [Lucas Wakefield](https://github.com/llwakefield)
 
-Together, we built [Rare Stuff] (http://rare-stuff.herokuapp.com), which is a full-stack e-commerce website. Rare Stuff is a reflection of our affinity for exclusive, often nostalgic, and occasionally off-the-wall items in categories like music, sports, and sneakers. The technical foundation of our project is an Express.js web server, a PostgreSQL database, and a React.js front end.
+Together, we built [Rare Stuff](http://rare-stuff.herokuapp.com), which is a full-stack e-commerce website. Rare Stuff is a reflection of our affinity for exclusive, often nostalgic, and occasionally off-the-wall items in categories like music, sports, and sneakers. The technical foundation of our project is an Express.js web server, a PostgreSQL database, and a React.js front end.
 
 ## So, What Does It Do?
 
