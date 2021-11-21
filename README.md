@@ -8,34 +8,32 @@ Together, we built [Rare Stuff](http://rare-stuff.herokuapp.com), which is a ful
 
 As an online store, Rare Stuff displays items that are for sale, and it allows the user to navigate the inventory by browsing, filtering by category, price, or keyword, and by using a shuffle feature.
 
-Once a user creates an account and logs in, they are able to add items to their cart, modify the cart, and proceed to checkout. From there, the user is able to enter essential purchase information and complete the checkout process.
+Once a user creates an account and logs in, they are able to add items to their cart, modify the cart, and proceed to checkout. From there, the user enters essential purchase information and completes the checkout process.
 
-For Admin users, additional features are baked into the front-end to allow the individual to edit item details, delete items, and view user information.
+For Admin users, additional features are baked into the front end to allow the individual to add items, edit item details, delete items, and view user information.
 
 
 ## And How Does It Do That?
 
-Rare Stuff 
+#### React.js:
+- Allows for the creation of a single-page app full of hooks that detect changes in state and trigger rendering of content as needed
+- This design makes for a smoother user experience, as it limits the reloading of content
 
-React.js:
--Allows for the creation of a single-page app full of hooks that detect changes in state and trigger rendering of content as needed
--This design makes for a smoother user experience, as it limits the reloading of content
+#### Express.js:
+- Lightweight and efficient as it serves up data from the back end to the front end
+- Using middleware, we can attach and later check for a JSON web token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
 
-Express.js:
--Lightweight and efficient as it serves up data from the back end to the front end
--Using middleware, we can attach and later check for a JSON web token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
+#### PostgreSQL:
+- Database management system used to store and update information related to items, users, orders, and more
 
-PostgreSQL:
--Database management system used to store and update information related to items, users, orders, and more
+#### bcrypt:
+- Improves security by hashing user passwords
 
-bcrypt:
--Improves security by hashing user passwords
+#### React-Bootstrap:
+- Given our tight 4-5-week project timeline, React-Bootstrap provided us with a clean, easily implemented foundation for the styling of our app
 
-React-Bootstrap:
--Given our tight 4-5-week project timeline, React-Bootstrap provided us with a clean, easily implemented foundation for the styling of our app
-
-ESLint:
--Using the Airbnb style guide, ESLint helped to keep our code consistent, clean, and readable, which likely saved us from a few unexpected bugs
+#### ESLint:
+- Using the Airbnb style guide, ESLint helped to keep our code consistent, clean, and readable, which likely saved us from a few unexpected bugs
 
 
 ## Local Development
