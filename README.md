@@ -21,7 +21,7 @@ For Admin users, additional features are baked into the front end to allow the i
 
 #### Express.js:
 - Lightweight and efficient as it serves up data from the back end to the front end
-- Using middleware, we can attach and later check for a JSON Web Token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
+- Using middleware, we can attach and later check for a server-side cookie containing a JSON Web Token, which helps us identify a logged-in user and determine whether or not they have admin-level access
 
 #### PostgreSQL:
 - Database management system used to store and update information related to items, users, orders, and more
