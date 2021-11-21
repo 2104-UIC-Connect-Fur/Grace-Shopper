@@ -21,7 +21,7 @@ For Admin users, additional features are baked into the front end to allow the i
 
 #### Express.js:
 - Lightweight and efficient as it serves up data from the back end to the front end
-- Using middleware, we can attach and later check for a server-side cookie containing a JSON Web Token, which helps us identify a logged-in user and determine whether or not they have admin-level access
+- Using middleware, we managed to securely and conveniently perform authentication and access user information
 
 #### PostgreSQL:
 - Database management system used to store and update information related to items, users, orders, and more
@@ -38,8 +38,8 @@ For Admin users, additional features are baked into the front end to allow the i
 ## Lessons Learned
 
 #### Authentication:
-- To create a convenient and secure authentication process, for a successfully logged-in user, we attached a server-side cookie, which included the JWT that resulted from the confirmation of their login. Using middleware, we could then pull the JWT off a user's cookie, determine the user information, and then attach those details to the `req` object. This made it more convenient to access the current user's ID anytime it was required to return user-specific information
-- Since the current user and their login status need to permeate the app, we resolved to store current username and login status in global state, with the help of useContext
+- As part of our authentication process, for a successfully logged-in user, we attach a server-side cookie, which includes the JWT that results from the confirmation of their login. Using middleware, we can then pull the JWT off a user's cookie, determine the user information, and then attach those details to the `req` object. This makes it more convenient to access the current user's ID anytime it is required to return user-specific information
+- Since the current user and their login status need to permeate the app, we resolved to store the current username and login status in global state, with the help of useContext
 
 #### User Cart:
 - One complicated decision that we made in the beginning while designing our database was how to construct the user's cart. Our solution was to define the cart as a user's incomplete order. We then wrote a database method to pull the required information from the orders, users, items, and ordersitems tables to build the user's cart
