@@ -1,14 +1,42 @@
-# The Smallest Starting Point
+# Rare Stuff
 
-So, you want to build a full-stack JavaScript application with:
+Team members: [Miguel Arias] (https://github.com/Miguel2493), [Michael Meidenbauer] (https://github.com/michaelmeidenbauer), and [Lucas Wakefield] (https://github.com/llwakefield)
 
-- An Express web server
-- A PostgreSQL database
-- A React front-end
+Together, we built [Rare Stuff] (http://rare-stuff.herokuapp.com), which is a full-stack e-commerce website. Rare Stuff is a reflection of our affinity for exclusive, often nostalgic, and occasionally off-the-wall items in categories like music, sports, and sneakers. The technical foundation of our project is an Express.js web server, a PostgreSQL database, and a React.js front end.
 
-And you want it to work locally as well as be easy to deploy?
+## So, What Does It Do?
 
-We've got your back:
+As an online store, Rare Stuff displays items that are for sale, and it allows the user to navigate the inventory by browsing, filtering by category, price, or keyword, and by using a shuffle feature.
+
+Once a user creates an account and logs in, they are able to add items to their cart, modify the cart, and proceed to checkout. From there, the user is able to enter essential purchase information and complete the checkout process.
+
+For Admin users, additional features are baked into the front-end to allow the individual to edit item details, delete items, and view user information.
+
+
+## And How Does It Do That?
+
+Rare Stuff 
+
+React.js:
+-Allows for the creation of a single-page app full of hooks that detect changes in state and trigger rendering of content as needed
+-This design makes for a smoother user experience, as it limits the reloading of content
+
+Express.js:
+-Lightweight and efficient as it serves up data from the back end to the front end
+-Using middleware, we can attach and later check for a JSON web token on a server-side cookie to identity a logged-in user and to determine whether or not they have admin-level access
+
+PostgreSQL:
+-Database management system used to store and update information related to items, users, orders, and more
+
+bcrypt:
+-Improves security by hashing user passwords
+
+React-Bootstrap:
+-Given our tight 4-5-week project timeline, React-Bootstrap provided us with a clean, easily implemented foundation for the styling of our app
+
+ESLint:
+-Using the Airbnb style guide, ESLint helped to keep our code consistent, clean, and readable, which likely saved us from a few unexpected bugs
+
 
 ## Local Development
 
